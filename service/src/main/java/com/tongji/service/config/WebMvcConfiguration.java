@@ -21,7 +21,9 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         log.info("开始注册自定义拦截器...");
         registry.addInterceptor(this.tokenInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/login");
+                .excludePathPatterns("/user/login")
+                .excludePathPatterns("/user/register")
+                .excludePathPatterns("/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**");
     }
 
 

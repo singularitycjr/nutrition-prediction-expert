@@ -4,6 +4,7 @@ package com.tongji.service.controller;
 import cn.dev33.satoken.stp.StpUtil;
 import com.tongji.model.dtos.LoginDTO;
 import com.tongji.model.dtos.ResponseResult;
+import com.tongji.model.dtos.UserDTO;
 import com.tongji.service.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,5 +44,11 @@ public class UserController {
     public ResponseResult logout(){
         StpUtil.logout();
         return ResponseResult.okResult("登出成功");
+    }
+
+    @Operation(summary = "注册用户")
+    @PostMapping("/register")
+    public ResponseResult register(@RequestBody UserDTO dto){
+        return userService.register(dto);
     }
 }
