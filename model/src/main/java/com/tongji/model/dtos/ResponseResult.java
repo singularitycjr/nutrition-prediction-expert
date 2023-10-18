@@ -1,6 +1,7 @@
 package com.tongji.model.dtos;
 
-import com.tongji.model.enums.AppHttpCodeEnum;
+
+import com.tongji.common.enums.AppHttpCodeEnum;
 
 import java.io.Serializable;
 

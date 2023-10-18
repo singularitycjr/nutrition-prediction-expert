@@ -1,4 +1,4 @@
-package com.tongji.model.enums;
+package com.tongji.common.enums;
 
 public enum AppHttpCodeEnum {
 
@@ -25,7 +25,8 @@ public enum AppHttpCodeEnum {
     DATA_NOT_EXIST(1002,"数据不存在"),
     // 数据错误 3000~3500
     NO_OPERATOR_AUTH(3000,"无权限操作"),
-    NEED_ADMIND(3001,"需要管理员权限");
+    NEED_ADMIND(3001,"需要管理员权限"),
+    UPLOAD_FAILED(3002,"上传失败");
 
     int code;
     String message;

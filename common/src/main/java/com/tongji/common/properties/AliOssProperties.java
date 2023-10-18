@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 @ConfigurationProperties(prefix = "alioss")
 @Data
 public class AliOssProperties {
