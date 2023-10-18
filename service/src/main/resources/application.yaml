@@ -2,11 +2,13 @@ server:
   port: 8021
 
 spring:
+  profiles:
+    active: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://111.229.146.107:3306/nee?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-    username: tongji_yeah
-    password: AaEEnB65HEBkkEBG
+    url: jdbc:mysql://${datasource.host}:${datasource.port}/${datasource.database}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: ${datasource.username}
+    password: ${datasource.password}
     type: com.alibaba.druid.pool.DruidDataSource
 
 springdoc:
@@ -14,3 +16,9 @@ springdoc:
     - group: 'default'
       paths-to-match: '/**'
       packages-to-scan: com.tongji.service.controller
+
+alioss:
+  endpoint: ${alioss.endpoint}
+  access-key-id: ${alioss.access-key-id}
+  access-key-secret: ${alioss.access-key-secret}
+  bucket-name: ${alioss.bucket-name}

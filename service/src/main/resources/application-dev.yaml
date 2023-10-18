@@ -1,0 +1,13 @@
+
+datasource:
+  host: 111.229.146.107
+  port: 3306
+  database: nee
+  username: tongji_yeah
+  password: AaEEnB65HEBkkEBG
+
+alioss:
+  endpoint: oss-cn-hangzhou.aliyuncs.com
+  access-key-id: LTAI5tQRFEZAF13DnkQxfUqW
+  access-key-secret:
+  bucket-name: abigail-is-learning
