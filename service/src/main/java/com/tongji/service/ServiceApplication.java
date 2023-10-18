@@ -1,13 +1,12 @@
-package com.tongji.nutritionalestimation;
+package com.tongji.service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class NutritionalEstimationApplication {
+public class ServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(NutritionalEstimationApplication.class, args);
+        SpringApplication.run(ServiceApplication.class,args);
     }
-
 }
