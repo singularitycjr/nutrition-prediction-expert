@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongji.service.mapper.PredictionDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.tongji.model.pojos.PredictionDetail">
+        <id column="id" property="id" />
+        <result column="prediction_id" property="predictionId" />
+        <result column="food_name" property="foodName" />
+        <result column="food_en" property="foodEn" />
+        <result column="food_mass" property="foodMass" />
+        <result column="carbohydrate_mass" property="carbohydrateMass" />
+        <result column="fat_mass" property="fatMass" />
+        <result column="protein_mass" property="proteinMass" />
+        <result column="cellulose_mass" property="celluloseMass" />
+        <result column="calorie_mass" property="calorieMass" />
+    </resultMap>
+
+</mapper>

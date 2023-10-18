@@ -1,0 +1,15 @@
+server:
+  port: 8021
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://111.229.146.107:3306/nee?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: tongji_yeah
+    password: AaEEnB65HEBkkEBG
+
+springdoc:
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.tongji.service.controller

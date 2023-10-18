@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongji.service.mapper.FoodMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.tongji.model.pojos.Food">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="en" property="en" />
+        <result column="density" property="density" />
+        <result column="carbohydrate_mass_density" property="carbohydrateMassDensity" />
+        <result column="carbohydrate_volume_density" property="carbohydrateVolumeDensity" />
+        <result column="fat_mass_density" property="fatMassDensity" />
+        <result column="fat_volume_density" property="fatVolumeDensity" />
+        <result column="protein_mass_density" property="proteinMassDensity" />
+        <result column="protein_volume_density" property="proteinVolumeDensity" />
+        <result column="cellulose_mass_density" property="celluloseMassDensity" />
+        <result column="cellulose_volume_density" property="celluloseVolumeDensity" />
+        <result column="calorie_mass_density" property="calorieMassDensity" />
+        <result column="calorie_volume_density" property="calorieVolumeDensity" />
+    </resultMap>
+
+</mapper>
