@@ -57,5 +57,17 @@
             <artifactId>sa-token-spring-boot3-starter</artifactId>
             <version>${sa-token.version}</version>
         </dependency>
+
+        <!-- 短信服务 -->
+        <dependency>
+            <groupId>com.zhenzikj</groupId>
+            <artifactId>zhenzisms</artifactId>
+            <version>${zhenzisms.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>${redis.starter.version}</version>
+        </dependency>
     </dependencies>
 </project>

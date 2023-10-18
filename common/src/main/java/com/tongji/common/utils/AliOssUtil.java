@@ -23,9 +23,8 @@ public class AliOssUtil {
     /**
      * 文件上传
      *
-     * @param bytes
-     * @param objectName
-     * @return
+     * @param bytes 字节
+     * @param objectName 文件名
      */
     public String upload(byte[] bytes, String objectName, String folder) {
 
@@ -38,17 +37,17 @@ public class AliOssUtil {
             // 创建PutObject请求。
             ossClient.putObject(bucketName, objectName, new ByteArrayInputStream(bytes));
         } catch (OSSException oe) {
-            System.out.println("Caught an OSSException, which means your request made it to OSS, "
+            log.info("Caught an OSSException, which means your request made it to OSS, "
                     + "but was rejected with an error response for some reason.");
-            System.out.println("Error Message:" + oe.getErrorMessage());
-            System.out.println("Error Code:" + oe.getErrorCode());
-            System.out.println("Request ID:" + oe.getRequestId());
-            System.out.println("Host ID:" + oe.getHostId());
+            log.info("Error Message: {}", oe.getErrorMessage());
+            log.info("Error Code: {}", oe.getErrorCode());
+            log.info("Request ID: {}", oe.getRequestId());
+            log.info("Host ID: {}", oe.getHostId());
         } catch (ClientException ce) {
-            System.out.println("Caught an ClientException, which means the client encountered "
+            log.info("Caught an ClientException, which means the client encountered "
                     + "a serious internal problem while trying to communicate with OSS, "
                     + "such as not being able to access the network.");
-            System.out.println("Error Message:" + ce.getMessage());
+            log.info("Error Message: {}", ce.getMessage());
         } finally {
             if (ossClient != null) {
                 ossClient.shutdown();

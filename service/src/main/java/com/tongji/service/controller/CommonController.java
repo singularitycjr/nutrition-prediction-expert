@@ -3,7 +3,7 @@ package com.tongji.service.controller;
 import com.tongji.common.constants.OssConstants;
 import com.tongji.common.enums.AppHttpCodeEnum;
 import com.tongji.common.utils.AliOssUtil;
-import com.tongji.model.dtos.ResponseResult;
+import com.tongji.model.vos.ResponseResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;

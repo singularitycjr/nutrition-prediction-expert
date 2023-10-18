@@ -12,7 +12,7 @@ public class OssConfiguration {
 
     @Bean
     public AliOssUtil aliOssUtil(AliOssProperties aliOssProperties){
-        log.info("初始化阿里云OSS工具类");;
+        log.info("初始化阿里云OSS工具类");
         return new AliOssUtil(aliOssProperties.getEndpoint(),
                 aliOssProperties.getAccessKeyId(),
                 aliOssProperties.getAccessKeySecret(),

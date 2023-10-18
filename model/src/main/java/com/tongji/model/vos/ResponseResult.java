@@ -1,4 +1,4 @@
-package com.tongji.model.dtos;
+package com.tongji.model.vos;
 
 
 import com.tongji.common.enums.AppHttpCodeEnum;

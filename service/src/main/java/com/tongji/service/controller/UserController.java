@@ -3,7 +3,7 @@ package com.tongji.service.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.tongji.model.dtos.LoginDTO;
-import com.tongji.model.dtos.ResponseResult;
+import com.tongji.model.vos.ResponseResult;
 import com.tongji.model.dtos.UserDTO;
 import com.tongji.service.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,5 +50,11 @@ public class UserController {
     @PostMapping("/register")
     public ResponseResult register(@RequestBody UserDTO dto){
         return userService.register(dto);
+    }
+
+    @Operation(summary = "发送短信验证码")
+    @GetMapping("/sendCode/{mobile}")
+    public ResponseResult sendCode(@PathVariable("mobile") String mobile){
+        return userService.sendCode(mobile);
     }
 }
