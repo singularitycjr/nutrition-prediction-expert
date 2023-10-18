@@ -51,5 +51,11 @@
             <artifactId>jaxb-runtime</artifactId>
             <version>${jaxb.runtime.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot3-starter</artifactId>
+            <version>${sa-token.version}</version>
+        </dependency>
     </dependencies>
 </project>

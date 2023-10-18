@@ -1,4 +1,4 @@
-package com.tongji.service.interceptor;
+package com.tongji.common.interceptor;
 
 import cn.dev33.satoken.stp.StpUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 /**
  * jwt令牌校验的拦截器
  */
-@Component
+//@Component
 @Slf4j
 public class TokenInterceptor implements HandlerInterceptor {
 

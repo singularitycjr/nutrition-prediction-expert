@@ -39,7 +39,7 @@ public class UserController {
         return userService.login(dto);
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     @Operation(summary = "登出")
     public ResponseResult logout(){
         StpUtil.logout();

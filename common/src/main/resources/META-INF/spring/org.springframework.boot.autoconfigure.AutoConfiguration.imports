@@ -1,3 +1,6 @@
 
 com.tongji.common.properties.AliOssProperties
 com.tongji.common.config.OssConfiguration
+
+com.tongji.common.interceptor.TokenInterceptor
+com.tongji.common.config.WebMvcConfiguration
