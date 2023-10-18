@@ -1,6 +1,8 @@
 package com.tongji.service.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.tongji.model.dtos.LoginDTO;
+import com.tongji.model.dtos.ResponseResult;
 import com.tongji.model.pojos.User;
 
 /**
@@ -12,5 +14,6 @@ import com.tongji.model.pojos.User;
  * @since 2023-10-18
  */
 public interface IUserService extends IService<User> {
+    ResponseResult login(LoginDTO loginDTO);
 
 }

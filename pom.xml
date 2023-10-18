@@ -27,8 +27,13 @@
         <mybatis.version>3.0.2</mybatis.version>
         <mybatis.test.version>3.0.2</mybatis.test.version>
         <mybatis.plus.version>3.5.3.1</mybatis.plus.version>
+
         <mysql.version>8.0.31</mysql.version>
+        <druid.version>1.2.1</druid.version>
+
         <knife4j-openapi3.version>4.3.0</knife4j-openapi3.version>
+        <hutool.version>5.8.21</hutool.version>
+        <sa-token.version>1.35.0.RC</sa-token.version>
     </properties>
     <dependencies>
         <dependency>
@@ -36,6 +41,7 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
     </dependencies>
 
     <dependencyManagement>
@@ -59,6 +65,12 @@
                 <scope>runtime</scope>
                 <version>${mysql.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
@@ -81,6 +93,18 @@
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
                 <version>${knife4j-openapi3.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-spring-boot3-starter</artifactId>
+                <version>${sa-token.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
