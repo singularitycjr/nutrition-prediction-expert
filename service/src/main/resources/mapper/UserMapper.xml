@@ -3,7 +3,7 @@
 <mapper namespace="com.tongji.service.mapper.UserMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.tongji.model.pojos.User">
+    <resultMap id="BaseResultMap" type="com.tongji.model.pojo.User">
         <id column="id" property="id" />
         <result column="name" property="name" />
         <result column="account" property="account" />

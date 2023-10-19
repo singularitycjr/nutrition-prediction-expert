@@ -3,7 +3,7 @@
 <mapper namespace="com.tongji.service.mapper.PredictionMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.tongji.model.pojos.Prediction">
+    <resultMap id="BaseResultMap" type="com.tongji.model.pojo.Prediction">
         <id column="id" property="id" />
         <result column="user_id" property="userId" />
         <result column="create_time" property="createTime" />

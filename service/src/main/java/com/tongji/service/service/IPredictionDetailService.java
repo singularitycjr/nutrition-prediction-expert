@@ -1,7 +1,7 @@
 package com.tongji.service.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.tongji.model.pojos.PredictionDetail;
+import com.tongji.model.pojo.PredictionDetail;
 
 /**
  * <p>

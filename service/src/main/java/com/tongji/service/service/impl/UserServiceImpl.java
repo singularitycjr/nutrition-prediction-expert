@@ -10,15 +10,15 @@ import com.tongji.common.constants.CommonConstants;
 import com.tongji.common.enums.AppHttpCodeEnum;
 import com.tongji.common.utils.CacheService;
 import com.tongji.common.utils.SmsUtil;
-import com.tongji.model.dtos.LoginDTO;
-import com.tongji.model.vos.ResponseResult;
-import com.tongji.model.dtos.UserDTO;
+import com.tongji.model.dto.LoginDTO;
+import com.tongji.model.vo.ResponseResult;
+import com.tongji.model.dto.UserDTO;
 import com.tongji.service.mapper.UserMapper;
 import com.tongji.service.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.tongji.model.pojos.User;
+import com.tongji.model.pojo.User;
 
 
 /**
@@ -83,8 +83,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         // 删掉验证码
         this.cacheService.delete(CommonConstants.SMS_CODE + phone);
+
         // 随机生成长度为6的字符串作为盐
-        String salt = RandomUtil.randomString(6);
+        String salt = RandomUtil.randomString(CommonConstants.SALT_LENGTH);
         String password = SaSecureUtil.md5(dto.getPassword() + salt);
 
         User user = new User();

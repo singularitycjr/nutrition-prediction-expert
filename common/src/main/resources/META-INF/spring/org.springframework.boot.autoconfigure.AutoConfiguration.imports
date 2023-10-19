@@ -9,3 +9,5 @@ com.tongji.common.properties.SmsProperties
 com.tongji.common.utils.SmsUtil
 
 com.tongji.common.utils.CacheService
+
+com.tongji.common.config.MybatisConfig

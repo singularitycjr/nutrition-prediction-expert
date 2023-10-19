@@ -2,9 +2,9 @@ package com.tongji.service.controller;
 
 
 import cn.dev33.satoken.stp.StpUtil;
-import com.tongji.model.dtos.LoginDTO;
-import com.tongji.model.vos.ResponseResult;
-import com.tongji.model.dtos.UserDTO;
+import com.tongji.model.dto.LoginDTO;
+import com.tongji.model.vo.ResponseResult;
+import com.tongji.model.dto.UserDTO;
 import com.tongji.service.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

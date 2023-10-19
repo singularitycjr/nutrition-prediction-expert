@@ -1,7 +1,7 @@
 package com.tongji.service.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.tongji.model.pojos.PredictionDetail;
+import com.tongji.model.pojo.PredictionDetail;
 
 /**
  * <p>

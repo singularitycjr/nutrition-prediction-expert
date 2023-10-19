@@ -1,7 +1,9 @@
 package com.tongji.service.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.tongji.model.pojos.Food;
+import com.tongji.model.pojo.Food;
+import com.tongji.model.query.FoodQuery;
+import com.tongji.model.vo.ResponseResult;
 
 /**
  * <p>
@@ -13,4 +15,5 @@ import com.tongji.model.pojos.Food;
  */
 public interface IFoodService extends IService<Food> {
 
+    ResponseResult queryPage(FoodQuery foodQuery);
 }

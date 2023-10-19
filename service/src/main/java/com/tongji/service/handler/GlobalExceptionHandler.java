@@ -2,7 +2,7 @@ package com.tongji.service.handler;
 
 
 import com.tongji.common.enums.AppHttpCodeEnum;
-import com.tongji.model.vos.ResponseResult;
+import com.tongji.model.vo.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

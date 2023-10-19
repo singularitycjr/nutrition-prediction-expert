@@ -1,6 +1,6 @@
 package com.tongji.service.service.impl;
 
-import com.tongji.model.pojos.PredictionDetail;
+import com.tongji.model.pojo.PredictionDetail;
 import com.tongji.service.mapper.PredictionDetailMapper;
 import com.tongji.service.service.IPredictionDetailService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

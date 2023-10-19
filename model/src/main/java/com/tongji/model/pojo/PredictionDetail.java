@@ -1,4 +1,4 @@
-package com.tongji.model.pojos;
+package com.tongji.model.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;

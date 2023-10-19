@@ -1,5 +1,6 @@
 package com.tongji.common.utils;
 
+import com.tongji.common.constants.CommonConstants;
 import com.tongji.common.properties.SmsProperties;
 import com.zhenzi.sms.ZhenziSmsClient;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class SmsUtil {
         params.put("templateId", this.smsProperties.getTemplateId());
         String[] templateParams = new String[2];
         templateParams[0] = code;
-        templateParams[1] = "3";
+        templateParams[1] = CommonConstants.SMS_CODE_TIMEOUT.toString();
         params.put("templateParams", templateParams);
         try {
             String result = client.send(params);

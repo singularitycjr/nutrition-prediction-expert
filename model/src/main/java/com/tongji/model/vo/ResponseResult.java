@@ -1,7 +1,8 @@
-package com.tongji.model.vos;
+package com.tongji.model.vo;
 
 
 import com.tongji.common.enums.AppHttpCodeEnum;
+import lombok.Getter;
 
 import java.io.Serializable;
 
@@ -9,6 +10,7 @@ import java.io.Serializable;
  * 通用的结果返回类
  * @param <T>
  */
+@Getter
 public class ResponseResult<T> implements Serializable {
 
     private Integer code;
@@ -95,24 +97,12 @@ public class ResponseResult<T> implements Serializable {
         return this;
     }
 
-    public Integer getCode() {
-        return code;
-    }
-
     public void setCode(Integer code) {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public T getData() {
-        return data;
     }
 
     public void setData(T data) {
