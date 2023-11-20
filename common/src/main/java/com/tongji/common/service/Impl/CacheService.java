@@ -1,4 +1,4 @@
-package com.tongji.common.utils;
+package com.tongji.common.service.Impl;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;

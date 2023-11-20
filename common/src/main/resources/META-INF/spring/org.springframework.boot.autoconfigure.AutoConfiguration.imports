@@ -1,6 +1,4 @@
 
-com.tongji.common.properties.AliOssProperties
-com.tongji.common.config.OssConfiguration
 
 com.tongji.common.interceptor.TokenInterceptor
 com.tongji.common.config.WebMvcConfiguration
@@ -8,6 +6,8 @@ com.tongji.common.config.WebMvcConfiguration
 com.tongji.common.properties.SmsProperties
 com.tongji.common.utils.SmsUtil
 
-com.tongji.common.utils.CacheService
+com.tongji.common.service.Impl.CacheService
 
 com.tongji.common.config.MybatisConfig
+
+com.tongji.common.service.Impl.MinIOFileStorageService

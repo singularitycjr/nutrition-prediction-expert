@@ -40,12 +40,6 @@ springdoc:
       paths-to-match: '/**'
       packages-to-scan: com.tongji.service.controller
 
-alioss:
-  endpoint: ${alioss.endpoint}
-  access-key-id: ${alioss.access-key-id}
-  access-key-secret: ${alioss.access-key-secret}
-  bucket-name: ${alioss.bucket-name}
-
 sms:
   app-id: ${sms.app-id}
   app-secret: ${sms.app-secret}
@@ -69,3 +63,9 @@ sa-token:
   # 是否输出操作日志
   is-log: true
 
+minio:
+  accessKey: ${minio.accessKey}
+  secretKey: ${minio.secretKey}
+  bucket: ${minio.bucket}
+  endpoint: ${minio.endpoint}
+  readPath: ${minio.readPath}

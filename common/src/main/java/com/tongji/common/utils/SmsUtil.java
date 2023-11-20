@@ -5,6 +5,7 @@ import com.tongji.common.properties.SmsProperties;
 import com.zhenzi.sms.ZhenziSmsClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ public class SmsUtil {
     @Autowired
     private SmsProperties smsProperties;
 
+    @Async
     public void sendSms(String phone, String code) {
         // 使用自己的 AppId 和 AppSecret
         ZhenziSmsClient client = new ZhenziSmsClient("https://sms_developer.zhenzikj.com",

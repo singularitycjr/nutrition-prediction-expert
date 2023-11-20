@@ -1,8 +1,7 @@
 package com.tongji.service.controller;
 
-import com.tongji.common.constants.OssConstants;
 import com.tongji.common.enums.AppHttpCodeEnum;
-import com.tongji.common.utils.AliOssUtil;
+import com.tongji.common.service.FileStorageService;
 import com.tongji.model.vo.ResponseResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -23,25 +21,34 @@ import java.util.UUID;
 public class CommonController {
 
     @Autowired
-    private AliOssUtil aliOssUtil;
+    private FileStorageService fileStorageService;
 
     @Operation(summary = "上传文件")
     @PostMapping("/upload")
     public ResponseResult upload(MultipartFile file){
         log.info("上传文件：" + file.getName());
-        try {
-            String originalFilename = file.getOriginalFilename();
-            assert originalFilename != null;
-            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            String objectName = UUID.randomUUID() + extension;
 
-            String filePath = this.aliOssUtil.upload(file.getBytes(), objectName, OssConstants.FOLDER);
-
-            return ResponseResult.okResult(filePath);
-        } catch (IOException e) {
-            log.info("上传失败：" + e.getMessage());
+        if(file == null || file.getSize() == 0){
+            return ResponseResult.errorResult(AppHttpCodeEnum.UPLOAD_FAILED);
         }
-        return ResponseResult.errorResult(AppHttpCodeEnum.UPLOAD_FAILED);
+
+        //2.上传图片到minIO中
+        String fileName = UUID.randomUUID().toString().replace("-", "");
+        //aa.jpg
+        String originalFilename = file.getOriginalFilename();
+        assert originalFilename != null;
+        String postfix = originalFilename.substring(originalFilename.lastIndexOf("."));
+        String fileId = null;
+        try {
+            fileId = fileStorageService.uploadImgFile("", fileName + postfix, file.getInputStream());
+            log.info("上传图片到MinIO中，fileId:{}",fileId);
+        } catch (Exception e) {
+            log.error("WmMaterialServiceImpl-上传文件失败 {}", e.getMessage());
+        }
+
+        //4.返回结果
+
+        return ResponseResult.okResult(fileId);
     }
 
 

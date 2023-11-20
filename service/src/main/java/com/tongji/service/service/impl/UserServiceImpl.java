@@ -8,7 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tongji.common.constants.CommonConstants;
 import com.tongji.common.enums.AppHttpCodeEnum;
-import com.tongji.common.utils.CacheService;
+import com.tongji.common.service.Impl.CacheService;
 import com.tongji.common.utils.SmsUtil;
 import com.tongji.model.dto.LoginDTO;
 import com.tongji.model.vo.ResponseResult;

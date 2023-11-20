@@ -21,6 +21,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/user/login")
                 .excludePathPatterns("/user/register")
+                .excludePathPatterns("/user/sendCode/**")
                 .excludePathPatterns("/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**");
     }
 
