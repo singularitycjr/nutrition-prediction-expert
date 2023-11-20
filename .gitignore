@@ -32,4 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 
-service/src/main/resources/application-dev.yaml
+service/food-service/src/main/resources/application-dev.yaml

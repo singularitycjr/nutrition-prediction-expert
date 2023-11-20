@@ -15,9 +15,10 @@
     <name>nutritional-estimation</name>
     <description>nutritional-estimation</description>
     <modules>
-        <module>service</module>
         <module>model</module>
         <module>common</module>
+        <module>gateway</module>
+        <module>service</module>
     </modules>
     <properties>
         <java.version>17</java.version>
@@ -47,6 +48,13 @@
         <zhenzisms.version>2.0.2</zhenzisms.version>
 
         <minio.version>8.5.2</minio.version>
+        <gateway.version>4.0.7</gateway.version>
+
+        <nacos.version>2022.0.0.0</nacos.version>
+        <nacos.config.version>2022.0.0.0</nacos.config.version>
+        <cloud.loadbalancer.version>4.0.4</cloud.loadbalancer.version>
+        <spring.cloud.version>2022.0.0</spring.cloud.version>
+        <com.alibaba.cloud>2022.0.0.0</com.alibaba.cloud>
     </properties>
     <dependencies>
         <dependency>
@@ -173,6 +181,48 @@
                 <groupId>io.minio</groupId>
                 <artifactId>minio</artifactId>
                 <version>${minio.version}</version>
+            </dependency>
+
+            <!--网关-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-gateway</artifactId>
+                <version>${gateway.version}</version>
+            </dependency>
+
+            <!-- nacos 客户端 -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${nacos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                <version>${nacos.config.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+                <version>${cloud.loadbalancer.version}</version>
+            </dependency>
+
+            <!-- spring cloud -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--spring cloud alibaba-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${com.alibaba.cloud}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
