@@ -1,4 +1,4 @@
-package com.tongji.service.controller;
+package com.tongji.user.controller;
 
 import com.tongji.common.enums.AppHttpCodeEnum;
 import com.tongji.common.service.FileStorageService;
