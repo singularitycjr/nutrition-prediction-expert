@@ -7,6 +7,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
+// 用不到这个文件了
+
 @Slf4j
 public class WebMvcConfiguration implements WebMvcConfigurer {
 

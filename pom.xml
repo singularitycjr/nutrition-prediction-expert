@@ -35,7 +35,7 @@
         <knife4j-openapi3.version>4.3.0</knife4j-openapi3.version>
         <hutool.version>5.8.21</hutool.version>
         <sa-token.version>1.35.0.RC</sa-token.version>
-
+        <sa-token.reactor.version>1.37.0</sa-token.reactor.version>
         <oss.sdk.version>3.15.1</oss.sdk.version>
         <jaxb.api.version>2.3.1</jaxb.api.version>
         <javax.activation.version>1.1.1</javax.activation.version>
@@ -62,7 +62,6 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-
     </dependencies>
 
     <dependencyManagement>
@@ -120,6 +119,13 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- Sa-Token 权限认证（Reactor响应式集成）, 在线文档：https://sa-token.cc -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-reactor-spring-boot3-starter</artifactId>
+                <version>${sa-token.reactor.version}</version>
             </dependency>
             <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
             <dependency>

@@ -8,10 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @MapperScan("com.tongji.service.mapper")
 @Slf4j
-public class ServiceApplication {
+public class FoodServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ServiceApplication.class,args);
+        SpringApplication.run(FoodServiceApplication.class,args);
         log.info("service启动成功");
         log.info("http://localhost:8021/doc.html");
     }
