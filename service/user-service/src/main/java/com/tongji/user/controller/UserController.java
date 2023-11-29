@@ -1,11 +1,11 @@
-package com.tongji.service.controller;
+package com.tongji.user.controller;
 
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.tongji.model.dto.LoginDTO;
-import com.tongji.model.vo.ResponseResult;
 import com.tongji.model.dto.UserDTO;
-import com.tongji.service.service.IUserService;
+import com.tongji.model.vo.ResponseResult;
+import com.tongji.user.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

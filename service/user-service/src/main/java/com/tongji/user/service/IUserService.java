@@ -1,10 +1,10 @@
-package com.tongji.service.service;
+package com.tongji.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tongji.model.dto.LoginDTO;
-import com.tongji.model.vo.ResponseResult;
 import com.tongji.model.dto.UserDTO;
 import com.tongji.model.pojo.User;
+import com.tongji.model.vo.ResponseResult;
 
 /**
  * <p>

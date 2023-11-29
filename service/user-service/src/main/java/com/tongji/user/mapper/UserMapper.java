@@ -1,4 +1,4 @@
-package com.tongji.service.mapper;
+package com.tongji.user.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

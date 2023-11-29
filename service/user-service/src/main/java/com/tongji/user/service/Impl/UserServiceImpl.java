@@ -1,4 +1,4 @@
-package com.tongji.service.service.impl;
+package com.tongji.user.service.Impl;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.StpUtil;
@@ -6,19 +6,19 @@ import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tongji.common.constants.CommonConstants;
 import com.tongji.common.enums.AppHttpCodeEnum;
 import com.tongji.common.service.Impl.CacheService;
 import com.tongji.common.utils.SmsUtil;
 import com.tongji.model.dto.LoginDTO;
-import com.tongji.model.vo.ResponseResult;
 import com.tongji.model.dto.UserDTO;
-import com.tongji.service.mapper.UserMapper;
-import com.tongji.service.service.IUserService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.tongji.model.pojo.User;
+import com.tongji.model.vo.ResponseResult;
+import com.tongji.user.mapper.UserMapper;
+import com.tongji.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.tongji.model.pojo.User;
 
 
 /**
