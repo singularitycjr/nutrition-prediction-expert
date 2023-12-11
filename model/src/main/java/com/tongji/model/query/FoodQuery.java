@@ -8,4 +8,5 @@ import lombok.EqualsAndHashCode;
 public class FoodQuery extends PageQuery {
     String name;
     String en;
+    Integer categoryId;
 }

@@ -17,6 +17,7 @@ import com.tongji.model.pojo.User;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.user.mapper.UserMapper;
 import com.tongji.user.service.IUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
  * @since 2023-10-18
  */
 @Service
+@Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Autowired
@@ -56,6 +58,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (!user.getPassword().equals(password)) {
             return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_PASSWORD_ERROR);
         }
+        log.info("登录成功 {}", user.getId());
         StpUtil.login(user.getId());
         return ResponseResult.okResult("登录成功");
     }

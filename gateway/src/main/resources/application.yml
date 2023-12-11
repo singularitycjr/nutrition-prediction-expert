@@ -1,5 +1,5 @@
 server:
-  port: 9521 # 网关端口
+  port: 8083 # 网关端口
 
 logging:
   level:
@@ -9,7 +9,7 @@ spring:
   profiles:
     active: dev
   main:
-    lazy-initialization: true  #默认false 关闭懒加载
+    lazy-initialization: false  #默认false 关闭懒加载
   application:
     name: app-gateway
   config:

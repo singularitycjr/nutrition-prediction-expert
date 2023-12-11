@@ -16,4 +16,6 @@ import com.tongji.model.vo.ResponseResult;
 public interface IFoodService extends IService<Food> {
 
     ResponseResult queryPage(FoodQuery foodQuery);
+
+    ResponseResult getByName(String name);
 }

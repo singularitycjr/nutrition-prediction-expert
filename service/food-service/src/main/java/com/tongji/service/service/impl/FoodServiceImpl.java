@@ -2,8 +2,10 @@ package com.tongji.service.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tongji.model.pojo.Food;
+import com.tongji.model.pojo.User;
 import com.tongji.model.query.FoodQuery;
 import com.tongji.model.vo.PageVO;
 import com.tongji.model.vo.ResponseResult;
@@ -11,6 +13,8 @@ import com.tongji.service.mapper.FoodMapper;
 import com.tongji.service.service.IFoodService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -56,5 +60,12 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements IF
         pageVO.setList(page.getRecords());
 
         return ResponseResult.okResult(pageVO);
+    }
+
+    @Override
+    public ResponseResult getByName(String name) {
+        List<Food> foods = this.list(Wrappers.<Food>lambdaQuery().like(StrUtil.isNotBlank(name), Food::getName, name));
+
+        return ResponseResult.okResult(foods);
     }
 }

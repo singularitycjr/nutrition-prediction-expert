@@ -44,4 +44,10 @@ public class FoodController {
         return this.foodService.queryPage(foodQuery);
     }
 
+    @GetMapping("/name/{name}")
+    @Operation(summary = "根据名称查询食物信息")
+    public ResponseResult getByName(@PathVariable("name") String name) {
+        log.info("分页查询食物信息: {}", name);
+        return this.foodService.getByName(name);
+    }
 }
