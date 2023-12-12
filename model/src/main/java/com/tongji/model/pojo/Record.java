@@ -12,7 +12,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author author
- * @since 2023-11-29
+ * @since 2023-12-12
  */
 @TableName("record")
 public class Record implements Serializable {
@@ -35,7 +35,15 @@ public class Record implements Serializable {
      */
     private LocalDateTime createTime;
 
+    /**
+     * 图片链接
+     */
     private String imgUrl;
+
+    /**
+     * 类型（早午晚加餐）
+     */
+    private String type;
 
     public Long getId() {
         return id;
@@ -65,14 +73,22 @@ public class Record implements Serializable {
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
     }
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     @Override
     public String toString() {
         return "Record{" +
-            "id=" + id +
-            ", userId=" + userId +
-            ", createTime=" + createTime +
-            ", imgUrl=" + imgUrl +
-        "}";
+                "id=" + id +
+                ", userId=" + userId +
+                ", createTime=" + createTime +
+                ", imgUrl=" + imgUrl +
+                ", type=" + type +
+                "}";
     }
 }

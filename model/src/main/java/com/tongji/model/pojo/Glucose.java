@@ -1,18 +1,19 @@
 package com.tongji.model.pojo;
 
+import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
+import java.time.LocalDateTime;
 import java.io.Serializable;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author author
- * @since 2023-11-29
+ * @since 2023-12-12
  */
 @TableName("glucose")
 public class Glucose implements Serializable {
@@ -24,7 +25,7 @@ public class Glucose implements Serializable {
 
     private Long userId;
 
-    private Double gluValue;
+    private BigDecimal gluValue;
 
     private LocalDateTime time;
 
@@ -42,11 +43,11 @@ public class Glucose implements Serializable {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
-    public Double getGluValue() {
+    public BigDecimal getGluValue() {
         return gluValue;
     }
 
-    public void setGluValue(Double gluValue) {
+    public void setGluValue(BigDecimal gluValue) {
         this.gluValue = gluValue;
     }
     public LocalDateTime getTime() {
@@ -60,10 +61,10 @@ public class Glucose implements Serializable {
     @Override
     public String toString() {
         return "Glucose{" +
-            "id=" + id +
-            ", userId=" + userId +
-            ", gluValue=" + gluValue +
-            ", time=" + time +
-        "}";
+                "id=" + id +
+                ", userId=" + userId +
+                ", gluValue=" + gluValue +
+                ", time=" + time +
+                "}";
     }
 }

@@ -1,5 +1,6 @@
 package com.tongji.model.pojo;
 
+import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -11,7 +12,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author author
- * @since 2023-11-29
+ * @since 2023-12-12
  */
 @TableName("record_detail")
 public class RecordDetail implements Serializable {
@@ -32,37 +33,37 @@ public class RecordDetail implements Serializable {
     /**
      * 食物id
      */
-    private String foodId;
+    private Long foodId;
 
     /**
      * 食物质量(g)
      */
-    private String foodMass;
+    private BigDecimal foodMass;
 
     /**
      * 碳水化合物质量(g)
      */
-    private String carbohydrateMass;
+    private BigDecimal carbohydrateMass;
 
     /**
      * 脂肪质量(g)
      */
-    private String fatMass;
+    private BigDecimal fatMass;
 
     /**
      * 蛋白质质量(g)
      */
-    private String proteinMass;
+    private BigDecimal proteinMass;
 
     /**
      * 纤维素质量(g)
      */
-    private String celluloseMass;
+    private BigDecimal celluloseMass;
 
     /**
      * 热量(kcal)
      */
-    private String calorieMass;
+    private BigDecimal calorieMass;
 
     public Long getId() {
         return id;
@@ -78,68 +79,68 @@ public class RecordDetail implements Serializable {
     public void setRecordId(Long recordId) {
         this.recordId = recordId;
     }
-    public String getFoodId() {
+    public Long getFoodId() {
         return foodId;
     }
 
-    public void setFoodId(String foodId) {
+    public void setFoodId(Long foodId) {
         this.foodId = foodId;
     }
-    public String getFoodMass() {
+    public BigDecimal getFoodMass() {
         return foodMass;
     }
 
-    public void setFoodMass(String foodMass) {
+    public void setFoodMass(BigDecimal foodMass) {
         this.foodMass = foodMass;
     }
-    public String getCarbohydrateMass() {
+    public BigDecimal getCarbohydrateMass() {
         return carbohydrateMass;
     }
 
-    public void setCarbohydrateMass(String carbohydrateMass) {
+    public void setCarbohydrateMass(BigDecimal carbohydrateMass) {
         this.carbohydrateMass = carbohydrateMass;
     }
-    public String getFatMass() {
+    public BigDecimal getFatMass() {
         return fatMass;
     }
 
-    public void setFatMass(String fatMass) {
+    public void setFatMass(BigDecimal fatMass) {
         this.fatMass = fatMass;
     }
-    public String getProteinMass() {
+    public BigDecimal getProteinMass() {
         return proteinMass;
     }
 
-    public void setProteinMass(String proteinMass) {
+    public void setProteinMass(BigDecimal proteinMass) {
         this.proteinMass = proteinMass;
     }
-    public String getCelluloseMass() {
+    public BigDecimal getCelluloseMass() {
         return celluloseMass;
     }
 
-    public void setCelluloseMass(String celluloseMass) {
+    public void setCelluloseMass(BigDecimal celluloseMass) {
         this.celluloseMass = celluloseMass;
     }
-    public String getCalorieMass() {
+    public BigDecimal getCalorieMass() {
         return calorieMass;
     }
 
-    public void setCalorieMass(String calorieMass) {
+    public void setCalorieMass(BigDecimal calorieMass) {
         this.calorieMass = calorieMass;
     }
 
     @Override
     public String toString() {
         return "RecordDetail{" +
-            "id=" + id +
-            ", recordId=" + recordId +
-            ", foodId=" + foodId +
-            ", foodMass=" + foodMass +
-            ", carbohydrateMass=" + carbohydrateMass +
-            ", fatMass=" + fatMass +
-            ", proteinMass=" + proteinMass +
-            ", celluloseMass=" + celluloseMass +
-            ", calorieMass=" + calorieMass +
-        "}";
+                "id=" + id +
+                ", recordId=" + recordId +
+                ", foodId=" + foodId +
+                ", foodMass=" + foodMass +
+                ", carbohydrateMass=" + carbohydrateMass +
+                ", fatMass=" + fatMass +
+                ", proteinMass=" + proteinMass +
+                ", celluloseMass=" + celluloseMass +
+                ", calorieMass=" + calorieMass +
+                "}";
     }
 }

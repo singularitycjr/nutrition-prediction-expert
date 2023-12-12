@@ -8,6 +8,7 @@
         <result column="user_id" property="userId" />
         <result column="create_time" property="createTime" />
         <result column="img_url" property="imgUrl" />
+        <result column="type" property="type" />
     </resultMap>
 
 </mapper>
