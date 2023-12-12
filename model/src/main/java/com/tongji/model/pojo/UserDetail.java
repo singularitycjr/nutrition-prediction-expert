@@ -7,11 +7,11 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author author
- * @since 2023-11-29
+ * @since 2023-12-12
  */
 @TableName("user_detail")
 public class UserDetail implements Serializable {
@@ -36,6 +36,11 @@ public class UserDetail implements Serializable {
      * kg
      */
     private Double weight;
+
+    /**
+     * 糖尿病类型（Ⅰ型糖尿病、Ⅱ型糖尿病、妊娠期糖尿病）
+     */
+    private String diabetesType;
 
     public Long getId() {
         return id;
@@ -79,16 +84,24 @@ public class UserDetail implements Serializable {
     public void setWeight(Double weight) {
         this.weight = weight;
     }
+    public String getDiabetesType() {
+        return diabetesType;
+    }
+
+    public void setDiabetesType(String diabetesType) {
+        this.diabetesType = diabetesType;
+    }
 
     @Override
     public String toString() {
         return "UserDetail{" +
-            "id=" + id +
-            ", userId=" + userId +
-            ", gender=" + gender +
-            ", age=" + age +
-            ", height=" + height +
-            ", weight=" + weight +
-        "}";
+                "id=" + id +
+                ", userId=" + userId +
+                ", gender=" + gender +
+                ", age=" + age +
+                ", height=" + height +
+                ", weight=" + weight +
+                ", diabetesType=" + diabetesType +
+                "}";
     }
 }

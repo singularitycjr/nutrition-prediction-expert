@@ -1,16 +1,22 @@
 import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.tongji.model.pojo.User;
+import com.tongji.user.UserServiceApplication;
+import com.tongji.user.mapper.UserMapper;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(classes = UserServiceApplication.class)
 public class aaffda {
 
+    @Autowired
+    private UserMapper userMapper;
     @Test
     public void test() {
-        System.out.println("Hello World!");
-        String password = "021106";
-        String salt = "FB1laK";
-        password = SaSecureUtil.md5(password + salt);
-        System.out.println(password);
-        StpUtil.login(111);
+        LambdaUpdateWrapper<User> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+        lambdaUpdateWrapper.eq(User::getId, 6).set(User::getName, "test");
+        this.userMapper.update(null, lambdaUpdateWrapper);
     }
 }
