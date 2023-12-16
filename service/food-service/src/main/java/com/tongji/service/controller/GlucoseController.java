@@ -30,8 +30,8 @@ public class GlucoseController {
     private IGlucoseService glucoseService;
 
     @Operation(summary = "获取血糖数据")
-    @PostMapping("/getGlucose")
-    public ResponseResult getGlucose(@RequestBody TimeRangeDTO timeRangeDTO){
+    @GetMapping("/getGlucose")
+    public ResponseResult getGlucose(TimeRangeDTO timeRangeDTO){
         log.info("获取血糖数据: {}", timeRangeDTO);
         return this.glucoseService.getGlucose(timeRangeDTO);
     }
