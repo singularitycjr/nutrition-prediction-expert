@@ -22,4 +22,9 @@ public class FoodCategoryServiceImpl extends ServiceImpl<FoodCategoryMapper, Foo
     public ResponseResult getAll() {
         return ResponseResult.okResult(this.baseMapper.getAll());
     }
+
+    @Override
+    public ResponseResult getById(Long id) {
+        return ResponseResult.okResult(this.baseMapper.selectById(id));
+    }
 }

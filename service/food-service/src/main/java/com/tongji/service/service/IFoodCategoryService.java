@@ -15,4 +15,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IFoodCategoryService extends IService<FoodCategory> {
 
     ResponseResult getAll();
+
+    ResponseResult getById(Long id);
 }
