@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,5 +52,39 @@ public class CommonController {
         return ResponseResult.okResult(fileId);
     }
 
+
+    @Operation(summary = "上传Mask图片")
+    @PostMapping("/uploadMask")
+    public ResponseResult uploadMask(MultipartFile file){
+
+        if(file == null || file.getSize() == 0){
+            return ResponseResult.errorResult(AppHttpCodeEnum.UPLOAD_FAILED);
+        }
+
+        //2.上传图片到minIO中
+        String fileName = UUID.randomUUID().toString().replace("-", "");
+        //aa.jpg
+        String originalFilename = file.getOriginalFilename();
+        log.info("originalFilename:{}",originalFilename);
+        assert originalFilename != null;
+        String postfix = originalFilename.substring(originalFilename.lastIndexOf("."));
+        String fileId = null;
+        try {
+            fileId = fileStorageService.uploadImgFile("", fileName + postfix, file.getInputStream());
+            log.info("上传图片到MinIO中，fileId:{}",fileId);
+        } catch (Exception e) {
+            log.error("WmMaterialServiceImpl-上传文件失败 {}", e.getMessage());
+        }
+
+        //4.返回结果
+
+        return ResponseResult.okResult(fileId);
+    }
+
+    @Operation(summary = "测试接口")
+    @GetMapping("/test")
+    public ResponseResult test() {
+        return ResponseResult.okResult("测试");
+    }
 
 }
