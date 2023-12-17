@@ -1,13 +1,8 @@
 package com.tongji.service.controller;
 
 
-import com.tongji.model.dto.GlucoseDTO;
-import com.tongji.model.dto.RecordAddDTO;
-import com.tongji.model.dto.RecordDTO;
-import com.tongji.model.dto.TimeRangeDTO;
-import com.tongji.model.pojo.Record;
+import com.tongji.model.dto.*;
 import com.tongji.model.vo.ResponseResult;
-import com.tongji.service.service.IGlucoseService;
 import com.tongji.service.service.IRecordService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -56,4 +51,15 @@ public class RecordController {
         return this.recordService.addRecord(recordAddDTO);
     }
 
+    @Operation(summary = "识别饮食信息")
+    @GetMapping("/recognize")
+    public ResponseResult recognize(RecognizeDTO recognizeDTO){
+        return this.recordService.recognize(recognizeDTO);
+    }
+
+    @Operation(summary = "营养评估")
+    @PostMapping("/nutrition")
+    public ResponseResult nutrition(@RequestBody FoodChosenDTO foodChosenDTO){
+        return this.recordService.nutrition(foodChosenDTO);
+    }
 }

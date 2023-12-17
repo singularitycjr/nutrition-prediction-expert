@@ -1,7 +1,9 @@
 package com.tongji.user.controller;
 
+import com.tongji.common.constants.CommonConstants;
 import com.tongji.common.enums.AppHttpCodeEnum;
 import com.tongji.common.service.FileStorageService;
+import com.tongji.common.service.Impl.CacheService;
 import com.tongji.model.vo.ResponseResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +25,9 @@ public class CommonController {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private CacheService cacheService;
 
     @Operation(summary = "上传文件")
     @PostMapping("/upload")
@@ -66,12 +71,26 @@ public class CommonController {
         //aa.jpg
         String originalFilename = file.getOriginalFilename();
         log.info("originalFilename:{}",originalFilename);
+
         assert originalFilename != null;
         String postfix = originalFilename.substring(originalFilename.lastIndexOf("."));
         String fileId = null;
         try {
             fileId = fileStorageService.uploadImgFile("", fileName + postfix, file.getInputStream());
             log.info("上传图片到MinIO中，fileId:{}",fileId);
+            String[] split = originalFilename.split("/");
+            String imgName = split[split.length - 1];
+            // 去掉后缀
+            imgName = imgName.substring(0, imgName.lastIndexOf("."));
+            imgName = imgName.substring(0, imgName.lastIndexOf("_"));
+            String userId = this.cacheService.get(CommonConstants.FOOD_IMG + imgName);
+            // 删掉这条记录
+            this.cacheService.delete(CommonConstants.FOOD_IMG + imgName);
+            // 把userId对应的mask图片存入缓存
+            this.cacheService.setEx(CommonConstants.USER_MASK_IMG + userId,
+                    fileId,
+                    CommonConstants.USER_IMG_TIMEOUT,
+                    CommonConstants.USER_IMG_TIMEOUT_TYPE);
         } catch (Exception e) {
             log.error("WmMaterialServiceImpl-上传文件失败 {}", e.getMessage());
         }

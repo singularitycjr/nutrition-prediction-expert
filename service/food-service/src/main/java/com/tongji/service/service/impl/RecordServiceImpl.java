@@ -2,17 +2,22 @@ package com.tongji.service.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.tongji.model.dto.RecordAddDTO;
-import com.tongji.model.dto.RecordDTO;
-import com.tongji.model.dto.TimeRangeDTO;
+import com.tongji.common.constants.CommonConstants;
+import com.tongji.common.service.Impl.CacheService;
+import com.tongji.model.dto.*;
+import com.tongji.model.json.FoodChoices;
+import com.tongji.model.json.LapDepthJSON;
 import com.tongji.model.pojo.Food;
 import com.tongji.model.pojo.Glucose;
 import com.tongji.model.pojo.Record;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.mapper.RecordMapper;
+import com.tongji.service.service.IAlgorithmService;
 import com.tongji.service.service.IRecordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +31,12 @@ import java.util.List;
  * @since 2023-11-29
  */
 @Service
+@Slf4j
 public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> implements IRecordService {
+
+    @Autowired
+    private IAlgorithmService algorithmService;
+
 
     @Override
     public ResponseResult getRecord(TimeRangeDTO timeRangeDTO) {
@@ -90,5 +100,22 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         record.setUserId(userId);
         this.save(record);
         return ResponseResult.okResult("添加成功");
+    }
+
+    @Override
+    public ResponseResult recognize(RecognizeDTO recognizeDTO) {
+        if (recognizeDTO.getUrl() == null || recognizeDTO.getNum() == null) {
+            return ResponseResult.errorResult(400, "url和num不能为空");
+        }
+        FoodChoices result = algorithmService.getPredictInfo(recognizeDTO);
+        log.info("识别结果: {}", result);
+        return ResponseResult.okResult(result);
+    }
+
+    @Override
+    public ResponseResult nutrition(FoodChosenDTO foodChosenDTO) {
+        LapDepthJSON lapDepthJSON = algorithmService.getNutritionInfo(foodChosenDTO);
+        log.info("营养评估结果: {}", lapDepthJSON);
+        return ResponseResult.okResult(lapDepthJSON);
     }
 }

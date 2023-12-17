@@ -1,8 +1,6 @@
 package com.tongji.service.service;
 
-import com.tongji.model.dto.RecordAddDTO;
-import com.tongji.model.dto.RecordDTO;
-import com.tongji.model.dto.TimeRangeDTO;
+import com.tongji.model.dto.*;
 import com.tongji.model.pojo.Record;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tongji.model.vo.ResponseResult;
@@ -28,4 +26,7 @@ public interface IRecordService extends IService<Record> {
     ResponseResult addRecord(RecordAddDTO recordAddDTO);
 
 
+    ResponseResult recognize(RecognizeDTO recognizeDTO);
+
+    ResponseResult nutrition(FoodChosenDTO foodChosenDTO);
 }
