@@ -2,13 +2,9 @@ package com.tongji.service.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.tongji.common.constants.CommonConstants;
-import com.tongji.common.service.Impl.CacheService;
 import com.tongji.model.dto.*;
 import com.tongji.model.json.FoodChoices;
 import com.tongji.model.json.LapDepthJSON;
-import com.tongji.model.pojo.Food;
-import com.tongji.model.pojo.Glucose;
 import com.tongji.model.pojo.Record;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.mapper.RecordMapper;

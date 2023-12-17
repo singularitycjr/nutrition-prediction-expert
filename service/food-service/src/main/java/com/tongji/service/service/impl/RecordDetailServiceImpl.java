@@ -4,7 +4,6 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tongji.model.dto.RecordDetailAddDTO;
 import com.tongji.model.dto.RecordDetailDTO;
-import com.tongji.model.pojo.Glucose;
 import com.tongji.model.pojo.Record;
 import com.tongji.model.pojo.RecordDetail;
 import com.tongji.model.vo.ResponseResult;

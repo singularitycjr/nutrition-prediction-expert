@@ -80,7 +80,7 @@ springdoc:
 #  endpoint: ${minio.endpoint}
 #  readPath: ${minio.readPath}
 
-algorithm:
-  host: http://100.80.163.197
-  create-mask-port: 8998
-  use-mask-port: 8997
+#algorithm:
+#  host: http://100.80.163.197
+#  create-mask-port: 8998
+#  use-mask-port: 8997
