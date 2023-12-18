@@ -31,6 +31,14 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
 
     @Override
     public FoodChoices getPredictInfo(RecognizeDTO recognizeDTO) {
+        if (!algorithmProperties.getEnableAlgorithm()) {
+            FoodChoices foodChoices = new FoodChoices();
+            FoodChoices.result result = new FoodChoices.result();
+            result.setFood(1);
+            result.setTop5(List.of("海参", "荞麦馒头", "鸡蛋", "鸡蛋", "鸡蛋"));
+            foodChoices.setResults(List.of(result));
+            return foodChoices;
+        }
         String url = recognizeDTO.getUrl();
         Integer num = recognizeDTO.getNum();
         long userId = StpUtil.getLoginIdAsLong();
@@ -51,31 +59,9 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
                 CommonConstants.USER_IMG_TIMEOUT,
                 CommonConstants.USER_IMG_TIMEOUT_TYPE);
 
-        if (!algorithmProperties.getEnableAlgorithm()) {
-            FoodChoices foodChoices = new FoodChoices();
-            FoodChoices.result result = new FoodChoices.result();
-            result.setFood(1);
-            result.setTop5(List.of("海参", "荞麦馒头", "鸡蛋", "鸡蛋", "鸡蛋"));
-            foodChoices.setResults(List.of(result));
-            return foodChoices;
-        }
-
-        JSONObject food1 = new JSONObject();
-        food1.put("num", 38);
-        food1.put("name", "海参");
-
-        JSONObject food2 = new JSONObject();
-        food2.put("num", 135);
-        food2.put("name", "荞麦馒头");
-
-        JSONObject food3 = new JSONObject();
-        food3.put("num", 203);
-        food3.put("name", "鸡蛋");
-
-        List<JSONObject> foods = List.of(food1, food2, food3);
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("foods", foods);
+        jsonObject.put("url", url);
         jsonObject.put("num", num);
 
         try {
@@ -84,11 +70,12 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
                     .append(":")
                     .append(algorithmProperties.getCreateMaskPort())
                     .append("/predict");
+            log.info("path: {}", path);
             String json = HttpClientUtil.doPostJson(path.toString(), jsonObject);
             log.info("json: {}", json);
-            LapDepthJSON lapDepthJSON = JSON.parseObject(json, LapDepthJSON.class);
-            log.info("lapDepthJSON: {}", lapDepthJSON);
-            return null;
+            FoodChoices foodChoices = JSON.parseObject(json, FoodChoices.class);
+            log.info("foodChoices: {}", foodChoices);
+            return foodChoices;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -96,6 +83,25 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
 
     @Override
     public LapDepthJSON getNutritionInfo(FoodChosenDTO foodChosenDTO) {
+
+        if (!algorithmProperties.getEnableAlgorithm()) {
+            LapDepthJSON.Nutrition nutrition = new LapDepthJSON.Nutrition();
+            nutrition.setKey("热量");
+            nutrition.setValue("100");
+
+            LapDepthJSON.Result result = new LapDepthJSON.Result();
+            result.setName("海参");
+            result.setNutrition(List.of(nutrition));
+
+            LapDepthJSON.Result result1 = new LapDepthJSON.Result();
+            result1.setName("清蒸肉丸");
+            result1.setNutrition(List.of(nutrition));
+
+            LapDepthJSON lapDepthJSON = new LapDepthJSON();
+            lapDepthJSON.setResults(List.of(result, result1));
+
+            return lapDepthJSON;
+        }
         // 找到对应的图片
         long userId = StpUtil.getLoginIdAsLong();
         String url = this.cacheService.get(CommonConstants.USER_IMG + userId);
@@ -112,21 +118,6 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         this.cacheService.delete(CommonConstants.USER_IMG + userId);
         this.cacheService.delete(CommonConstants.USER_MASK_IMG + userId);
 
-        if (!algorithmProperties.getEnableAlgorithm()) {
-            LapDepthJSON.Nutrition nutrition = new LapDepthJSON.Nutrition();
-            nutrition.setKey("热量");
-            nutrition.setValue("100");
-
-            LapDepthJSON.Result result = new LapDepthJSON.Result();
-            result.setName("海参");
-            result.setNutrition(List.of(nutrition));
-
-            LapDepthJSON lapDepthJSON = new LapDepthJSON();
-            lapDepthJSON.setResults(List.of(result));
-
-            return lapDepthJSON;
-        }
-
         List<JSONObject> foodsJSON = new ArrayList<>();
         List<FoodChosenDTO.food> foodList = foodChosenDTO.getFoods();
         for (FoodChosenDTO.food food : foodList) {
@@ -139,8 +130,6 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("foods", foodsJSON);
 
-
-        // TODO 找到正确的url
         jsonObject.put("img_url", url);
         jsonObject.put("mask_url", maskUrl);
 

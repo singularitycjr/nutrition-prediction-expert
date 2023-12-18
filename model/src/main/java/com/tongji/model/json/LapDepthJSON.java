@@ -15,6 +15,7 @@ public class LapDepthJSON {
 
     @Data
     public static class Result {
+        private Long id;
         private String name;
         private List<Nutrition> nutrition;
     }

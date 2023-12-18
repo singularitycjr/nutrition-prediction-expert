@@ -175,12 +175,14 @@ public class HttpClientUtil {
     public static String doPostJson(String url, JSONObject jsonObject) throws IOException {
         // 创建Httpclient对象
         CloseableHttpClient httpClient = HttpClients.createDefault();
+
         CloseableHttpResponse response = null;
         String resultString = "";
 
         try {
             // 创建Http Post请求
             HttpPost httpPost = new HttpPost(url);
+
 
             if (jsonObject != null) {
                 StringEntity entity = new StringEntity(jsonObject.toString(),"utf-8");
@@ -191,7 +193,11 @@ public class HttpClientUtil {
                 httpPost.setEntity(entity);
             }
 
-            httpPost.setConfig(builderRequestConfig());
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectTimeout(TIMEOUT_MSEC * 100)
+                    .setConnectionRequestTimeout(TIMEOUT_MSEC * 100)
+                    .setSocketTimeout(TIMEOUT_MSEC * 100).build();
+            httpPost.setConfig(requestConfig);
 
             // 执行http请求
             response = httpClient.execute(httpPost);

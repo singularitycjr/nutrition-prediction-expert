@@ -30,4 +30,5 @@ public interface IFoodService extends IService<Food> {
     ResponseResult addFood(FoodAddDTO foodAddDTO);
 
 //    ResponseResult getByName(String name);
+    Long getIdByName(String name);
 }

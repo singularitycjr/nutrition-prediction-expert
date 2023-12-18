@@ -154,4 +154,12 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements IF
 //
 //        return ResponseResult.okResult(foods);
 //    }
+    @Override
+    public Long getIdByName(String name) {
+        Food food = this.getOne(Wrappers.<Food>lambdaQuery().eq(Food::getName, name));
+        if (food == null) {
+            return null;
+        }
+        return food.getId();
+    }
 }

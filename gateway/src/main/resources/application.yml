@@ -1,5 +1,5 @@
 server:
-  port: 8083 # 网关端口
+  port: 8023 # 网关端口
 
 logging:
   level:

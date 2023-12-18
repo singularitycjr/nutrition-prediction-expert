@@ -9,6 +9,7 @@ import com.tongji.model.pojo.Record;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.mapper.RecordMapper;
 import com.tongji.service.service.IAlgorithmService;
+import com.tongji.service.service.IFoodService;
 import com.tongji.service.service.IRecordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,8 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
 
     @Autowired
     private IAlgorithmService algorithmService;
+    @Autowired
+    private IFoodService foodService;
 
 
     @Override
@@ -111,6 +114,13 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
     @Override
     public ResponseResult nutrition(FoodChosenDTO foodChosenDTO) {
         LapDepthJSON lapDepthJSON = algorithmService.getNutritionInfo(foodChosenDTO);
+        // 遍历lapDepthJSON中的result
+        for (LapDepthJSON.Result result : lapDepthJSON.getResults()) {
+            // 通过食物名字获取食物id
+            Long id = this.foodService.getIdByName(result.getName());
+            result.setId(id);
+        }
+        // Long id = this.foodService.getIdByName()
         log.info("营养评估结果: {}", lapDepthJSON);
         return ResponseResult.okResult(lapDepthJSON);
     }
