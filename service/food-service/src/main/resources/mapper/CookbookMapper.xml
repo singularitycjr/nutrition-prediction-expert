@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iot.publisher.mapper.CookbookMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.tongji.model.pojo.Cookbook">
+        <id column="id" property="id" />
+        <result column="location" property="location" />
+        <result column="season" property="season" />
+        <result column="energy" property="energy" />
+        <result column="protein_mass" property="proteinMass" />
+        <result column="protein_energy_ratio" property="proteinEnergyRatio" />
+        <result column="carbohydrate_mass" property="carbohydrateMass" />
+        <result column="carbohydrate_energy_ratio" property="carbohydrateEnergyRatio" />
+        <result column="fat_mass" property="fatMass" />
+        <result column="fat_energy_ratio" property="fatEnergyRatio" />
+        <result column="note" property="note" />
+    </resultMap>
+
+</mapper>
