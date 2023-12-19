@@ -6,10 +6,12 @@ import com.tongji.model.dto.*;
 import com.tongji.model.json.FoodChoices;
 import com.tongji.model.json.LapDepthJSON;
 import com.tongji.model.pojo.Record;
+import com.tongji.model.pojo.RecordDetail;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.mapper.RecordMapper;
 import com.tongji.service.service.IAlgorithmService;
 import com.tongji.service.service.IFoodService;
+import com.tongji.service.service.IRecordDetailService;
 import com.tongji.service.service.IRecordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +39,8 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
     private IAlgorithmService algorithmService;
     @Autowired
     private IFoodService foodService;
+    @Autowired
+    private IRecordDetailService recordDetailService;
 
 
     @Override
@@ -47,7 +53,14 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
                 Wrappers.<Record>lambdaQuery().eq(Record::getUserId, id).
                         between(Record::getCreateTime, timeRangeDTO.getStartTime(), timeRangeDTO.getEndTime())
         );
-        return ResponseResult.okResult(recordList);
+
+        List<RecordDTO> recordDTOList =new ArrayList<RecordDTO>();
+        for(Record record:recordList){
+            RecordDTO recordDTO = new RecordDTO();
+            BeanUtils.copyProperties(record,recordDTO);
+            recordDTOList.add(recordDTO);
+        }
+        return ResponseResult.okResult(recordDTOList);
     }
 
     @Override
@@ -98,7 +111,10 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         BeanUtils.copyProperties(recordAddDTO,record);
         record.setUserId(userId);
         this.save(record);
-        return ResponseResult.okResult("添加成功");
+
+        RecordAddReturnDTO recordAddReturnDTO=new RecordAddReturnDTO();
+        recordAddReturnDTO.setId(record.getId());
+        return ResponseResult.okResult(recordAddReturnDTO);
     }
 
     @Override
@@ -123,5 +139,35 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         // Long id = this.foodService.getIdByName()
         log.info("营养评估结果: {}", lapDepthJSON);
         return ResponseResult.okResult(lapDepthJSON);
+    }
+
+    @Override
+    public ResponseResult statistic(TimeRangeDTO timeRangeDTO) {
+        if (timeRangeDTO.getStartTime() == null || timeRangeDTO.getEndTime() == null) {
+            return ResponseResult.errorResult(400, "时间范围不能为空");
+        }
+        Long id = StpUtil.getLoginIdAsLong();
+        List<Record> recordList = this.list(
+                Wrappers.<Record>lambdaQuery().eq(Record::getUserId, id).
+                        between(Record::getCreateTime, timeRangeDTO.getStartTime(), timeRangeDTO.getEndTime())
+        );
+
+        RecordStatisticDTO recordStatisticDTO = new RecordStatisticDTO();
+
+        for (Record record : recordList) {
+            List<RecordDetail> recordDetailList = recordDetailService.list(
+                    Wrappers.<RecordDetail>lambdaQuery().eq(RecordDetail::getRecordId, record.getId())
+            );
+            for(RecordDetail recordDetail:recordDetailList){
+                recordStatisticDTO.setCalorieMass(recordStatisticDTO.getCalorieMass().add(recordDetail.getCalorieMass()!=null?recordDetail.getCalorieMass():new BigDecimal(0)));
+                recordStatisticDTO.setCarbohydrateMass(recordStatisticDTO.getCarbohydrateMass().add(recordDetail.getCarbohydrateMass()!=null?recordDetail.getCarbohydrateMass():new BigDecimal(0)));
+                recordStatisticDTO.setFatMass(recordStatisticDTO.getFatMass().add(recordDetail.getFatMass()!=null?recordDetail.getFatMass():new BigDecimal(0)));
+                recordStatisticDTO.setProteinMass(recordStatisticDTO.getProteinMass().add(recordDetail.getProteinMass()!=null?recordDetail.getProteinMass():new BigDecimal(0)));
+                recordStatisticDTO.setCelluloseMass(recordStatisticDTO.getCelluloseMass().add(recordDetail.getCelluloseMass()!=null?recordDetail.getCelluloseMass():new BigDecimal(0)));
+            }
+        }
+
+        return ResponseResult.okResult(recordStatisticDTO);
+
     }
 }

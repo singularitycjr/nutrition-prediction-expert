@@ -1,7 +1,9 @@
 package com.tongji.service.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.tongji.model.dto.CookbookDTO;
 import com.tongji.model.pojo.Cookbook;
+import com.tongji.model.vo.ResponseResult;
 
 /**
  * <p>
@@ -12,5 +14,5 @@ import com.tongji.model.pojo.Cookbook;
  * @since 2023-12-18
  */
 public interface ICookbookService extends IService<Cookbook> {
-
+    public ResponseResult getCookbook(CookbookDTO cookbookDTO);
 }
