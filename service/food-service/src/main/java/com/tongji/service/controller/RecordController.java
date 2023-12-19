@@ -29,7 +29,7 @@ public class RecordController {
     @Operation(summary = "获取饮食数据")
     @GetMapping("/getRecord")
     public ResponseResult getRecord(TimeRangeDTO timeRangeDTO){
-        log.info("获取血糖数据: {}", timeRangeDTO);
+        log.info("获取饮食数据: {}", timeRangeDTO);
         return this.recordService.getRecord(timeRangeDTO);
     }
 
@@ -61,5 +61,11 @@ public class RecordController {
     @PostMapping("/nutrition")
     public ResponseResult nutrition(@RequestBody FoodChosenDTO foodChosenDTO){
         return this.recordService.nutrition(foodChosenDTO);
+    }
+
+    @Operation(summary = "时段营养统计")
+    @GetMapping("/statistic")
+    public ResponseResult statistic(TimeRangeDTO timeRangeDTO){
+        return this.recordService.statistic(timeRangeDTO);
     }
 }

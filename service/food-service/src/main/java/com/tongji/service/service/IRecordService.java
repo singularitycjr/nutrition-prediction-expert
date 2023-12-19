@@ -29,4 +29,6 @@ public interface IRecordService extends IService<Record> {
     ResponseResult recognize(RecognizeDTO recognizeDTO);
 
     ResponseResult nutrition(FoodChosenDTO foodChosenDTO);
+
+    ResponseResult statistic(TimeRangeDTO timeRangeDTO);
 }

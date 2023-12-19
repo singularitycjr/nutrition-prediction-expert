@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tongji.service.service.IRecordService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.List;
 public class RecordDetailServiceImpl extends ServiceImpl<RecordDetailMapper, RecordDetail> implements IRecordDetailService {
 
     @Autowired
+    @Lazy
     private IRecordService recordService;
 
     @Override
@@ -73,7 +75,7 @@ public class RecordDetailServiceImpl extends ServiceImpl<RecordDetailMapper, Rec
         }
 
         List<RecordDetail> recordDetailList = this.list(
-                Wrappers.<RecordDetail>lambdaQuery().eq(RecordDetail::getId, record_id)
+                Wrappers.<RecordDetail>lambdaQuery().eq(RecordDetail::getRecordId, record_id)
         );
 
         if(recordDetailList == null) {
