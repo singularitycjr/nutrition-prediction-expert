@@ -12,5 +12,8 @@ public class AlgorithmProperties {
     private String createMaskPort;
     private String useMaskPort;
 
+    private String createMaskPath;
+    private String useMaskPath;
+
     private Boolean enableAlgorithm;
 }

@@ -36,7 +36,16 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             FoodChoices.result result = new FoodChoices.result();
             result.setFood(1);
             result.setTop5(List.of("海参", "荞麦馒头", "鸡蛋", "鸡蛋", "鸡蛋"));
-            foodChoices.setResults(List.of(result));
+
+            FoodChoices.result result1 = new FoodChoices.result();
+            result1.setFood(2);
+            result1.setTop5(List.of("清蒸肉丸", "清蒸肉丸", "清蒸肉丸", "清蒸肉丸", "清蒸肉丸"));
+
+            FoodChoices.result result2 = new FoodChoices.result();
+            result2.setFood(3);
+            result2.setTop5(List.of("水煮肉", "白菜", "清蒸肉丸", "清蒸肉丸", "清蒸肉丸"));
+
+            foodChoices.setResults(List.of(result, result1, result2));
             return foodChoices;
         }
         String url = recognizeDTO.getUrl();
@@ -66,13 +75,16 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
 
         try {
             StringBuilder path = new StringBuilder()
-                    .append(algorithmProperties.getHost())
-                    .append(":")
-                    .append(algorithmProperties.getCreateMaskPort())
-                    .append("/predict");
+                    .append(algorithmProperties.getHost());
+            if (algorithmProperties.getCreateMaskPort() != null) {
+                path.append(":")
+                    .append(algorithmProperties.getCreateMaskPort());
+            }
+            if (algorithmProperties.getCreateMaskPath() != null) {
+                path.append(algorithmProperties.getCreateMaskPath());
+            }
             log.info("path: {}", path);
             String json = HttpClientUtil.doPostJson(path.toString(), jsonObject);
-            log.info("json: {}", json);
             FoodChoices foodChoices = JSON.parseObject(json, FoodChoices.class);
             log.info("foodChoices: {}", foodChoices);
             return foodChoices;
@@ -112,8 +124,6 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         if (maskUrl == null) {
             throw new RuntimeException("请先上传Mask图片");
         }
-        log.info("url: {}", url);
-        log.info("maskUrl: {}", maskUrl);
         // 删除缓存
         this.cacheService.delete(CommonConstants.USER_IMG + userId);
         this.cacheService.delete(CommonConstants.USER_MASK_IMG + userId);
@@ -135,10 +145,19 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
 
         try {
             StringBuilder path = new StringBuilder()
-                    .append(algorithmProperties.getHost())
-                    .append(":")
-                    .append(algorithmProperties.getUseMaskPort())
-                    .append("/predict");
+                    .append(algorithmProperties.getHost());
+
+            if (algorithmProperties.getUseMaskPort() != null) {
+                path.append(":")
+                        .append(algorithmProperties.getUseMaskPort());
+            }
+            if (algorithmProperties.getUseMaskPath() != null) {
+                path.append(algorithmProperties.getUseMaskPath());
+            }
+            log.info("path: {}", path);
+                    //.append(":")
+                    //.append(algorithmProperties.getUseMaskPort())
+                    //.append("/predict");
             String json = HttpClientUtil.doPostJson(path.toString(), jsonObject);
             LapDepthJSON lapDepthJSON = JSON.parseObject(json, LapDepthJSON.class);
             log.info("lapDepthJSON: {}", lapDepthJSON);
