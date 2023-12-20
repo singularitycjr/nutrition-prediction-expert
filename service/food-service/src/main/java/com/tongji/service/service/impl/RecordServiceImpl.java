@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -158,16 +159,24 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             List<RecordDetail> recordDetailList = recordDetailService.list(
                     Wrappers.<RecordDetail>lambdaQuery().eq(RecordDetail::getRecordId, record.getId())
             );
-            for(RecordDetail recordDetail:recordDetailList){
-                recordStatisticDTO.setCalorieMass(recordStatisticDTO.getCalorieMass().add(recordDetail.getCalorieMass()!=null?recordDetail.getCalorieMass():new BigDecimal(0)));
-                recordStatisticDTO.setCarbohydrateMass(recordStatisticDTO.getCarbohydrateMass().add(recordDetail.getCarbohydrateMass()!=null?recordDetail.getCarbohydrateMass():new BigDecimal(0)));
-                recordStatisticDTO.setFatMass(recordStatisticDTO.getFatMass().add(recordDetail.getFatMass()!=null?recordDetail.getFatMass():new BigDecimal(0)));
-                recordStatisticDTO.setProteinMass(recordStatisticDTO.getProteinMass().add(recordDetail.getProteinMass()!=null?recordDetail.getProteinMass():new BigDecimal(0)));
-                recordStatisticDTO.setCelluloseMass(recordStatisticDTO.getCelluloseMass().add(recordDetail.getCelluloseMass()!=null?recordDetail.getCelluloseMass():new BigDecimal(0)));
+            for (RecordDetail recordDetail : recordDetailList) {
+                recordStatisticDTO.setCalorieMass(recordStatisticDTO.getCalorieMass().add(recordDetail.getCalorieMass() != null ? recordDetail.getCalorieMass() : new BigDecimal(0)));
+                recordStatisticDTO.setCarbohydrateMass(recordStatisticDTO.getCarbohydrateMass().add(recordDetail.getCarbohydrateMass() != null ? recordDetail.getCarbohydrateMass() : new BigDecimal(0)));
+                recordStatisticDTO.setFatMass(recordStatisticDTO.getFatMass().add(recordDetail.getFatMass() != null ? recordDetail.getFatMass() : new BigDecimal(0)));
+                recordStatisticDTO.setProteinMass(recordStatisticDTO.getProteinMass().add(recordDetail.getProteinMass() != null ? recordDetail.getProteinMass() : new BigDecimal(0)));
+                recordStatisticDTO.setCelluloseMass(recordStatisticDTO.getCelluloseMass().add(recordDetail.getCelluloseMass() != null ? recordDetail.getCelluloseMass() : new BigDecimal(0)));
+
+                if (Objects.equals(record.getType(), "早餐")) {
+                    recordStatisticDTO.setBreakfastCalorieMass(recordStatisticDTO.getBreakfastCalorieMass().add(recordDetail.getCalorieMass() != null ? recordDetail.getCalorieMass() : new BigDecimal(0)));
+                } else if (Objects.equals(record.getType(), "午餐")) {
+                    recordStatisticDTO.setLunchCalorieMass(recordStatisticDTO.getLunchCalorieMass().add(recordDetail.getCalorieMass() != null ? recordDetail.getCalorieMass() : new BigDecimal(0)));
+                } else if (Objects.equals(record.getType(), "晚餐")) {
+                    recordStatisticDTO.setDinnerCalorieMass(recordStatisticDTO.getDinnerCalorieMass().add(recordDetail.getCalorieMass() != null ? recordDetail.getCalorieMass() : new BigDecimal(0)));
+                } else if (Objects.equals(record.getType(), "加餐")) {
+                    recordStatisticDTO.setSnackCalorieMass(recordStatisticDTO.getSnackCalorieMass().add(recordDetail.getCalorieMass() != null ? recordDetail.getCalorieMass() : new BigDecimal(0)));
+                }
             }
         }
-
         return ResponseResult.okResult(recordStatisticDTO);
-
     }
 }

@@ -32,11 +32,20 @@ public class RecordStatisticDTO {
      */
     private BigDecimal calorieMass;
 
+    private BigDecimal breakfastCalorieMass;
+    private BigDecimal lunchCalorieMass;
+    private BigDecimal dinnerCalorieMass;
+    private BigDecimal snackCalorieMass;
+
     public RecordStatisticDTO() {
         carbohydrateMass= new BigDecimal(0);
         fatMass= new BigDecimal(0);
         proteinMass= new BigDecimal(0);
         celluloseMass= new BigDecimal(0);
         calorieMass= new BigDecimal(0);
+        breakfastCalorieMass= new BigDecimal(0);
+        lunchCalorieMass= new BigDecimal(0);
+        dinnerCalorieMass= new BigDecimal(0);
+        snackCalorieMass= new BigDecimal(0);
     }
 }
