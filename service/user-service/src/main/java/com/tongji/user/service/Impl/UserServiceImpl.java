@@ -14,6 +14,7 @@ import com.tongji.common.service.Impl.CacheService;
 import com.tongji.common.utils.SmsUtil;
 import com.tongji.model.dto.LoginDTO;
 import com.tongji.model.dto.UserDTO;
+import com.tongji.model.dto.UserDetailDTO;
 import com.tongji.model.pojo.User;
 import com.tongji.model.pojo.UserDetail;
 import com.tongji.model.vo.ResponseResult;
@@ -21,6 +22,7 @@ import com.tongji.user.mapper.UserDetailMapper;
 import com.tongji.user.mapper.UserMapper;
 import com.tongji.user.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +44,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Autowired
     private CacheService cacheService;
+
+    @Autowired
+    private UserDetailServiceImpl userDetailService;
 
     @Autowired
     private UserDetailMapper userDetailMapper;
@@ -257,7 +262,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public ResponseResult getDetail() {
         User user = this.getById(StpUtil.getLoginIdAsLong());
-        return ResponseResult.okResult(userDetailMapper.selectById(user.getId()));
+        UserDetail userDetail=userDetailService.getOne(
+                Wrappers.<UserDetail>lambdaQuery().eq(UserDetail::getUserId,user.getId())
+        );
+        UserDetailDTO userDetailDTO=new UserDetailDTO();
+
+        BeanUtils.copyProperties(user,userDetailDTO);
+        BeanUtils.copyProperties(userDetail,userDetailDTO);
+
+        return ResponseResult.okResult(userDetailDTO);
     }
 
     @Override
