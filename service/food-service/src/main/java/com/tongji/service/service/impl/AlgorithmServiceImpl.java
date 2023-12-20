@@ -34,16 +34,16 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         if (!algorithmProperties.getEnableAlgorithm()) {
             FoodChoices foodChoices = new FoodChoices();
             FoodChoices.result result = new FoodChoices.result();
-            result.setFood(1);
-            result.setTop5(List.of("海参", "荞麦馒头", "鸡蛋", "鸡蛋", "鸡蛋"));
+            result.setFood(38);
+            result.setTop5(List.of("海参", "紫菜包饭", "玉米棒", "青椒", "皮蛋"));
 
             FoodChoices.result result1 = new FoodChoices.result();
-            result1.setFood(2);
-            result1.setTop5(List.of("清蒸肉丸", "清蒸肉丸", "清蒸肉丸", "清蒸肉丸", "清蒸肉丸"));
+            result1.setFood(135);
+            result1.setTop5(List.of("荞麦馒头", "馒头", "芝麻糊", "菜包", "南瓜紫薯馒头"));
 
             FoodChoices.result result2 = new FoodChoices.result();
-            result2.setFood(3);
-            result2.setTop5(List.of("水煮肉", "白菜", "清蒸肉丸", "清蒸肉丸", "清蒸肉丸"));
+            result2.setFood(203);
+            result2.setTop5(List.of("鸡蛋", "牛奶", "双皮奶", "豆浆", "汤圆"));
 
             foodChoices.setResults(List.of(result, result1, result2));
             return foodChoices;
@@ -97,20 +97,47 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     public LapDepthJSON getNutritionInfo(FoodChosenDTO foodChosenDTO) {
 
         if (!algorithmProperties.getEnableAlgorithm()) {
-            LapDepthJSON.Nutrition nutrition = new LapDepthJSON.Nutrition();
-            nutrition.setKey("热量");
-            nutrition.setValue("100");
+            List<LapDepthJSON.Nutrition> nutrition1 = new ArrayList<>();
+            nutrition1.add(new LapDepthJSON.Nutrition("质量", "20.812"));
+            nutrition1.add(new LapDepthJSON.Nutrition("碳水化合物", "0.520"));
+            nutrition1.add(new LapDepthJSON.Nutrition("脂肪", "0.042"));
+            nutrition1.add(new LapDepthJSON.Nutrition("蛋白质", "3.434"));
+            nutrition1.add(new LapDepthJSON.Nutrition("纤维素", "0.000"));
+            nutrition1.add(new LapDepthJSON.Nutrition("热量", "16.234"));
 
-            LapDepthJSON.Result result = new LapDepthJSON.Result();
-            result.setName("海参");
-            result.setNutrition(List.of(nutrition));
+            List<LapDepthJSON.Nutrition> nutrition2 = new ArrayList<>();
+            nutrition2.add(new LapDepthJSON.Nutrition("质量", "133.440"));
+            nutrition2.add(new LapDepthJSON.Nutrition("碳水化合物", "60.895"));
+            nutrition2.add(new LapDepthJSON.Nutrition("脂肪", "2.311"));
+            nutrition2.add(new LapDepthJSON.Nutrition("蛋白质", "12.142"));
+            nutrition2.add(new LapDepthJSON.Nutrition("纤维素", "2.712"));
+            nutrition2.add(new LapDepthJSON.Nutrition("热量", "304.754"));
+
+            List<LapDepthJSON.Nutrition> nutrition3 = new ArrayList<>();
+            nutrition3.add(new LapDepthJSON.Nutrition("质量", "33.920"));
+            nutrition3.add(new LapDepthJSON.Nutrition("碳水化合物", "0.814"));
+            nutrition3.add(new LapDepthJSON.Nutrition("脂肪", "2.917"));
+            nutrition3.add(new LapDepthJSON.Nutrition("蛋白质", "4.444"));
+            nutrition3.add(new LapDepthJSON.Nutrition("纤维素", "0.000"));
+            nutrition3.add(new LapDepthJSON.Nutrition("热量", "471.492"));
+
 
             LapDepthJSON.Result result1 = new LapDepthJSON.Result();
-            result1.setName("清蒸肉丸");
-            result1.setNutrition(List.of(nutrition));
+            result1.setName("海参");
+            result1.setNutrition(nutrition1);
+
+            LapDepthJSON.Result result2 = new LapDepthJSON.Result();
+            result2.setName("荞麦馒头");
+            result2.setNutrition(nutrition2);
+
+            LapDepthJSON.Result result3 = new LapDepthJSON.Result();
+            result3.setName("鸡蛋");
+            result3.setNutrition(nutrition3);
+
+
 
             LapDepthJSON lapDepthJSON = new LapDepthJSON();
-            lapDepthJSON.setResults(List.of(result, result1));
+            lapDepthJSON.setResults(List.of(result1, result2, result3));
 
             return lapDepthJSON;
         }
