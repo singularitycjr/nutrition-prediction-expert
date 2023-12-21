@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.tongji.common.constants.CommonConstants;
 import com.tongji.common.service.Impl.CacheService;
 import com.tongji.common.utils.HttpClientUtil;
+import com.tongji.model.dto.AugorithmReturnDTO;
 import com.tongji.model.dto.FoodChosenDTO;
 import com.tongji.model.dto.RecognizeDTO;
 import com.tongji.model.json.FoodChoices;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -94,52 +96,45 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     }
 
     @Override
-    public LapDepthJSON getNutritionInfo(FoodChosenDTO foodChosenDTO) {
+    public List<AugorithmReturnDTO> getNutritionInfo(FoodChosenDTO foodChosenDTO) {
 
         if (!algorithmProperties.getEnableAlgorithm()) {
-            List<LapDepthJSON.Nutrition> nutrition1 = new ArrayList<>();
-            nutrition1.add(new LapDepthJSON.Nutrition("质量", "20.812"));
-            nutrition1.add(new LapDepthJSON.Nutrition("碳水化合物", "0.520"));
-            nutrition1.add(new LapDepthJSON.Nutrition("脂肪", "0.042"));
-            nutrition1.add(new LapDepthJSON.Nutrition("蛋白质", "3.434"));
-            nutrition1.add(new LapDepthJSON.Nutrition("纤维素", "0.000"));
-            nutrition1.add(new LapDepthJSON.Nutrition("热量", "16.234"));
+            List<AugorithmReturnDTO> augorithmReturnDTOList = new ArrayList<>();
 
-            List<LapDepthJSON.Nutrition> nutrition2 = new ArrayList<>();
-            nutrition2.add(new LapDepthJSON.Nutrition("质量", "133.440"));
-            nutrition2.add(new LapDepthJSON.Nutrition("碳水化合物", "60.895"));
-            nutrition2.add(new LapDepthJSON.Nutrition("脂肪", "2.311"));
-            nutrition2.add(new LapDepthJSON.Nutrition("蛋白质", "12.142"));
-            nutrition2.add(new LapDepthJSON.Nutrition("纤维素", "2.712"));
-            nutrition2.add(new LapDepthJSON.Nutrition("热量", "304.754"));
+            AugorithmReturnDTO augorithmReturnDTO1 = new AugorithmReturnDTO();
+//            augorithmReturnDTO1.setId(38L);
+            augorithmReturnDTO1.setName("海参");
+            augorithmReturnDTO1.setFoodMass(new BigDecimal("20.812"));
+            augorithmReturnDTO1.setCarbohydrateMass(new BigDecimal("0.520"));
+            augorithmReturnDTO1.setFatMass(new BigDecimal("0.042"));
+            augorithmReturnDTO1.setProteinMass(new BigDecimal("3.434"));
+            augorithmReturnDTO1.setCelluloseMass(new BigDecimal("0.000"));
+            augorithmReturnDTO1.setCalorieMass(new BigDecimal("16.234"));
+            augorithmReturnDTOList.add(augorithmReturnDTO1);
 
-            List<LapDepthJSON.Nutrition> nutrition3 = new ArrayList<>();
-            nutrition3.add(new LapDepthJSON.Nutrition("质量", "33.920"));
-            nutrition3.add(new LapDepthJSON.Nutrition("碳水化合物", "0.814"));
-            nutrition3.add(new LapDepthJSON.Nutrition("脂肪", "2.917"));
-            nutrition3.add(new LapDepthJSON.Nutrition("蛋白质", "4.444"));
-            nutrition3.add(new LapDepthJSON.Nutrition("纤维素", "0.000"));
-            nutrition3.add(new LapDepthJSON.Nutrition("热量", "471.492"));
-
-
-            LapDepthJSON.Result result1 = new LapDepthJSON.Result();
-            result1.setName("海参");
-            result1.setNutrition(nutrition1);
-
-            LapDepthJSON.Result result2 = new LapDepthJSON.Result();
-            result2.setName("荞麦馒头");
-            result2.setNutrition(nutrition2);
-
-            LapDepthJSON.Result result3 = new LapDepthJSON.Result();
-            result3.setName("鸡蛋");
-            result3.setNutrition(nutrition3);
+            AugorithmReturnDTO augorithmReturnDTO2 = new AugorithmReturnDTO();
+//            augorithmReturnDTO2.setId(135L);
+            augorithmReturnDTO2.setName("荞麦馒头");
+            augorithmReturnDTO2.setFoodMass(new BigDecimal("133.440"));
+            augorithmReturnDTO2.setCarbohydrateMass(new BigDecimal("60.895"));
+            augorithmReturnDTO2.setFatMass(new BigDecimal("2.311"));
+            augorithmReturnDTO2.setProteinMass(new BigDecimal("12.142"));
+            augorithmReturnDTO2.setCelluloseMass(new BigDecimal("2.712"));
+            augorithmReturnDTO2.setCalorieMass(new BigDecimal("304.754"));
+            augorithmReturnDTOList.add(augorithmReturnDTO2);
 
 
+            AugorithmReturnDTO augorithmReturnDTO3 = new AugorithmReturnDTO();
+            augorithmReturnDTO3.setName("鸡蛋");
+            augorithmReturnDTO3.setFoodMass(new BigDecimal("33.920"));
+            augorithmReturnDTO3.setCarbohydrateMass(new BigDecimal("0.814"));
+            augorithmReturnDTO3.setFatMass(new BigDecimal("2.917"));
+            augorithmReturnDTO3.setProteinMass(new BigDecimal("4.444"));
+            augorithmReturnDTO3.setCelluloseMass(new BigDecimal("0.000"));
+            augorithmReturnDTO3.setCalorieMass(new BigDecimal("471.492"));
+            augorithmReturnDTOList.add(augorithmReturnDTO3);
 
-            LapDepthJSON lapDepthJSON = new LapDepthJSON();
-            lapDepthJSON.setResults(List.of(result1, result2, result3));
-
-            return lapDepthJSON;
+            return augorithmReturnDTOList;
         }
         // 找到对应的图片
         long userId = StpUtil.getLoginIdAsLong();
@@ -170,7 +165,10 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         jsonObject.put("img_url", url);
         jsonObject.put("mask_url", maskUrl);
 
+
         try {
+            List<AugorithmReturnDTO> augorithmReturnDTOList = new ArrayList<>();
+
             StringBuilder path = new StringBuilder()
                     .append(algorithmProperties.getHost());
 
@@ -187,8 +185,35 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
                     //.append("/predict");
             String json = HttpClientUtil.doPostJson(path.toString(), jsonObject);
             LapDepthJSON lapDepthJSON = JSON.parseObject(json, LapDepthJSON.class);
-            log.info("lapDepthJSON: {}", lapDepthJSON);
-            return lapDepthJSON;
+
+
+            for(LapDepthJSON.Result result : lapDepthJSON.getResults()) {
+                AugorithmReturnDTO augorithmReturnDTO = new AugorithmReturnDTO();
+                augorithmReturnDTO.setName(result.getName());
+                augorithmReturnDTO.setId(result.getId());
+                for(LapDepthJSON.Nutrition nutrition : result.getNutrition()) {
+                    if(nutrition.getKey().equals("质量"))
+                        augorithmReturnDTO.setFoodMass(new BigDecimal(nutrition.getValue()));
+
+                    if(nutrition.getKey().equals("碳水化合物"))
+                        augorithmReturnDTO.setCarbohydrateMass(new BigDecimal(nutrition.getValue()));
+
+                    if(nutrition.getKey().equals("脂肪"))
+                        augorithmReturnDTO.setFatMass(new BigDecimal(nutrition.getValue()));
+
+                    if(nutrition.getKey().equals("蛋白质"))
+                        augorithmReturnDTO.setProteinMass(new BigDecimal(nutrition.getValue()));
+
+                    if(nutrition.getKey().equals("纤维素"))
+                        augorithmReturnDTO.setCelluloseMass(new BigDecimal(nutrition.getValue()));
+
+                    if(nutrition.getKey().equals("热量"))
+                        augorithmReturnDTO.setCalorieMass(new BigDecimal(nutrition.getValue()));
+                }
+                augorithmReturnDTOList.add(augorithmReturnDTO);
+            }
+//            log.info("lapDepthJSON: {}", lapDepthJSON);
+            return augorithmReturnDTOList;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

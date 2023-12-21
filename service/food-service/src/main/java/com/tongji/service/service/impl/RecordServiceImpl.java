@@ -130,16 +130,16 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
 
     @Override
     public ResponseResult nutrition(FoodChosenDTO foodChosenDTO) {
-        LapDepthJSON lapDepthJSON = algorithmService.getNutritionInfo(foodChosenDTO);
+        List<AugorithmReturnDTO> nutritionList = algorithmService.getNutritionInfo(foodChosenDTO);
         // 遍历lapDepthJSON中的result
-        for (LapDepthJSON.Result result : lapDepthJSON.getResults()) {
+        for (AugorithmReturnDTO dto : nutritionList) {
             // 通过食物名字获取食物id
-            Long id = this.foodService.getIdByName(result.getName());
-            result.setId(id);
+            Long id = this.foodService.getIdByName(dto.getName());
+            dto.setId(id);
         }
         // Long id = this.foodService.getIdByName()
-        log.info("营养评估结果: {}", lapDepthJSON);
-        return ResponseResult.okResult(lapDepthJSON);
+        log.info("营养评估结果: {}", nutritionList);
+        return ResponseResult.okResult(nutritionList);
     }
 
     @Override
