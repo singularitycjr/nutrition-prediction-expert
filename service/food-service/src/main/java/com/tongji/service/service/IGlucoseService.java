@@ -1,6 +1,7 @@
 package com.tongji.service.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.tongji.model.dto.GlucoseAddDTO;
 import com.tongji.model.dto.GlucoseDTO;
 import com.tongji.model.dto.TimeRangeDTO;
 import com.tongji.model.pojo.Glucose;
@@ -22,5 +23,5 @@ public interface IGlucoseService extends IService<Glucose> {
 
     ResponseResult updateGlucose(GlucoseDTO glucoseDTO);
 
-    ResponseResult addGlucose(GlucoseDTO glucoseDTO);
+    ResponseResult addGlucose(GlucoseAddDTO glucoseAddDTO);
 }

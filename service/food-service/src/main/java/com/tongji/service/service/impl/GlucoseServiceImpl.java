@@ -2,6 +2,7 @@ package com.tongji.service.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.tongji.model.dto.GlucoseAddDTO;
 import com.tongji.model.dto.GlucoseDTO;
 import com.tongji.model.dto.TimeRangeDTO;
 import com.tongji.model.pojo.Glucose;
@@ -75,16 +76,16 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
     }
 
     @Override
-    public ResponseResult addGlucose(GlucoseDTO glucoseDTO) {
-        if (glucoseDTO.getGluValue() == null || glucoseDTO.getTime() == null) {
+    public ResponseResult addGlucose(GlucoseAddDTO glucoseAddDTO) {
+        if (glucoseAddDTO.getGluValue() == null || glucoseAddDTO.getTime() == null) {
             return ResponseResult.errorResult(400, "血糖值和时间不能为空");
         }
         Long userId = StpUtil.getLoginIdAsLong();
         Glucose glucose = new Glucose();
         glucose.setId(null);
         glucose.setUserId(userId);
-        glucose.setGluValue(glucoseDTO.getGluValue());
-        glucose.setTime(glucoseDTO.getTime());
+        glucose.setGluValue(glucoseAddDTO.getGluValue());
+        glucose.setTime(glucoseAddDTO.getTime());
         this.save(glucose);
         return ResponseResult.okResult("添加成功");
     }

@@ -1,6 +1,7 @@
 package com.tongji.service.controller;
 
 
+import com.tongji.model.dto.GlucoseAddDTO;
 import com.tongji.model.dto.GlucoseDTO;
 import com.tongji.model.dto.TimeRangeDTO;
 import com.tongji.model.vo.ResponseResult;
@@ -50,7 +51,7 @@ public class GlucoseController {
 
     @Operation(summary = "添加血糖数据")
     @PostMapping("/addGlucose")
-    public ResponseResult addGlucose(@RequestBody GlucoseDTO glucoseDTO){
-        return this.glucoseService.addGlucose(glucoseDTO);
+    public ResponseResult addGlucose(@RequestBody GlucoseAddDTO glucoseAddDTO){
+        return this.glucoseService.addGlucose(glucoseAddDTO);
     }
 }

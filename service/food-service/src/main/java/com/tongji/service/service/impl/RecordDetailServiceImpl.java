@@ -4,10 +4,13 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tongji.model.dto.RecordDetailAddDTO;
 import com.tongji.model.dto.RecordDetailDTO;
+import com.tongji.model.dto.RecordDetailReturnDTO;
 import com.tongji.model.pojo.Record;
 import com.tongji.model.pojo.RecordDetail;
 import com.tongji.model.vo.ResponseResult;
+import com.tongji.service.mapper.FoodMapper;
 import com.tongji.service.mapper.RecordDetailMapper;
+import com.tongji.service.service.IFoodService;
 import com.tongji.service.service.IRecordDetailService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tongji.service.service.IRecordService;
@@ -16,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +36,9 @@ public class RecordDetailServiceImpl extends ServiceImpl<RecordDetailMapper, Rec
     @Autowired
     @Lazy
     private IRecordService recordService;
+
+    @Autowired
+    private FoodMapper foodMapper;
 
     @Override
     public ResponseResult getById(Long id) {
@@ -82,7 +89,16 @@ public class RecordDetailServiceImpl extends ServiceImpl<RecordDetailMapper, Rec
             return ResponseResult.errorResult(400, "该饮食详细数据不存在");
         }
 
-        return ResponseResult.okResult(recordDetailList);
+        List<RecordDetailReturnDTO> recordDetailReturnDTOList = new ArrayList<>();
+        for(RecordDetail recordDetail : recordDetailList) {
+            RecordDetailReturnDTO recordDetailReturnDTO = new RecordDetailReturnDTO();
+            BeanUtils.copyProperties(recordDetail, recordDetailReturnDTO);
+            String foodName = foodMapper.selectById(recordDetail.getFoodId()).getName();
+            recordDetailReturnDTO.setFoodName(foodName);
+            recordDetailReturnDTOList.add(recordDetailReturnDTO);
+        }
+
+        return ResponseResult.okResult(recordDetailReturnDTOList);
     }
 
     @Override

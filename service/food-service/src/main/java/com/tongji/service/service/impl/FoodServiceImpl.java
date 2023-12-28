@@ -37,6 +37,7 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements IF
 //        LambdaQueryChainWrapper<Food> queryWrapper = lambdaQuery();
         Integer pageNo = foodQuery.getPageNo();
         Integer pageSize = foodQuery.getPageSize();
+        Long userId = StpUtil.getLoginIdAsLong();
         if (pageNo == null || pageNo < 1) {
             pageNo = 1;
         }
@@ -55,10 +56,12 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements IF
         Page<Food> page = new Page<>(pageNo, pageSize);
         page.addOrder(new OrderItem(orderBy, isAsc));
 
+
         page = lambdaQuery()
                 .like(StrUtil.isNotBlank(foodQuery.getName()), Food::getName, foodQuery.getName())
                 .like(StrUtil.isNotBlank(foodQuery.getEn()), Food::getEn, foodQuery.getEn())
                 .eq(ObjectUtil.isAllNotEmpty(foodQuery.getCategoryId()), Food::getCategory, foodQuery.getCategoryId())
+                .and(q -> q.isNull(Food::getUserId).or().eq(Food::getUserId, userId))
                 .page(page);
 
         PageVO<Food> pageVO = new PageVO<>();

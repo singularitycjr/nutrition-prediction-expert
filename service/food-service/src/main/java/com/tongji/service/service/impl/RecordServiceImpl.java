@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -61,6 +62,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             BeanUtils.copyProperties(record,recordDTO);
             recordDTOList.add(recordDTO);
         }
+        recordDTOList.sort(Comparator.comparing(RecordDTO::getCreateTime));
         return ResponseResult.okResult(recordDTOList);
     }
 
