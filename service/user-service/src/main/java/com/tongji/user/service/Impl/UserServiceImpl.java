@@ -274,7 +274,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public ResponseResult updateDetail(UserDetail userDetail) {
+    public ResponseResult updateDetail(UserDetailDTO userDetailDTO) {
         Long id = StpUtil.getLoginIdAsLong();
         // 找到这条信息
         UserDetail userDetailFound = userDetailMapper.selectOne(Wrappers.<UserDetail>lambdaQuery().eq(UserDetail::getUserId,
@@ -282,8 +282,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (userDetailFound == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "用户信息不存在");
         }
+        UserDetail userDetail = new UserDetail();
         userDetail.setId(userDetailFound.getId());
         userDetail.setUserId(id);
+        BeanUtils.copyProperties(userDetailDTO, userDetail);
         if (userDetail.getAge() == null) {
             userDetail.setAge(0);
         }
@@ -294,10 +296,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userDetail.setWeight(0.0);
         }
         if (userDetail.getGender() == null) {
-            userDetail.setGender("未知");
+            userDetail.setGender(null);
         }
         if (userDetail.getDiabetesType() == null) {
-            userDetail.setDiabetesType("未知");
+            userDetail.setDiabetesType(null);
         }
         log.info("修改用户信息 {}", userDetail);
         userDetailMapper.updateById(userDetail);

@@ -4,6 +4,7 @@ package com.tongji.user.controller;
 import cn.dev33.satoken.stp.StpUtil;
 import com.tongji.model.dto.LoginDTO;
 import com.tongji.model.dto.UserDTO;
+import com.tongji.model.dto.UserDetailDTO;
 import com.tongji.model.pojo.UserDetail;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.user.service.IUserService;
@@ -31,7 +32,7 @@ public class UserController {
     @Operation(summary = "获取用户信息")
     public ResponseResult getUser(){
         //return userService.getById(1).toString();
-        return ResponseResult.okResult(userService.getById(1));
+        return ResponseResult.okResult(userService.getById(  StpUtil.getLoginIdAsLong() ));
     }
 
     @PostMapping("/login")
@@ -91,7 +92,7 @@ public class UserController {
 
     @Operation(summary = "修改用户细节信息(只能修改自己的)")
     @PutMapping("/updateDetail")
-    public ResponseResult updateDetail(@RequestBody UserDetail userDetail){
-        return userService.updateDetail(userDetail);
+    public ResponseResult updateDetail(@RequestBody UserDetailDTO userDetailDTO){
+        return userService.updateDetail(userDetailDTO);
     }
 }
