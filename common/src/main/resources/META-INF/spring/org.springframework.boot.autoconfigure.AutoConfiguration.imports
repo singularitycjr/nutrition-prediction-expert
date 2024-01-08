@@ -1,7 +1,8 @@
 
 
 #com.tongji.common.interceptor.TokenInterceptor
-#com.tongji.common.config.WebMvcConfiguration
+com.tongji.common.interceptor.AuthorInterceptor
+com.tongji.common.config.WebMvcConfiguration
 
 com.tongji.common.properties.SmsProperties
 com.tongji.common.utils.SmsUtil

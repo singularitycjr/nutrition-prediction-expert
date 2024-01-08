@@ -1,5 +1,6 @@
 package com.tongji.common.config;
 
+import com.tongji.common.interceptor.AuthorInterceptor;
 import com.tongji.common.interceptor.TokenInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +13,22 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Slf4j
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
+    //@Autowired
+    //private TokenInterceptor tokenInterceptor;
+
     @Autowired
-    private TokenInterceptor tokenInterceptor;
+    private AuthorInterceptor authorInterceptor;
 
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         log.info("开始注册自定义拦截器...");
-        registry.addInterceptor(this.tokenInterceptor)
+        registry.addInterceptor(this.authorInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/login")
-                .excludePathPatterns("/user/register")
-                .excludePathPatterns("/user/sendCode/**")
+                .excludePathPatterns("/doc.html")
+                //.excludePathPatterns("/user/login")
+                //.excludePathPatterns("/user/register")
+                //.excludePathPatterns("/user/sendCode/**")
                 .excludePathPatterns("/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**");
     }
 
