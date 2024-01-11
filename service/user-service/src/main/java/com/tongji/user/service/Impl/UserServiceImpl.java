@@ -112,6 +112,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         } catch (Exception e) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "用户名已存在");
         }
+
+        UserDetail userDetail = new UserDetail();
+        userDetail.setUserId(user.getId());
+        userDetailService.save(userDetail);
+
         return ResponseResult.okResult("注册成功");
     }
 
