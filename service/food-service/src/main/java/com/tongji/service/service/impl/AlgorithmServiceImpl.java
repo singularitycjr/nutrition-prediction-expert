@@ -54,9 +54,9 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         Integer num = recognizeDTO.getNum();
         long userId = StpUtil.getLoginIdAsLong();
         String key = CommonConstants.USER_IMG + userId;
-        if (cacheService.get(key) != null) {
-            throw new RuntimeException("请勿重复识别");
-        }
+        //if (cacheService.get(key) != null) {
+        //    throw new RuntimeException("请勿重复识别");
+        //}
         this.cacheService.setEx(key, url, CommonConstants.USER_IMG_TIMEOUT,
                 CommonConstants.USER_IMG_TIMEOUT_TYPE);
         // 从url中获取到最后一段作为图片名
