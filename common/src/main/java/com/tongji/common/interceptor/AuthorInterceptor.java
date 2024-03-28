@@ -12,11 +12,11 @@ public class AuthorInterceptor implements HandlerInterceptor {
         // 获取拦截到的路由信息
         // 获取请求头中的参数
 
-        String key = request.getHeader("gateway_key");
-        log.info("当前拦截到的key是：{}", key);
-        if (!"r8t41n2i5ifsd1g3".equals(key)) {
-            throw new RuntimeException("非法请求");
-        }
+        //String key = request.getHeader("gateway_key");
+        //log.info("当前拦截到的key是：{}", key);
+        //if (!"r8t41n2i5ifsd1g3".equals(key)) {
+        //    throw new RuntimeException("非法请求");
+        //}
         return true;
     }
 }
