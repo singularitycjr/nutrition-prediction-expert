@@ -51,21 +51,33 @@ public class RecordController {
         return this.recordService.addRecord(recordAddDTO);
     }
 
-    @Operation(summary = "识别饮食信息")
-    @GetMapping("/recognize")
-    public ResponseResult recognize(RecognizeDTO recognizeDTO){
-        return this.recordService.recognize(recognizeDTO);
-    }
-
-    @Operation(summary = "营养评估")
-    @PostMapping("/nutrition")
-    public ResponseResult nutrition(@RequestBody FoodChosenDTO foodChosenDTO){
-        return this.recordService.nutrition(foodChosenDTO);
-    }
+    //@Operation(summary = "识别饮食信息")
+    //@GetMapping("/recognize")
+    //public ResponseResult recognize(RecognizeDTO recognizeDTO){
+    //    return this.recordService.recognize(recognizeDTO);
+    //}
+    //
+    //@Operation(summary = "营养评估")
+    //@PostMapping("/nutrition")
+    //public ResponseResult nutrition(@RequestBody FoodChosenDTO foodChosenDTO){
+    //    return this.recordService.nutrition(foodChosenDTO);
+    //}
 
     @Operation(summary = "时段营养统计")
     @GetMapping("/statistic")
     public ResponseResult statistic(TimeRangeDTO timeRangeDTO){
         return this.recordService.statistic(timeRangeDTO);
+    }
+
+    @Operation(summary = "调用GO后端SegRec接口")
+    @PostMapping("/segrec")
+    public ResponseResult segrec(@RequestBody SegRecDTO segRecDTO){
+        return this.recordService.segrec(segRecDTO);
+    }
+
+    @Operation(summary = "调用GO后端Nutrition接口")
+    @PostMapping("/nutrition")
+    public ResponseResult nutrition(@RequestBody NutritionDTO nutritionDTO){
+        return this.recordService.nutrition(nutritionDTO);
     }
 }

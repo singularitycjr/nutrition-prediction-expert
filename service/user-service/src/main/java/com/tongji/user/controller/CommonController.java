@@ -1,20 +1,23 @@
 package com.tongji.user.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.tongji.common.constants.CommonConstants;
 import com.tongji.common.enums.AppHttpCodeEnum;
 import com.tongji.common.service.FileStorageService;
 import com.tongji.common.service.Impl.CacheService;
+import com.tongji.model.vo.GoBankUploadVO;
 import com.tongji.model.vo.ResponseResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -101,9 +104,35 @@ public class CommonController {
     }
 
     @Operation(summary = "测试接口")
-    @GetMapping("/test")
+    @GetMapping("/ping")
     public ResponseResult test() {
-        return ResponseResult.okResult("测试");
+        return ResponseResult.okResult("pong");
     }
 
+    @Operation(summary = "上传文件到go后端")
+    @PostMapping("/uploadToGo")
+    public ResponseResult uploadToGo(@RequestBody byte[] body, @RequestHeader HttpHeaders headers){
+        // 获取请求头中的 content-type
+        String contentType = Objects.requireNonNull(headers.getContentType()).toString();
+
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "https://ericwvi.site/bgmp/api/files/upload?Name=avatar";
+
+        // 为restTemplate添加请求头
+        /* 请求头 */
+        HttpHeaders header = new HttpHeaders();
+
+        header.add("x-api-key", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Nn0.0C-pklGl8S9T6aiJgxZAudKW3x2gbisxKUaxiRj2WbA");
+        header.add("Content-Type", contentType);
+        HttpEntity<byte[]> httpEntity = new HttpEntity<>(body, header);
+
+        String res = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
+
+        GoBankUploadVO goBankEndVO = JSON.parseObject(res, GoBankUploadVO.class);
+
+        if (goBankEndVO == null || goBankEndVO.getCode() == null || goBankEndVO.getCode() != 200) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.UPLOAD_FAILED);
+        }
+        return ResponseResult.okResult(goBankEndVO.getMessage());
+    }
 }

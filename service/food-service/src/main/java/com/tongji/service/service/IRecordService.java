@@ -31,4 +31,7 @@ public interface IRecordService extends IService<Record> {
     ResponseResult nutrition(FoodChosenDTO foodChosenDTO);
 
     ResponseResult statistic(TimeRangeDTO timeRangeDTO);
+
+    ResponseResult segrec(SegRecDTO segRecDTO);
+    ResponseResult nutrition(NutritionDTO nutritionDTO);
 }

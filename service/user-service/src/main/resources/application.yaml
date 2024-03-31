@@ -10,9 +10,9 @@ spring:
     name: user-service
   cloud:
     nacos:
-      username: ${nacos.username}
-      password: ${nacos.password}
-      server-addr: ${nacos.server-addr}
+      username: nacos
+      password: nacos
+      server-addr: 212.64.29.100:8848
   config:
     import:
       - optional:nacos:user-service.yaml # 导入nacos中的配置文件

@@ -1,12 +1,15 @@
 package com.tongji.service.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.tongji.common.enums.AppHttpCodeEnum;
 import com.tongji.model.dto.*;
 import com.tongji.model.json.FoodChoices;
-import com.tongji.model.json.LapDepthJSON;
 import com.tongji.model.pojo.Record;
 import com.tongji.model.pojo.RecordDetail;
+import com.tongji.model.vo.GoBankNutritionVO;
+import com.tongji.model.vo.GoBankSegRecVO;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.mapper.RecordMapper;
 import com.tongji.service.service.IAlgorithmService;
@@ -17,7 +20,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -180,5 +186,48 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             }
         }
         return ResponseResult.okResult(recordStatisticDTO);
+    }
+
+    @Override
+    public ResponseResult segrec(SegRecDTO segRecDTO) {
+
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "https://ericwvi.site/bgmp/api/diet?Action=SegRec";
+
+        // 为restTemplate添加请求头
+        /* 请求头 */
+        HttpHeaders header = new HttpHeaders();
+
+        header.add("x-api-key", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Nn0.0C-pklGl8S9T6aiJgxZAudKW3x2gbisxKUaxiRj2WbA");
+
+        HttpEntity<SegRecDTO> httpEntity = new HttpEntity<>(segRecDTO, header);
+
+        String res = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
+        GoBankSegRecVO goBankSegRecVO = JSON.parseObject(res, GoBankSegRecVO.class);
+        if (goBankSegRecVO == null || goBankSegRecVO.getCode() == null || goBankSegRecVO.getCode() != 200) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.SERVER_ERROR);
+        }
+        return ResponseResult.okResult(goBankSegRecVO);
+    }
+    @Override
+    public ResponseResult nutrition(NutritionDTO nutritionDTO) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "https://ericwvi.site/bgmp/api/diet?Action=Nutrition";
+
+        // 为restTemplate添加请求头
+        /* 请求头 */
+        HttpHeaders header = new HttpHeaders();
+
+        header.add("x-api-key", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Nn0.0C-pklGl8S9T6aiJgxZAudKW3x2gbisxKUaxiRj2WbA");
+
+        HttpEntity<NutritionDTO> httpEntity = new HttpEntity<>(nutritionDTO, header);
+
+        String res = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
+
+        GoBankNutritionVO goBankSegRecVO = JSON.parseObject(res, GoBankNutritionVO.class);
+        if (goBankSegRecVO == null || goBankSegRecVO.getCode() == null || goBankSegRecVO.getCode() != 200) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.SERVER_ERROR);
+        }
+        return ResponseResult.okResult(goBankSegRecVO);
     }
 }
