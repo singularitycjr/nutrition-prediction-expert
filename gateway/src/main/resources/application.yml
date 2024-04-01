@@ -17,9 +17,9 @@ spring:
       - optional:nacos:app-gateway.yaml # 导入nacos中的配置文件
   cloud:
     nacos:
-      username: ${nacos.username}
-      password: ${nacos.password}
-      server-addr: ${nacos.server-addr}
+      username: nacos
+      password: nacos
+      server-addr: 212.64.29.100:8848
     gateway:
       routes: # 网关路由配置
         - id: food

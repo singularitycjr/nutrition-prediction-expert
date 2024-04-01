@@ -13,6 +13,9 @@ spring:
       username: nacos
       password: nacos
       server-addr: 212.64.29.100:8848
+      discovery:
+        ip: 47.100.190.116
+        port: 8020
   config:
     import:
       - optional:nacos:user-service.yaml # 导入nacos中的配置文件
