@@ -228,6 +228,6 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         if (goBankSegRecVO == null || goBankSegRecVO.getCode() == null || goBankSegRecVO.getCode() != 200) {
             return ResponseResult.errorResult(AppHttpCodeEnum.SERVER_ERROR);
         }
-        return ResponseResult.okResult(goBankSegRecVO);
+        return ResponseResult.okResult(goBankSegRecVO.format());
     }
 }
