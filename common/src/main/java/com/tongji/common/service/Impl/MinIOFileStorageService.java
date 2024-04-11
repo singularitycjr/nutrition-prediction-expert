@@ -3,6 +3,7 @@ package com.tongji.common.service.Impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.tongji.common.config.MinIOConfig;
+import com.tongji.common.enums.AppHttpCodeEnum;
 import com.tongji.common.properties.MinIOConfigProperties;
 import com.tongji.common.service.FileStorageService;
 import io.minio.GetObjectArgs;
@@ -13,12 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 @Slf4j
 @EnableConfigurationProperties(MinIOConfigProperties.class)
@@ -54,6 +57,49 @@ public class MinIOFileStorageService implements FileStorageService {
         stringBuilder.append(filename);
         return stringBuilder.toString();
     }
+    /**
+     *  上传xlsx表格文件
+     * @param prefix  文件前缀
+     * @param filename  文件名
+     * @param inputStream 文件流
+     * @return  文件全路径
+     */
+    public String uploadFileForAllType(String prefix, String filename,InputStream inputStream,String contentType) {
+        String filePath = builderFilePath(prefix, filename);
+        try {
+            PutObjectArgs putObjectArgs = PutObjectArgs.builder()
+                    .object(filePath)
+                    .contentType(contentType)
+                    .bucket(minIOConfigProperties.getBucket()).stream(inputStream,inputStream.available(),-1)
+                    .build();
+            minioClient.putObject(putObjectArgs);
+            return minIOConfigProperties.getReadPath() + separator + minIOConfigProperties.getBucket() +
+                    separator +
+                    filePath;
+        }catch (Exception ex){
+            log.error("minio put file error.",ex);
+            throw new RuntimeException("上传文件失败");
+        }
+    }
+
+    @Override
+    public String uploadFile(MultipartFile file){
+        //上传图片到minIO中
+        String fileName = UUID.randomUUID().toString().replace("-", "");
+
+        String originalFilename = file.getOriginalFilename();
+        assert originalFilename != null;
+        String postfix = originalFilename.substring(originalFilename.lastIndexOf("."));
+        String fileId = null;
+        try {
+            fileId = uploadFileForAllType("", fileName + postfix, file.getInputStream(),file.getContentType());
+            log.info("上传图片到MinIO中，fileId:{}",fileId);
+        } catch (Exception e) {
+            log.error("WmMaterialServiceImpl-上传文件失败 {}", e.getMessage());
+        }
+
+        return fileId;
+    }
 
     /**
      *  上传图片文件
@@ -80,6 +126,7 @@ public class MinIOFileStorageService implements FileStorageService {
             throw new RuntimeException("上传文件失败");
         }
     }
+
 
     /**
      *  上传html文件
@@ -162,4 +209,6 @@ public class MinIOFileStorageService implements FileStorageService {
         }
         return byteArrayOutputStream.toByteArray();
     }
+
+
 }

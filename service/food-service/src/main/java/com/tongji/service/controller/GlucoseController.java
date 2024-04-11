@@ -3,6 +3,7 @@ package com.tongji.service.controller;
 
 import com.tongji.model.dto.GlucoseAddDTO;
 import com.tongji.model.dto.GlucoseDTO;
+import com.tongji.model.dto.GlucoseFileAddDTO;
 import com.tongji.model.dto.TimeRangeDTO;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.service.IGlucoseService;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -53,5 +55,17 @@ public class GlucoseController {
     @PostMapping("/addGlucose")
     public ResponseResult addGlucose(@RequestBody GlucoseAddDTO glucoseAddDTO){
         return this.glucoseService.addGlucose(glucoseAddDTO);
+    }
+
+    @Operation(summary = "添加血糖数据文件")
+    @PostMapping("/uploadGlucoseFile")
+    public ResponseResult uploadGlucoseFile(@RequestParam("file") MultipartFile file){
+        return this.glucoseService.uploadGlucoseFile(file);
+    }
+
+    @Operation(summary = "上传血糖两列数据")
+    @PostMapping("/addFileData")
+    public ResponseResult addFileData(@RequestBody GlucoseFileAddDTO glucoseFileAddDTO){
+        return this.glucoseService.addFileData(glucoseFileAddDTO);
     }
 }

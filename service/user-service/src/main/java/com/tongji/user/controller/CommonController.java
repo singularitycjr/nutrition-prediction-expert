@@ -32,30 +32,43 @@ public class CommonController {
     @Autowired
     private CacheService cacheService;
 
+//    @Operation(summary = "上传文件")
+//    @PostMapping("/upload")
+//    public ResponseResult upload(MultipartFile file){
+//        log.info("上传文件：" + file.getName());
+//
+//        if(file == null || file.getSize() == 0){
+//            return ResponseResult.errorResult(AppHttpCodeEnum.UPLOAD_FAILED);
+//        }
+//
+//        //2.上传图片到minIO中
+//        String fileName = UUID.randomUUID().toString().replace("-", "");
+//        //aa.jpg
+//        String originalFilename = file.getOriginalFilename();
+//        assert originalFilename != null;
+//        String postfix = originalFilename.substring(originalFilename.lastIndexOf("."));
+//        String fileId = null;
+//        try {
+//            fileId = fileStorageService.uploadImgFile("", fileName + postfix, file.getInputStream());
+//            log.info("上传图片到MinIO中，fileId:{}",fileId);
+//        } catch (Exception e) {
+//            log.error("WmMaterialServiceImpl-上传文件失败 {}", e.getMessage());
+//        }
+//
+//        //4.返回结果
+//
+//        return ResponseResult.okResult(fileId);
+//    }
+
     @Operation(summary = "上传文件")
     @PostMapping("/upload")
     public ResponseResult upload(MultipartFile file){
         log.info("上传文件：" + file.getName());
-
-        if(file == null || file.getSize() == 0){
+        if(file.getSize() == 0){
             return ResponseResult.errorResult(AppHttpCodeEnum.UPLOAD_FAILED);
         }
 
-        //2.上传图片到minIO中
-        String fileName = UUID.randomUUID().toString().replace("-", "");
-        //aa.jpg
-        String originalFilename = file.getOriginalFilename();
-        assert originalFilename != null;
-        String postfix = originalFilename.substring(originalFilename.lastIndexOf("."));
-        String fileId = null;
-        try {
-            fileId = fileStorageService.uploadImgFile("", fileName + postfix, file.getInputStream());
-            log.info("上传图片到MinIO中，fileId:{}",fileId);
-        } catch (Exception e) {
-            log.error("WmMaterialServiceImpl-上传文件失败 {}", e.getMessage());
-        }
-
-        //4.返回结果
+        String fileId=fileStorageService.uploadFile(file);
 
         return ResponseResult.okResult(fileId);
     }

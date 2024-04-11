@@ -1,5 +1,7 @@
 package com.tongji.common.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.InputStream;
 
 /**
@@ -26,6 +28,7 @@ public interface FileStorageService {
      */
     public String uploadHtmlFile(String prefix, String filename,InputStream inputStream);
 
+    public String uploadFile(MultipartFile file);
     /**
      * 删除文件
      * @param pathUrl  文件全路径
