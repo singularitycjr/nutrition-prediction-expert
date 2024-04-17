@@ -20,6 +20,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.StandardEnvironment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -49,6 +51,8 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
     private IFoodService foodService;
     @Autowired
     private IRecordDetailService recordDetailService;
+    @Autowired
+    private Environment environment;
 
 
     @Override
@@ -191,15 +195,16 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
 
     @Override
     public ResponseResult segrec(SegRecDTO segRecDTO) {
-
+        Environment environment = new StandardEnvironment();
         RestTemplate restTemplate = new RestTemplate();
-        String url = "https://ericwvi.site/bgmp/api/diet?Action=SegRec";
+        String url= environment.getProperty("algorithmUrl.segRec");
+//        String url = "https://ericwvi.site/bgmp/api/diet?Action=SegRec";
 
         // 为restTemplate添加请求头
         /* 请求头 */
         HttpHeaders header = new HttpHeaders();
 
-        header.add("x-api-key", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Nn0.0C-pklGl8S9T6aiJgxZAudKW3x2gbisxKUaxiRj2WbA");
+        header.add("x-api-key", environment.getProperty("x-api-key"));
 
         HttpEntity<SegRecDTO> httpEntity = new HttpEntity<>(segRecDTO, header);
 
@@ -212,14 +217,16 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
     }
     @Override
     public ResponseResult nutrition(NutritionDTO nutritionDTO) {
+//        Environment environment = new StandardEnvironment();
         RestTemplate restTemplate = new RestTemplate();
-        String url = "https://ericwvi.site/bgmp/api/diet?Action=Nutrition";
+        String url= environment.getProperty("algorithmUrl.nutrition");
+//        String url = "https://ericwvi.site/bgmp/api/diet?Action=Nutrition";
 
         // 为restTemplate添加请求头
         /* 请求头 */
         HttpHeaders header = new HttpHeaders();
 
-        header.add("x-api-key", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Nn0.0C-pklGl8S9T6aiJgxZAudKW3x2gbisxKUaxiRj2WbA");
+        header.add("x-api-key", environment.getProperty("x-api-key"));
 
         HttpEntity<NutritionDTO> httpEntity = new HttpEntity<>(nutritionDTO, header);
 

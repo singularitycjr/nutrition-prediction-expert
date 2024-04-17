@@ -18,6 +18,8 @@ import com.tongji.service.service.IGlucoseService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.StandardEnvironment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -53,6 +55,9 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private Environment environment;
 
     @Override
     public ResponseResult getGlucose(TimeRangeDTO timeRangeDTO) {
@@ -239,8 +244,8 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
 
         //调go接口部分
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://212.64.29.100:52965/predict";
-
+        String url = environment.getProperty("algorithmUrl.glucosePredict");
+        System.out.println(url);
         // 为restTemplate添加请求头
         /* 请求头 */
         HttpHeaders header = new HttpHeaders();
