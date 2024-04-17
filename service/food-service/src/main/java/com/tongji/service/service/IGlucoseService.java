@@ -33,4 +33,6 @@ public interface IGlucoseService extends IService<Glucose> {
     ResponseResult uploadGlucoseFile(MultipartFile file) ;
 
     ResponseResult addFileData(GlucoseFileAddDTO glucoseFileAddDTO);
+
+    ResponseResult getPredictGlucose();
 }

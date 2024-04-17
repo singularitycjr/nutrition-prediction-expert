@@ -68,4 +68,10 @@ public class GlucoseController {
     public ResponseResult addFileData(@RequestBody GlucoseFileAddDTO glucoseFileAddDTO){
         return this.glucoseService.addFileData(glucoseFileAddDTO);
     }
+
+    @Operation(summary = "调go接口获取血糖预测结果")
+    @PostMapping("/getPredictGlucose")
+    public ResponseResult getPredictGlucose(){
+        return this.glucoseService.getPredictGlucose();
+    }
 }

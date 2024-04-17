@@ -1,10 +1,16 @@
 package com.tongji.service.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import cn.hutool.json.ObjectMapper;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tongji.common.service.FileStorageService;
 import com.tongji.model.dto.*;
 import com.tongji.model.pojo.Glucose;
+import com.tongji.model.vo.GoBankNutritionVO;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.mapper.GlucoseMapper;
 import com.tongji.service.service.IGlucoseService;
@@ -12,8 +18,11 @@ import com.tongji.service.service.IGlucoseService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -29,10 +38,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -211,4 +217,54 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         return ResponseResult.okResult(200,"文件上传成功");
     }
 
+    @Override
+    public ResponseResult getPredictGlucose()
+    {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        //获取当前时间往前96条数据
+        Long userId = StpUtil.getLoginIdAsLong();
+        LocalDateTime currentTime=LocalDateTime.now();
+        List<Glucose> glucoseList=this.list(
+                Wrappers.<Glucose>lambdaQuery().
+                        eq(Glucose::getUserId, userId).
+                        orderByDesc(Glucose::getTime).
+                        last("LIMIT 96")
+        );
+        List<Object[]> dataList = new ArrayList<>();
+        for (Glucose glucose : glucoseList){
+            dataList.add(new Object[] {glucose.getTime().format(formatter), glucose.getGluValue()});
+        }
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("seq",dataList);
+
+        //调go接口部分
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://212.64.29.100:52965/predict";
+
+        // 为restTemplate添加请求头
+        /* 请求头 */
+        HttpHeaders header = new HttpHeaders();
+//        写成request形式
+        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(jsonObject, header);
+//        发送http请求并返回字符串形式结果
+        String res = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
+
+        // 将字符串解析为 JsonNode 对象
+        JSONObject jsonResult = JSONUtil.parseObj(res);
+        JSONArray datasArray= (JSONArray) jsonResult.get("results");
+        //转换为合适的键值对形式
+        List<GlucosePredictDTO> predictList=new ArrayList<>();
+        for (Object object : datasArray) {
+            JSONArray data = (JSONArray) object;
+            GlucosePredictDTO glucosePredictDTO=new GlucosePredictDTO();
+            glucosePredictDTO.setTime(LocalDateTime.parse(data.get(0).toString(),formatter));
+            glucosePredictDTO.setValue((BigDecimal)data.get(1));
+            predictList.add(glucosePredictDTO);
+        }
+        Map<String,List<GlucosePredictDTO>> returnMap=new HashMap<>();
+        returnMap.put("precict",predictList);
+
+        return ResponseResult.okResult(returnMap);
+
+    }
 }

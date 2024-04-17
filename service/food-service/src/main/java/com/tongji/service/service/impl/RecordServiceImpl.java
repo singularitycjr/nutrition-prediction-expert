@@ -188,6 +188,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         return ResponseResult.okResult(recordStatisticDTO);
     }
 
+
     @Override
     public ResponseResult segrec(SegRecDTO segRecDTO) {
 

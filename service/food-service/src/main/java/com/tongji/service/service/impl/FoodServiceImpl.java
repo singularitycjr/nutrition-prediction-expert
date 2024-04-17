@@ -116,21 +116,6 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements IF
             return ResponseResult.errorResult(400, "该食物数据不存在");
         }
 
-//        food.setName(foodDTO.getName());
-//        food.setEn(foodDTO.getEn());
-//        food.setDensity(foodDTO.getDensity());
-//        food.setCarbohydrateMassDensity(foodDTO.getCarbohydrateMassDensity());
-//        food.setCarbohydrateVolumeDensity(foodDTO.getCarbohydrateVolumeDensity());
-//        food.setFatMassDensity(foodDTO.getFatMassDensity());
-//        food.setFatVolumeDensity(foodDTO.getFatVolumeDensity());
-//        food.setProteinMassDensity(foodDTO.getProteinMassDensity());
-//        food.setProteinVolumeDensity(foodDTO.getProteinVolumeDensity());
-//        food.setCelluloseMassDensity(foodDTO.getCelluloseMassDensity()\);
-//        food.setCelluloseVolumeDensity(foodDTO.getCelluloseVolumeDensity());
-//        food.setCalorieMassDensity(foodDTO.getCalorieMassDensity());
-//        food.setCalorieVolumeDensity(foodDTO.getCalorieVolumeDensity());
-//        food.setCategory(foodDTO.getCategory());
-//
         BeanUtils.copyProperties(foodDTO,food);
 
         this.updateById(food);
