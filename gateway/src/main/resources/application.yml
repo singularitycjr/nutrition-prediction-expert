@@ -20,6 +20,10 @@ spring:
       username: nacos
       password: nacos
       server-addr: 212.64.29.100:8848
+      discovery:
+        ip: 212.64.29.100 #zmc
+        port: 8023
+        group: zhuanzong
     gateway:
       routes: # 网关路由配置
         - id: food

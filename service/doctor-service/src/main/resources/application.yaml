@@ -1,5 +1,5 @@
 server:
-  port: 8021
+  port: 8024
 
 spring:
   profiles:
@@ -7,7 +7,7 @@ spring:
 #  main:
 #    lazy-initialization: true  #默认false 关闭懒加载
   application:
-    name: food-service
+    name: doctor-service
   cloud:
     nacos:
       username: nacos
@@ -16,11 +16,11 @@ spring:
       discovery:
 #        ip: 47.100.190.116 #lc
         ip: 47.115.207.162 #cjr
-        port: 8021
+        port: 8024
         group: zhuanzong
   config:
     import:
-      - optional:nacos:food-service.yaml # 导入nacos中的配置文件
+      - optional:nacos:doctor-service.yaml # 导入nacos中的配置文件
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${datasource.host}:${datasource.port}/${datasource.database}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
@@ -55,4 +55,4 @@ springdoc:
   group-configs:
     - group: 'default'
       paths-to-match: '/**'
-      packages-to-scan: com.tongji.service.controller
+      packages-to-scan: com.tongji.doctor.controller

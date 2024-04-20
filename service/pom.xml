@@ -14,6 +14,7 @@
     <modules>
         <module>food-service</module>
         <module>user-service</module>
+        <module>doctor-service</module>
     </modules>
 
     <properties>
