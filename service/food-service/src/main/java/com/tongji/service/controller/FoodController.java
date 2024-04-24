@@ -1,6 +1,7 @@
 package com.tongji.service.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.tongji.model.dto.FoodAddDTO;
 import com.tongji.model.dto.FoodDTO;
 import com.tongji.model.dto.GlucoseDTO;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
  * @since 2023-10-18
  */
 @RestController
+//@SaCheckRole("PATIENT")
 @RequestMapping("/food")
 @Tag(name = "食物信息")
 @Slf4j

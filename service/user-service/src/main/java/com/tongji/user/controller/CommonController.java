@@ -1,5 +1,6 @@
 package com.tongji.user.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.alibaba.fastjson.JSON;
 import com.tongji.common.constants.CommonConstants;
 import com.tongji.common.enums.AppHttpCodeEnum;
@@ -21,6 +22,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @RestController
+//@SaCheckLogin
 @RequestMapping("/common")
 @Tag(name = "通用接口")
 @Slf4j

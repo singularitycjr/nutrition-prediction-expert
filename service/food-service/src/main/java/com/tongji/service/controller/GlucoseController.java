@@ -1,6 +1,7 @@
 package com.tongji.service.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.tongji.model.dto.GlucoseAddDTO;
 import com.tongji.model.dto.GlucoseDTO;
 import com.tongji.model.dto.GlucoseFileAddDTO;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @since 2023-11-29
  */
 @RestController
+//@SaCheckRole("DOCTOR")
 @RequestMapping("/glucose")
 @Slf4j
 @Tag(name = "血糖数据")
@@ -70,7 +72,7 @@ public class GlucoseController {
     }
 
     @Operation(summary = "调go接口获取血糖预测结果")
-    @PostMapping("/getPredictGlucose")
+    @GetMapping("/getPredictGlucose")
     public ResponseResult getPredictGlucose(){
         return this.glucoseService.getPredictGlucose();
     }

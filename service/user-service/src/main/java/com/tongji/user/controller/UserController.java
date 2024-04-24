@@ -1,6 +1,8 @@
 package com.tongji.user.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.stp.StpUtil;
 import com.tongji.model.dto.LoginDTO;
 import com.tongji.model.dto.UserDTO;
@@ -35,6 +37,7 @@ public class UserController {
         return ResponseResult.okResult(userService.getById(  StpUtil.getLoginIdAsLong() ));
     }
 
+
     @PostMapping("/login")
     @Operation(summary = "登录")
     public ResponseResult login(@RequestBody LoginDTO dto){
@@ -44,9 +47,9 @@ public class UserController {
     @PostMapping("/logout")
     @Operation(summary = "登出")
     public ResponseResult logout(){
-        StpUtil.logout();
-        return ResponseResult.okResult("登出成功");
+        return userService.logout();
     }
+
 
     @Operation(summary = "注册用户")
     @PostMapping("/register")

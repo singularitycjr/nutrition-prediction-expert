@@ -53,5 +53,10 @@ public class User implements Serializable {
      */
     private String salt;
 
+    /**
+     * 角色
+     */
+    private Long role;
+
 
 }

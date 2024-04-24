@@ -14,7 +14,7 @@ spring:
       password: nacos
       server-addr: 212.64.29.100:8848
       discovery:
-        #        ip: 47.100.190.116 #lc
+        # ip: 47.100.190.116 #lc
         ip: 47.115.207.162 #cjr
         port: 8020
         group: zhuanzong

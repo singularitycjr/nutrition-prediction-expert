@@ -4,8 +4,8 @@ server:
 spring:
   profiles:
     active: dev
-#  main:
-#    lazy-initialization: true  #默认false 关闭懒加载
+  main:
+    lazy-initialization: false  #默认false 关闭懒加载
   application:
     name: doctor-service
   cloud:

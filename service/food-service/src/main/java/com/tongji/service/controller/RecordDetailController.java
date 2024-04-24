@@ -1,6 +1,7 @@
 package com.tongji.service.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.tongji.model.dto.RecordDetailAddDTO;
 import com.tongji.model.dto.RecordDetailDTO;
 import com.tongji.model.dto.TimeRangeDTO;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
  * @since 2023-11-29
  */
 @RestController
+//@SaCheckRole("PATIENT")
 @RequestMapping("/record-detail")
 @Slf4j
 @Tag(name = "食物记录详细信息")

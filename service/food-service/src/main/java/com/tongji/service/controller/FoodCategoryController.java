@@ -1,6 +1,7 @@
 package com.tongji.service.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.tongji.model.pojo.FoodCategory;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.service.IFoodCategoryService;
@@ -24,6 +25,7 @@ import java.util.List;
  * @since 2023-12-09
  */
 @RestController
+//@SaCheckRole("PATIENT")
 @RequestMapping("/food-category")
 @Tag(name = "食物分类信息")
 public class FoodCategoryController {

@@ -19,6 +19,8 @@ import com.tongji.model.vo.ResponseResult;
 public interface IUserService extends IService<User> {
     ResponseResult login(LoginDTO loginDTO);
 
+    ResponseResult logout();
+
     ResponseResult register(UserDTO dto);
 
     ResponseResult sendCode(String mobile);

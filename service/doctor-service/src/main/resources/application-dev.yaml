@@ -6,6 +6,13 @@ datasource:
   username: tongji_yeah
   password: AaEEnB65HEBkkEBG
 
+#datasource:
+#  host: localhost
+#  port: 3306
+#  database: zhuanzong
+#  username: root
+#  password: cjr0117
+
 sms:
   app-id: 113556
   app-secret: 70c2c874-d4a8-435f-ab30-6755763a1994

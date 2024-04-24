@@ -20,6 +20,7 @@
         <module>gateway</module>
         <module>service</module>
         <module>test-service</module>
+        <module>Global</module>
     </modules>
     <properties>
         <java.version>17</java.version>
@@ -253,6 +254,8 @@
                 <artifactId>poi-ooxml</artifactId>
                 <version>3.14</version>
             </dependency>
+
+
         </dependencies>
 
 

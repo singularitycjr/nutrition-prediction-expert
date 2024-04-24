@@ -10,6 +10,7 @@ spring:
     active: dev
   main:
     lazy-initialization: false  #默认false 关闭懒加载
+#    web-application-type: reactive
   application:
     name: app-gateway
   config:
@@ -32,10 +33,18 @@ spring:
             - Path=/food/**
           filters:
             - StripPrefix= 1
+
         - id: user
           uri: lb://user-service
           predicates:
             - Path=/user/**
+          filters:
+            - StripPrefix= 1
+
+        - id: doctor
+          uri: lb://doctor-service
+          predicates:
+            - Path=/doctor/**
           filters:
             - StripPrefix= 1
   data:

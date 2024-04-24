@@ -8,6 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.base.Enums;
 import com.tongji.common.constants.CommonConstants;
 import com.tongji.common.enums.AppHttpCodeEnum;
 import com.tongji.common.service.Impl.CacheService;
@@ -15,6 +16,8 @@ import com.tongji.common.utils.SmsUtil;
 import com.tongji.model.dto.LoginDTO;
 import com.tongji.model.dto.UserDTO;
 import com.tongji.model.dto.UserDetailDTO;
+import com.tongji.global.enums.RoleEnum;
+import com.tongji.global.constrants.Constrants;
 import com.tongji.model.pojo.User;
 import com.tongji.model.pojo.UserDetail;
 import com.tongji.model.vo.ResponseResult;
@@ -24,7 +27,10 @@ import com.tongji.user.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -51,13 +57,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     private UserDetailMapper userDetailMapper;
 
+    @Autowired
+    private Environment environment;
+
     @Override
     public ResponseResult login(LoginDTO loginDTO) {
         if (StrUtil.hasBlank(loginDTO.getAccount(), loginDTO.getPassword())) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "用户名或密码为空");
         }
 
-        User user = this.getOne(Wrappers.<User>lambdaQuery().eq(User::getAccount, loginDTO.getAccount()));
+        User user = this.getOne(Wrappers.<User>lambdaQuery()
+                .eq(User::getAccount, loginDTO.getAccount())
+                .eq(User::getRole, RoleEnum.valueOf(loginDTO.getRole()).getRoleNum())
+        );
         if (user == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "用户不存在");
         }
@@ -69,9 +81,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (!user.getPassword().equals(password)) {
             return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_PASSWORD_ERROR);
         }
-        log.info("登录成功 {}", user.getId());
+
         StpUtil.login(user.getId());
+
+        //将角色写入redis
+        cacheService.delete(Constrants.USER_ROLE + user.getId());
+        cacheService.set(Constrants.USER_ROLE + user.getId(), loginDTO.getRole());
+
+        String expireString = environment.getProperty("sa-token.timeout");
+        if (StrUtil.hasBlank(expireString))
+            expireString = "14400";
+        long expire = Long.parseLong(expireString);
+        cacheService.expire(Constrants.USER_ROLE + user.getId(), expire, TimeUnit.SECONDS);
+        log.info("登录成功 {}", user.getId());
         return ResponseResult.okResult("登录成功");
+    }
+
+    @Override
+    public ResponseResult logout() {
+        User user = this.getById(StpUtil.getLoginIdAsLong());
+        //删除角色缓存
+        cacheService.delete(Constrants.USER_ROLE + user.getId());
+        StpUtil.logout();
+        return ResponseResult.okResult("登出成功");
+
     }
 
     @Override
@@ -79,7 +112,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String phone = dto.getAccount();
         String code = dto.getCode();
         // dto 参数检查
-        if (StrUtil.hasBlank(phone, dto.getPassword(), dto.getName(), code)) {
+        if (StrUtil.hasBlank(phone, dto.getPassword(), dto.getName(), code, dto.getRole())) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "属性不能为空");
         }
         // 检查手机号格式
@@ -95,8 +128,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (!code.equals(codeCache)) {
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "验证码错误");
         }
+
+        RoleEnum roleEnum = Enums.getIfPresent(RoleEnum.class, dto.getRole()).orNull();
+        if (roleEnum == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "角色不存在");
+        }
         // 删掉验证码
         this.cacheService.delete(CommonConstants.SMS_CODE + phone);
+
+//        User user = this.getOne(Wrappers.<User>lambdaQuery()
+//                .eq(User::getAccount, dto.getAccount())
+//                .eq(User::getRole,dto.getRole())
+//        );
+//        if(user!=null){
+//            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_EXIST, "用户已存在");
+//        }
 
         // 随机生成长度为6的字符串作为盐
         String salt = RandomUtil.randomString(CommonConstants.SALT_LENGTH);
@@ -107,6 +153,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setAccount(dto.getAccount());
         user.setSalt(salt);
         user.setPassword(password);
+        user.setRole(RoleEnum.valueOf(dto.getRole()).getRoleNum());
         try {
             this.save(user);
         } catch (Exception e) {
@@ -130,11 +177,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (!Validator.isMobile(mobile)) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "手机号格式不正确");
         }
-        // 先去查这个手机号有没有注册过
-        User user = this.getOne(Wrappers.<User>lambdaQuery().eq(User::getAccount, mobile));
-        if (user != null) {
-            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_EXIST, "手机号已注册");
-        }
+//        // 先去查这个手机号有没有注册过
+//        User user = this.getOne(Wrappers.<User>lambdaQuery().eq(User::getAccount, mobile));
+//        if (user != null) {
+//            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_EXIST, "手机号已注册");
+//        }
         // 看看之前有没有发送过验证码
         String codeCache = this.cacheService.get(CommonConstants.SMS_CODE + mobile);
         if (StrUtil.isNotBlank(codeCache)) {
@@ -223,6 +270,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         this.baseMapper.update(null, lambdaUpdateWrapper);
         // 将当前账号下线
 
+        //删掉角色信息
+        cacheService.delete(Constrants.USER_ROLE + user.getId());
+
         StpUtil.logout();
 
         return ResponseResult.okResult("修改成功");
@@ -243,7 +293,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "两次密码不一致");
         }
         // 找到是哪个账号
-        User user = this.getOne(Wrappers.<User>lambdaQuery().eq(User::getAccount, dto.getAccount()));
+        User user = this.getOne(Wrappers.<User>lambdaQuery()
+                .eq(User::getAccount, dto.getAccount())
+                .eq(User::getRole, RoleEnum.valueOf(dto.getRole()).getRoleNum())
+        );
         if (user == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "手机号未注册");
         }
@@ -267,13 +320,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public ResponseResult getDetail() {
         User user = this.getById(StpUtil.getLoginIdAsLong());
-        UserDetail userDetail=userDetailService.getOne(
-                Wrappers.<UserDetail>lambdaQuery().eq(UserDetail::getUserId,user.getId())
+        UserDetail userDetail = userDetailService.getOne(
+                Wrappers.<UserDetail>lambdaQuery().eq(UserDetail::getUserId, user.getId())
         );
-        UserDetailDTO userDetailDTO=new UserDetailDTO();
+        UserDetailDTO userDetailDTO = new UserDetailDTO();
 
-        BeanUtils.copyProperties(user,userDetailDTO);
-        BeanUtils.copyProperties(userDetail,userDetailDTO);
+        BeanUtils.copyProperties(user, userDetailDTO);
+        BeanUtils.copyProperties(userDetail, userDetailDTO);
 
         return ResponseResult.okResult(userDetailDTO);
     }

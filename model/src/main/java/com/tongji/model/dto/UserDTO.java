@@ -28,4 +28,9 @@ public class UserDTO {
      * 验证码
      */
     private String code;
+
+    /**
+     * 角色
+     */
+    private String role;
 }

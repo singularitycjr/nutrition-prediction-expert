@@ -76,8 +76,10 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements IF
     public ResponseResult getById(Long id) {
         Long userId = StpUtil.getLoginIdAsLong();
         Food food = this.getOne(
-                Wrappers.<Food>lambdaQuery().eq(Food::getUserId, userId).
-                        eq(Food::getId, id)
+                Wrappers.<Food>lambdaQuery()
+//                        .eq(Food::getUserId, userId)
+                        .and(q -> q.isNull(Food::getUserId).or().eq(Food::getUserId, userId))
+                        .eq(Food::getId, id)
         );
         if (food == null) {
             return ResponseResult.errorResult(400, "该食物数据不存在");
@@ -92,8 +94,10 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements IF
         }
         Long userId = StpUtil.getLoginIdAsLong();
         Food food = this.getOne(
-                Wrappers.<Food>lambdaQuery().eq(Food::getUserId, userId).
-                        eq(Food::getId, id)
+                Wrappers.<Food>lambdaQuery()
+//                        .eq(Food::getUserId, userId)
+                        .and(q -> q.isNull(Food::getUserId).or().eq(Food::getUserId, userId))
+                        .eq(Food::getId, id)
         );
         if (food == null) {
             return ResponseResult.errorResult(400, "该食物数据不存在");
@@ -109,8 +113,10 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements IF
         }
         Long userId = StpUtil.getLoginIdAsLong();
         Food food = this.getOne(
-                Wrappers.<Food>lambdaQuery().eq(Food::getUserId, userId).
-                        eq(Food::getId, foodDTO.getId())
+                Wrappers.<Food>lambdaQuery()
+//                        eq(Food::getUserId, userId).
+                        .and(q -> q.isNull(Food::getUserId).or().eq(Food::getUserId, userId))
+                        .eq(Food::getId, foodDTO.getId())
         );
         if (food == null) {
             return ResponseResult.errorResult(400, "该食物数据不存在");

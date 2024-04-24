@@ -16,4 +16,7 @@ public class CommonConstants {
     public static final String FOOD_IMG = "food_img:";
     public static final Integer USER_IMG_TIMEOUT = 3;
     public static final TimeUnit USER_IMG_TIMEOUT_TYPE = TimeUnit.MINUTES;
+
+
+
 }
