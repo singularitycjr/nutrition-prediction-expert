@@ -29,8 +29,8 @@ public class UserDTO {
      */
     private String code;
 
-    /**
-     * 角色
-     */
-    private String role;
+//    /**
+//     * 角色
+//     */
+//    private String role;
 }

@@ -68,7 +68,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         User user = this.getOne(Wrappers.<User>lambdaQuery()
                 .eq(User::getAccount, loginDTO.getAccount())
-                .eq(User::getRole, RoleEnum.valueOf(loginDTO.getRole()).getRoleNum())
+//                .eq(User::getRole, RoleEnum.valueOf(loginDTO.getRole()).getRoleNum())
         );
         if (user == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "用户不存在");
@@ -86,7 +86,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         //将角色写入redis
         cacheService.delete(Constrants.USER_ROLE + user.getId());
-        cacheService.set(Constrants.USER_ROLE + user.getId(), loginDTO.getRole());
+//        cacheService.set(Constrants.USER_ROLE + user.getId(), RoleEnum.find(user.getRole()).getName());
 
         String expireString = environment.getProperty("sa-token.timeout");
         if (StrUtil.hasBlank(expireString))
@@ -112,7 +112,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String phone = dto.getAccount();
         String code = dto.getCode();
         // dto 参数检查
-        if (StrUtil.hasBlank(phone, dto.getPassword(), dto.getName(), code, dto.getRole())) {
+        if (StrUtil.hasBlank(phone, dto.getPassword(), dto.getName(), code)) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "属性不能为空");
         }
         // 检查手机号格式
@@ -129,10 +129,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "验证码错误");
         }
 
-        RoleEnum roleEnum = Enums.getIfPresent(RoleEnum.class, dto.getRole()).orNull();
-        if (roleEnum == null) {
-            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "角色不存在");
-        }
+//        RoleEnum roleEnum = Enums.getIfPresent(RoleEnum.class, dto.getRole()).orNull();
+//        if (roleEnum == null) {
+//            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "角色不存在");
+//        }
         // 删掉验证码
         this.cacheService.delete(CommonConstants.SMS_CODE + phone);
 
@@ -153,7 +153,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setAccount(dto.getAccount());
         user.setSalt(salt);
         user.setPassword(password);
-        user.setRole(RoleEnum.valueOf(dto.getRole()).getRoleNum());
+//        user.setRole(RoleEnum.valueOf(dto.getRole()).getRoleNum());
         try {
             this.save(user);
         } catch (Exception e) {
@@ -295,7 +295,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // 找到是哪个账号
         User user = this.getOne(Wrappers.<User>lambdaQuery()
                 .eq(User::getAccount, dto.getAccount())
-                .eq(User::getRole, RoleEnum.valueOf(dto.getRole()).getRoleNum())
+//                .eq(User::getRole, RoleEnum.valueOf(dto.getRole()).getRoleNum())
         );
         if (user == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "手机号未注册");
