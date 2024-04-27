@@ -1,4 +1,4 @@
-package com.tongji.user.service.Impl;
+package com.tongji.doctor.service.Impl;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.StpUtil;
@@ -16,17 +16,14 @@ import com.tongji.common.service.FileStorageService;
 import com.tongji.common.service.Impl.CacheService;
 import com.tongji.common.utils.SmsUtil;
 import com.tongji.global.helper.LoginObj;
-import com.tongji.model.dto.UserLoginDTO;
-import com.tongji.model.dto.UserDTO;
-import com.tongji.model.dto.UserDetailDTO;
+import com.tongji.model.dto.DoctorLoginDTO;
+import com.tongji.model.dto.DoctorDTO;
 import com.tongji.global.enums.RoleEnum;
 import com.tongji.global.constrants.Constrants;
-import com.tongji.model.pojo.User;
-import com.tongji.model.pojo.UserDetail;
+import com.tongji.model.pojo.Doctor;
 import com.tongji.model.vo.ResponseResult;
-import com.tongji.user.mapper.UserDetailMapper;
-import com.tongji.user.mapper.UserMapper;
-import com.tongji.user.service.IUserService;
+import com.tongji.doctor.mapper.DoctorMapper;
+import com.tongji.doctor.service.IDoctorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +46,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 @Slf4j
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
+public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> implements IDoctorService {
 
     @Autowired
     private SmsUtil smsUtil;
@@ -57,80 +54,68 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     private CacheService cacheService;
 
-    @Autowired
-    private UserDetailServiceImpl userDetailService;
-
-    @Autowired
-    private UserDetailMapper userDetailMapper;
-
-    @Autowired
-    private Environment environment;
+//    @Autowired
+//    private Environment environment;
 
     @Autowired
     private FileStorageService fileStorageService;
 
     @Override
-    public ResponseResult login(UserLoginDTO userLoginDTO) {
-        if (StrUtil.hasBlank(userLoginDTO.getAccount(), userLoginDTO.getPassword())) {
+    public ResponseResult login(DoctorLoginDTO doctorLoginDTO) {
+        if (StrUtil.hasBlank(doctorLoginDTO.getAccount(), doctorLoginDTO.getPassword())) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "用户名或密码为空");
         }
 
-        User user = this.getOne(Wrappers.<User>lambdaQuery()
-                        .eq(User::getAccount, userLoginDTO.getAccount())
-//                .eq(User::getRole, RoleEnum.valueOf(loginDTO.getRole()).getRoleNum())
+        Doctor doctor = this.getOne(Wrappers.<Doctor>lambdaQuery()
+                        .eq(Doctor::getAccount, doctorLoginDTO.getAccount())
         );
-        if (user == null) {
+        if (doctor == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "用户不存在");
         }
 
         // 对比密码
-        String salt = user.getSalt();
-        String password = userLoginDTO.getPassword();
+        String salt = doctor.getSalt();
+        String password = doctorLoginDTO.getPassword();
         password = SaSecureUtil.md5(password + salt);
-        if (!user.getPassword().equals(password)) {
+        if (!doctor.getPassword().equals(password)) {
             return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_PASSWORD_ERROR);
         }
 
-        LoginObj loginObj = new LoginObj(RoleEnum.PATIENT.getName(), user.getId());
-        JSONObject jsonUser = (JSONObject) JSONObject.toJSON(loginObj);
+        LoginObj loginObj = new LoginObj(RoleEnum.PATIENT.getName(), doctor.getId());
+        JSONObject jsonDoctor = (JSONObject) JSONObject.toJSON(loginObj);
         //会话登录：参数填写要登录的账号id，建议的数据类型：long | int | String，
-        //不可以传入复杂类型，如：User、Admin 等等
+        //不可以传入复杂类型，如：Doctor、Admin 等等
         //因此转为JSON字符串传入，需要时再转回Object
-        StpUtil.login(jsonUser);
+        StpUtil.login(jsonDoctor);
 
 //        //将角色写入redis
-//        cacheService.delete(Constrants.USER_ROLE + user.getId());
-//        cacheService.set(Constrants.USER_ROLE + user.getId(), RoleEnum.find(user.getRole()).getName());
+//        cacheService.delete(Constrants.USER_ROLE + doctor.getId());
+//        cacheService.set(Constrants.USER_ROLE + doctor.getId(), RoleEnum.find(doctor.getRole()).getName());
 //        String expireString = environment.getProperty("sa-token.timeout");
 //        if (StrUtil.hasBlank(expireString))
 //            expireString = "14400";
 //        long expire = Long.parseLong(expireString);
-//        cacheService.expire(Constrants.USER_ROLE + user.getId(), expire, TimeUnit.SECONDS);
+//        cacheService.expire(Constrants.USER_ROLE + doctor.getId(), expire, TimeUnit.SECONDS);
 
-        log.info("登录成功 {}", user.getId());
+        log.info("登录成功 {}", doctor.getId());
         return ResponseResult.okResult("登录成功");
     }
 
     @Override
     public ResponseResult logout() {
-//        LoginObj loginObj= JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-//        User user = this.getById(loginObj.getId());
-//        //删除角色缓存
-//        cacheService.delete(Constrants.USER_ROLE + user.getId());
         StpUtil.logout();
         return ResponseResult.okResult("登出成功");
-
     }
 
     @Override
-    public ResponseResult getUser() {
+    public ResponseResult getDoctor() {
         LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-        User user = this.getById(loginObj.getId());
-        return ResponseResult.okResult(user);
+        Doctor doctor = this.getById(loginObj.getId());
+        return ResponseResult.okResult(doctor);
     }
 
     @Override
-    public ResponseResult register(UserDTO dto) {
+    public ResponseResult register(DoctorDTO dto) {
         String phone = dto.getAccount();
         String code = dto.getCode();
         // dto 参数检查
@@ -151,40 +136,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "验证码错误");
         }
 
-//        RoleEnum roleEnum = Enums.getIfPresent(RoleEnum.class, dto.getRole()).orNull();
-//        if (roleEnum == null) {
-//            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "角色不存在");
-//        }
+
         // 删掉验证码
         this.cacheService.delete(CommonConstants.SMS_CODE + phone);
 
-//        User user = this.getOne(Wrappers.<User>lambdaQuery()
-//                .eq(User::getAccount, dto.getAccount())
-//                .eq(User::getRole,dto.getRole())
-//        );
-//        if(user!=null){
-//            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_EXIST, "用户已存在");
-//        }
 
         // 随机生成长度为6的字符串作为盐
         String salt = RandomUtil.randomString(CommonConstants.SALT_LENGTH);
         String password = SaSecureUtil.md5(dto.getPassword() + salt);
 
-        User user = new User();
-        user.setName(dto.getName());
-        user.setAccount(dto.getAccount());
-        user.setSalt(salt);
-        user.setPassword(password);
-//        user.setRole(RoleEnum.valueOf(dto.getRole()).getRoleNum());
+        Doctor doctor = new Doctor();
+        doctor.setName(dto.getName());
+        doctor.setAccount(dto.getAccount());
+        doctor.setSalt(salt);
+        doctor.setPassword(password);
         try {
-            this.save(user);
+            this.save(doctor);
         } catch (Exception e) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "用户名已存在");
         }
 
-        UserDetail userDetail = new UserDetail();
-        userDetail.setUserId(user.getId());
-        userDetailService.save(userDetail);
 
         return ResponseResult.okResult("注册成功");
     }
@@ -200,8 +171,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "手机号格式不正确");
         }
         // 先去查这个手机号有没有注册过
-        User user = this.getOne(Wrappers.<User>lambdaQuery().eq(User::getAccount, mobile));
-        if (user != null) {
+        Doctor doctor = this.getOne(Wrappers.<Doctor>lambdaQuery().eq(Doctor::getAccount, mobile));
+        if (doctor != null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_EXIST, "手机号已注册");
         }
         // 看看之前有没有发送过验证码
@@ -230,8 +201,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "手机号格式不正确");
         }
         // 先去查这个手机号有没有注册过
-        User user = this.getOne(Wrappers.<User>lambdaQuery().eq(User::getAccount, mobile));
-        if (user == null) {
+        Doctor doctor = this.getOne(Wrappers.<Doctor>lambdaQuery().eq(Doctor::getAccount, mobile));
+        if (doctor == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "手机号未注册");
         }
         // 看看之前有没有发送过验证码
@@ -250,21 +221,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public ResponseResult updateName(UserDTO dto) {
+    public ResponseResult updateName(DoctorDTO dto) {
         if (StrUtil.hasBlank(dto.getName())) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "用户名不能为空");
         }
-//        User user = this.getById(StpUtil.getLoginIdAsLong());
+
         log.info("修改用户名 {}", StpUtil.getLoginIdAsLong());
         LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-        User user = this.getById(loginObj.getId());
-        user.setName(dto.getName());
-        this.updateById(user);
+        Doctor doctor = this.getById(loginObj.getId());
+        doctor.setName(dto.getName());
+        this.updateById(doctor);
         return ResponseResult.okResult("修改成功");
     }
 
     @Override
-    public ResponseResult updatePassword(UserDTO dto) {
+    public ResponseResult updatePassword(DoctorDTO dto) {
         if (StrUtil.hasBlank(dto.getPassword()) || StrUtil.hasBlank(dto.getRePassword())
                 || StrUtil.hasBlank(dto.getCode())) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
@@ -278,26 +249,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "两次密码不一致");
         }
         // 找到是哪个账号
-//        User user = this.getById(StpUtil.getLoginIdAsLong());
+//        Doctor doctor = this.getById(StpUtil.getLoginIdAsLong());
         LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-        User user = this.getById(loginObj.getId());
+        Doctor doctor = this.getById(loginObj.getId());
         // 检查验证码是否正确
-        String codeCache = this.cacheService.get(CommonConstants.SMS_UPDATE_CODE + user.getAccount());
+        String codeCache = this.cacheService.get(CommonConstants.SMS_UPDATE_CODE + doctor.getAccount());
         if (!dto.getCode().equals(codeCache)) {
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "验证码错误");
         }
         // 删掉验证码
-        this.cacheService.delete(CommonConstants.SMS_UPDATE_CODE + user.getAccount());
-        String salt = user.getSalt();
+        this.cacheService.delete(CommonConstants.SMS_UPDATE_CODE + doctor.getAccount());
+        String salt = doctor.getSalt();
         String password = SaSecureUtil.md5(dto.getPassword() + salt);
 
-        LambdaUpdateWrapper<User> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-        lambdaUpdateWrapper.eq(User::getId, user.getId()).set(User::getPassword, password);
+        LambdaUpdateWrapper<Doctor> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+        lambdaUpdateWrapper.eq(Doctor::getId, doctor.getId()).set(Doctor::getPassword, password);
         this.baseMapper.update(null, lambdaUpdateWrapper);
         // 将当前账号下线
 
-//        //删掉角色信息
-//        cacheService.delete(Constrants.USER_ROLE + user.getId());
 
         StpUtil.logout();
 
@@ -305,7 +274,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public ResponseResult forgetPassword(UserDTO dto) {
+    public ResponseResult forgetPassword(DoctorDTO dto) {
         if (StrUtil.hasBlank(dto.getAccount()) || StrUtil.hasBlank(dto.getPassword()) || StrUtil.hasBlank(dto.getRePassword())
                 || StrUtil.hasBlank(dto.getCode())) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
@@ -319,11 +288,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "两次密码不一致");
         }
         // 找到是哪个账号
-        User user = this.getOne(Wrappers.<User>lambdaQuery()
-                        .eq(User::getAccount, dto.getAccount())
-//                .eq(User::getRole, RoleEnum.valueOf(dto.getRole()).getRoleNum())
+        Doctor doctor = this.getOne(Wrappers.<Doctor>lambdaQuery()
+                        .eq(Doctor::getAccount, dto.getAccount())
         );
-        if (user == null) {
+        if (doctor == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "手机号未注册");
         }
         // 检查验证码是否正确
@@ -333,68 +301,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         // 删掉验证码
         this.cacheService.delete(CommonConstants.SMS_UPDATE_CODE + dto.getAccount());
-        String salt = user.getSalt();
+        String salt = doctor.getSalt();
         String password = SaSecureUtil.md5(dto.getPassword() + salt);
 
-        LambdaUpdateWrapper<User> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-        lambdaUpdateWrapper.eq(User::getId, user.getId()).set(User::getPassword, password);
+        LambdaUpdateWrapper<Doctor> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+        lambdaUpdateWrapper.eq(Doctor::getId, doctor.getId()).set(Doctor::getPassword, password);
         this.baseMapper.update(null, lambdaUpdateWrapper);
 
         return ResponseResult.okResult("修改成功");
     }
 
-    @Override
-    public ResponseResult getDetail() {
-//        User user = this.getById(StpUtil.getLoginIdAsLong());
-        System.out.println(StpUtil.getLoginId().getClass());
-        LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-        User user = this.getById(loginObj.getId());
-        UserDetail userDetail = userDetailService.getOne(
-                Wrappers.<UserDetail>lambdaQuery().eq(UserDetail::getUserId, user.getId())
-        );
-        UserDetailDTO userDetailDTO = new UserDetailDTO();
 
-        BeanUtils.copyProperties(user, userDetailDTO);
-        BeanUtils.copyProperties(userDetail, userDetailDTO);
-
-        return ResponseResult.okResult(userDetailDTO);
-    }
-
-    @Override
-    public ResponseResult updateDetail(UserDetailDTO userDetailDTO) {
-//        Long id = StpUtil.getLoginIdAsLong();
-        LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-        Long id = loginObj.getId();
-
-        // 找到这条信息
-        UserDetail userDetailFound = userDetailMapper.selectOne(Wrappers.<UserDetail>lambdaQuery().eq(UserDetail::getUserId,
-                id));
-        if (userDetailFound == null) {
-            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "用户信息不存在");
-        }
-        UserDetail userDetail = new UserDetail();
-        userDetail.setId(userDetailFound.getId());
-        userDetail.setUserId(id);
-        BeanUtils.copyProperties(userDetailDTO, userDetail);
-        if (userDetail.getAge() == null) {
-            userDetail.setAge(0);
-        }
-        if (userDetail.getHeight() == null) {
-            userDetail.setHeight(0.0);
-        }
-        if (userDetail.getWeight() == null) {
-            userDetail.setWeight(0.0);
-        }
-        if (userDetail.getGender() == null) {
-            userDetail.setGender(null);
-        }
-        if (userDetail.getDiabetesType() == null) {
-            userDetail.setDiabetesType(null);
-        }
-        log.info("修改用户信息 {}", userDetail);
-        userDetailMapper.updateById(userDetail);
-        return ResponseResult.okResult("修改成功");
-    }
 
     @Override
     public ResponseResult uploadProfix(MultipartFile picture) {
@@ -411,19 +328,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return ResponseResult.errorResult(400, "文件类型错误");
         }
 
-//        User user = this.getById(StpUtil.getLoginIdAsLong());
-        LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-        User user = this.getById(loginObj.getId());
 
-        String prifileUrl = user.getProfile();
+        LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
+        Doctor doctor = this.getById(loginObj.getId());
+
+        String prifileUrl = doctor.getProfile();
         if (!StrUtil.hasBlank(prifileUrl))
             fileStorageService.delete(prifileUrl);
 
         //将文件上传到minio
         String path = fileStorageService.uploadFile(picture);
-        user.setProfile(path);
+        doctor.setProfile(path);
 
-        this.updateById(user);
+        this.updateById(doctor);
         Map<String, String> map = new HashMap<>();
         map.put("url", path);
         return ResponseResult.okResult(map);

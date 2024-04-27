@@ -23,21 +23,31 @@ public class SaTokenConfigure {
                 .addInclude("/**")    /* 拦截全部path */
                 // 开放地址
                 .addExclude("/favicon.ico")
+
                 .addExclude("/user/user/login")
                 .addExclude("/user/user/register")
                 .addExclude("/user/user/sendCode/**")
                 .addExclude("/user/user/sendCodeUpdate/**")
                 .addExclude("/user/user/forgetPassword")
                 .addExclude("/user/common/uploadMask")
+
+                .addExclude("/doctor/doctor/login")
+                .addExclude("/doctor/doctor/register")
+                .addExclude("/doctor/doctor/sendCode/**")
+                .addExclude("/doctor/doctor/sendCodeUpdate/**")
+                .addExclude("/doctor/doctor/forgetPassword")
+                .addExclude("/doctor/common/uploadMask")
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
-                    // 登录校验 -- 拦截所有路由，并排除/user/doLogin 用于开放登录
-                    SaRouter.match("/**", "/user/login", r -> StpUtil.checkLogin());
+                    SaRouter.match("/**")
+                            .notMatch("/user/user/login")
+                            .notMatch("/doctor/doctor/login")
+                            .check(r -> StpUtil.checkLogin());
 
 //                    进入角色鉴权
                     // 权限/角色认证 -- 不同模块, 校验不同权限/角色
                     SaRouter.match("/food/**", r -> StpUtil.checkRole(RoleEnum.PATIENT.getName()));
-                    SaRouter.match("/doctor/**", r -> StpUtil.checkRole(RoleEnum.DOCTOR.getName()));
+//                    SaRouter.match("/doctor/**", r -> StpUtil.checkRole(RoleEnum.DOCTOR.getName()));
 
                     // 更多匹配 ...  */
                 })

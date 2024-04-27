@@ -1,29 +1,29 @@
 package com.tongji.model.pojo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-
-import java.io.Serial;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * <p>
- * 患者信息
+ * 医生信息
  * </p>
  *
  * @author author
- * @since 2023-10-18
+ * @since 2024-04-26
  */
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("user")
-public class User implements Serializable {
-
+@TableName("doctor")
+public class Doctor implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -53,15 +53,10 @@ public class User implements Serializable {
      */
     private String salt;
 
-    /**
-     * 主治医师
-     */
-    private Long doctor;
 
     /**
      * 头像路径
      */
     private String profile;
-
 
 }

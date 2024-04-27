@@ -1,12 +1,12 @@
 package com.tongji.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.tongji.model.dto.LoginDTO;
+import com.tongji.model.dto.UserLoginDTO;
 import com.tongji.model.dto.UserDTO;
 import com.tongji.model.dto.UserDetailDTO;
 import com.tongji.model.pojo.User;
-import com.tongji.model.pojo.UserDetail;
 import com.tongji.model.vo.ResponseResult;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -17,7 +17,9 @@ import com.tongji.model.vo.ResponseResult;
  * @since 2023-10-18
  */
 public interface IUserService extends IService<User> {
-    ResponseResult login(LoginDTO loginDTO);
+    ResponseResult getUser();
+
+    ResponseResult login(UserLoginDTO userLoginDTO);
 
     ResponseResult logout();
 
@@ -36,4 +38,6 @@ public interface IUserService extends IService<User> {
     ResponseResult getDetail();
 
     ResponseResult updateDetail(UserDetailDTO userDetailDTO);
+
+    ResponseResult uploadProfix( MultipartFile picture);
 }

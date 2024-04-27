@@ -225,7 +225,8 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
     @Override
     public ResponseResult getPredictGlucose()
     {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter returnFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         //获取当前时间往前96条数据
         Long userId = StpUtil.getLoginIdAsLong();
         LocalDateTime currentTime=LocalDateTime.now();
@@ -237,10 +238,12 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         );
         List<Object[]> dataList = new ArrayList<>();
         for (Glucose glucose : glucoseList){
-            dataList.add(new Object[] {glucose.getTime().format(formatter), glucose.getGluValue()});
+            dataList.add(new Object[] {glucose.getTime().format(inputFormatter), glucose.getGluValue()});
+//            System.out.println(glucose.getTime().format(formatter));
         }
         Map<String, Object> jsonObject = new HashMap<>();
         jsonObject.put("seq",dataList);
+
 
         //调go接口部分
         RestTemplate restTemplate = new RestTemplate();
@@ -262,9 +265,10 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         for (Object object : datasArray) {
             JSONArray data = (JSONArray) object;
             GlucosePredictDTO glucosePredictDTO=new GlucosePredictDTO();
-            glucosePredictDTO.setTime(LocalDateTime.parse(data.get(0).toString(),formatter));
+            glucosePredictDTO.setTime(LocalDateTime.parse(data.get(0).toString(),returnFormatter));
             glucosePredictDTO.setValue((BigDecimal)data.get(1));
             predictList.add(glucosePredictDTO);
+//            System.out.println(data.get(0).toString());
         }
         Map<String,List<GlucosePredictDTO>> returnMap=new HashMap<>();
         returnMap.put("precict",predictList);

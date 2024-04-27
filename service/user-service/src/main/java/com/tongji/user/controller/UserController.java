@@ -1,19 +1,17 @@
 package com.tongji.user.controller;
 
 
-import cn.dev33.satoken.annotation.SaCheckLogin;
-import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.stp.StpUtil;
-import com.tongji.model.dto.LoginDTO;
+import com.tongji.model.dto.UserLoginDTO;
 import com.tongji.model.dto.UserDTO;
 import com.tongji.model.dto.UserDetailDTO;
-import com.tongji.model.pojo.UserDetail;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.user.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -33,14 +31,13 @@ public class UserController {
     @GetMapping("/get")
     @Operation(summary = "获取用户信息")
     public ResponseResult getUser(){
-        //return userService.getById(1).toString();
-        return ResponseResult.okResult(userService.getById(  StpUtil.getLoginIdAsLong() ));
+        return userService.getUser();
     }
 
 
     @PostMapping("/login")
     @Operation(summary = "登录")
-    public ResponseResult login(@RequestBody LoginDTO dto){
+    public ResponseResult login(@RequestBody UserLoginDTO dto){
         return userService.login(dto);
     }
 
@@ -98,4 +95,12 @@ public class UserController {
     public ResponseResult updateDetail(@RequestBody UserDetailDTO userDetailDTO){
         return userService.updateDetail(userDetailDTO);
     }
+
+    @Operation(summary = "上传头像")
+    @PutMapping("/uploadProfix")
+    public ResponseResult uploadProfix(@RequestParam("picture") MultipartFile picture){
+        return userService.uploadProfix(picture);
+    }
+
+
 }
