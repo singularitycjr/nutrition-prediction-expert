@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpInterface;
 import cn.dev33.satoken.stp.StpUtil;
 import com.tongji.global.constrants.Constrants;
 import com.tongji.global.helper.LoginObj;
+import com.tongji.global.util.SaTokenUtil;
 import com.tongji.model.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

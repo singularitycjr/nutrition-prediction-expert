@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tongji.global.util.SaTokenUtil;
 import com.tongji.model.dto.FoodAddDTO;
 import com.tongji.model.dto.FoodDTO;
 import com.tongji.model.pojo.Food;
@@ -34,10 +35,9 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements IF
 
     @Override
     public ResponseResult queryPage(FoodQuery foodQuery) {
-//        LambdaQueryChainWrapper<Food> queryWrapper = lambdaQuery();
         Integer pageNo = foodQuery.getPageNo();
         Integer pageSize = foodQuery.getPageSize();
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
         if (pageNo == null || pageNo < 1) {
             pageNo = 1;
         }
@@ -74,7 +74,7 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements IF
 
     @Override
     public ResponseResult getById(Long id) {
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
         Food food = this.getOne(
                 Wrappers.<Food>lambdaQuery()
 //                        .eq(Food::getUserId, userId)
@@ -92,7 +92,7 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements IF
         if (id == null) {
             return ResponseResult.errorResult(400, "id不能为空");
         }
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
         Food food = this.getOne(
                 Wrappers.<Food>lambdaQuery()
 //                        .eq(Food::getUserId, userId)
@@ -111,7 +111,7 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements IF
         if (foodDTO.getId() == null) {
             return ResponseResult.errorResult(400, "id不能为空");
         }
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
         Food food = this.getOne(
                 Wrappers.<Food>lambdaQuery()
 //                        eq(Food::getUserId, userId).
@@ -133,7 +133,7 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements IF
         if (foodAddDTO.getName() == null) {
             return ResponseResult.errorResult(400, "名称不能为空");
         }
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
         Food food = new Food();
         BeanUtils.copyProperties(foodAddDTO,food);
         food.setId(null);
@@ -142,12 +142,7 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements IF
         return ResponseResult.okResult("添加成功");
     }
 
-//    @Override
-//    public ResponseResult getByName(String name) {
-//        List<Food> foods = this.list(Wrappers.<Food>lambdaQuery().like(StrUtil.isNotBlank(name), Food::getName, name));
-//
-//        return ResponseResult.okResult(foods);
-//    }
+
     @Override
     public Long getIdByName(String name) {
         Food food = this.getOne(Wrappers.<Food>lambdaQuery().eq(Food::getName, name));

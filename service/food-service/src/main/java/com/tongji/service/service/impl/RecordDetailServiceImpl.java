@@ -2,6 +2,7 @@ package com.tongji.service.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.tongji.global.util.SaTokenUtil;
 import com.tongji.model.dto.RecordDetailAddDTO;
 import com.tongji.model.dto.RecordDetailDTO;
 import com.tongji.model.dto.RecordDetailReturnDTO;
@@ -45,7 +46,7 @@ public class RecordDetailServiceImpl extends ServiceImpl<RecordDetailMapper, Rec
         if (id == null) {
             return ResponseResult.errorResult(400, "id不能为空");
         }
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
 
         RecordDetail recordDetail = this.getOne(
                 Wrappers.<RecordDetail>lambdaQuery().eq(RecordDetail::getId, id)
@@ -71,7 +72,7 @@ public class RecordDetailServiceImpl extends ServiceImpl<RecordDetailMapper, Rec
         if (record_id == null) {
             return ResponseResult.errorResult(400, "record_id不能为空");
         }
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
 
         Record record = recordService.getOne(
                 Wrappers.<Record>lambdaQuery().eq(Record::getUserId, userId).
@@ -106,7 +107,7 @@ public class RecordDetailServiceImpl extends ServiceImpl<RecordDetailMapper, Rec
         if (id == null) {
             return ResponseResult.errorResult(400, "id不能为空");
         }
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
         RecordDetail recordDetail = this.getOne(
                 Wrappers.<RecordDetail>lambdaQuery().eq(RecordDetail::getId, id)
         );
@@ -132,7 +133,7 @@ public class RecordDetailServiceImpl extends ServiceImpl<RecordDetailMapper, Rec
         if (recordDetailDTO.getId() == null|| recordDetailDTO.getRecordId() == null || recordDetailDTO.getFoodId() == null) {
             return ResponseResult.errorResult(400, "id不能为空");
         }
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
         RecordDetail recordDetail = this.getOne(
                 Wrappers.<RecordDetail>lambdaQuery().eq(RecordDetail::getId, recordDetailDTO.getId())
         );
@@ -158,7 +159,7 @@ public class RecordDetailServiceImpl extends ServiceImpl<RecordDetailMapper, Rec
         if (recordDetailAddDTO.getRecordId() == null || recordDetailAddDTO.getFoodId() == null) {
             return ResponseResult.errorResult(400, "食物和所属记录不能为空");
         }
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
 
         RecordDetail recordDetail = new RecordDetail();
         BeanUtils.copyProperties(recordDetailAddDTO, recordDetail);

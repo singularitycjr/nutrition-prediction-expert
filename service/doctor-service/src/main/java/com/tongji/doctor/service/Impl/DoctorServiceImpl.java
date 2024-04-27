@@ -16,6 +16,7 @@ import com.tongji.common.service.FileStorageService;
 import com.tongji.common.service.Impl.CacheService;
 import com.tongji.common.utils.SmsUtil;
 import com.tongji.global.helper.LoginObj;
+import com.tongji.global.util.SaTokenUtil;
 import com.tongji.model.dto.DoctorLoginDTO;
 import com.tongji.model.dto.DoctorDTO;
 import com.tongji.global.enums.RoleEnum;
@@ -54,8 +55,6 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
     @Autowired
     private CacheService cacheService;
 
-//    @Autowired
-//    private Environment environment;
 
     @Autowired
     private FileStorageService fileStorageService;
@@ -109,8 +108,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
 
     @Override
     public ResponseResult getDoctor() {
-        LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-        Doctor doctor = this.getById(loginObj.getId());
+        Doctor doctor = this.getById(SaTokenUtil.getId());
         return ResponseResult.okResult(doctor);
     }
 
@@ -226,9 +224,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "用户名不能为空");
         }
 
-        log.info("修改用户名 {}", StpUtil.getLoginIdAsLong());
-        LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-        Doctor doctor = this.getById(loginObj.getId());
+        Doctor doctor = this.getById(SaTokenUtil.getId());
         doctor.setName(dto.getName());
         this.updateById(doctor);
         return ResponseResult.okResult("修改成功");
@@ -249,9 +245,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "两次密码不一致");
         }
         // 找到是哪个账号
-//        Doctor doctor = this.getById(StpUtil.getLoginIdAsLong());
-        LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-        Doctor doctor = this.getById(loginObj.getId());
+        Doctor doctor = this.getById(SaTokenUtil.getId());
         // 检查验证码是否正确
         String codeCache = this.cacheService.get(CommonConstants.SMS_UPDATE_CODE + doctor.getAccount());
         if (!dto.getCode().equals(codeCache)) {
@@ -329,8 +323,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
         }
 
 
-        LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-        Doctor doctor = this.getById(loginObj.getId());
+        Doctor doctor = this.getById(SaTokenUtil.getId());
 
         String prifileUrl = doctor.getProfile();
         if (!StrUtil.hasBlank(prifileUrl))

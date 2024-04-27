@@ -8,6 +8,7 @@ import cn.hutool.json.ObjectMapper;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tongji.common.service.FileStorageService;
+import com.tongji.global.util.SaTokenUtil;
 import com.tongji.model.dto.*;
 import com.tongji.model.pojo.Glucose;
 import com.tongji.model.vo.GoBankNutritionVO;
@@ -64,7 +65,7 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         if (timeRangeDTO.getStartTime() == null || timeRangeDTO.getEndTime() == null) {
             return ResponseResult.errorResult(400, "时间范围不能为空");
         }
-        Long id = StpUtil.getLoginIdAsLong();
+        Long id = SaTokenUtil.getId();
         List<Glucose> glucoseList = this.list(
                 Wrappers.<Glucose>lambdaQuery().eq(Glucose::getUserId, id).
                         between(Glucose::getTime, timeRangeDTO.getStartTime(), timeRangeDTO.getEndTime())
@@ -77,7 +78,7 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         if (id == null) {
             return ResponseResult.errorResult(400, "id不能为空");
         }
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
         Glucose glucose = this.getOne(
                 Wrappers.<Glucose>lambdaQuery().eq(Glucose::getUserId, userId).
                         eq(Glucose::getId, id)
@@ -94,7 +95,7 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         if (glucoseDTO.getId() == null) {
             return ResponseResult.errorResult(400, "id不能为空");
         }
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
         Glucose glucose = this.getOne(
                 Wrappers.<Glucose>lambdaQuery().eq(Glucose::getUserId, userId).
                         eq(Glucose::getId, glucoseDTO.getId())
@@ -113,7 +114,7 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         if (glucoseAddDTO.getGluValue() == null || glucoseAddDTO.getTime() == null) {
             return ResponseResult.errorResult(400, "血糖值和时间不能为空");
         }
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
         Glucose glucose = new Glucose();
         glucose.setId(null);
         glucose.setUserId(userId);
@@ -190,7 +191,7 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         else
             return ResponseResult.okResult(400,"表格文件为空");
 
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
         List<Glucose> glucoseList=new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         while(rowIterator.hasNext())
@@ -228,7 +229,7 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         DateTimeFormatter returnFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         //获取当前时间往前96条数据
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
         LocalDateTime currentTime=LocalDateTime.now();
         List<Glucose> glucoseList=this.list(
                 Wrappers.<Glucose>lambdaQuery().
@@ -239,7 +240,6 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         List<Object[]> dataList = new ArrayList<>();
         for (Glucose glucose : glucoseList){
             dataList.add(new Object[] {glucose.getTime().format(inputFormatter), glucose.getGluValue()});
-//            System.out.println(glucose.getTime().format(formatter));
         }
         Map<String, Object> jsonObject = new HashMap<>();
         jsonObject.put("seq",dataList);

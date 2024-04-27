@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tongji.common.constants.CommonConstants;
 import com.tongji.common.service.Impl.CacheService;
 import com.tongji.common.utils.HttpClientUtil;
+import com.tongji.global.util.SaTokenUtil;
 import com.tongji.model.dto.AugorithmReturnDTO;
 import com.tongji.model.dto.FoodChosenDTO;
 import com.tongji.model.dto.RecognizeDTO;
@@ -35,6 +36,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     @Autowired
     private CacheService cacheService;
 
+
     @Override
     public FoodChoices getPredictInfo(RecognizeDTO recognizeDTO) {
         if (!algorithmProperties.getEnableAlgorithm()) {
@@ -56,7 +58,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         }
         String url = recognizeDTO.getUrl();
         Integer num = recognizeDTO.getNum();
-        long userId = StpUtil.getLoginIdAsLong();
+        long userId = SaTokenUtil.getId();
         String key = CommonConstants.USER_IMG + userId;
         //if (cacheService.get(key) != null) {
         //    throw new RuntimeException("请勿重复识别");
@@ -141,7 +143,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             return augorithmReturnDTOList;
         }
         // 找到对应的图片
-        long userId = StpUtil.getLoginIdAsLong();
+        long userId = SaTokenUtil.getId();
         String url = this.cacheService.get(CommonConstants.USER_IMG + userId);
         if (url == null) {
             throw new RuntimeException("请先识别图片");
@@ -216,7 +218,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
                 }
                 augorithmReturnDTOList.add(augorithmReturnDTO);
             }
-//            log.info("lapDepthJSON: {}", lapDepthJSON);
+
             return augorithmReturnDTOList;
         } catch (IOException e) {
             throw new RuntimeException(e);

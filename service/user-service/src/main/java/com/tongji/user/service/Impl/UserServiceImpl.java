@@ -5,7 +5,6 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -16,11 +15,11 @@ import com.tongji.common.service.FileStorageService;
 import com.tongji.common.service.Impl.CacheService;
 import com.tongji.common.utils.SmsUtil;
 import com.tongji.global.helper.LoginObj;
+import com.tongji.global.util.SaTokenUtil;
 import com.tongji.model.dto.UserLoginDTO;
 import com.tongji.model.dto.UserDTO;
 import com.tongji.model.dto.UserDetailDTO;
 import com.tongji.global.enums.RoleEnum;
-import com.tongji.global.constrants.Constrants;
 import com.tongji.model.pojo.User;
 import com.tongji.model.pojo.UserDetail;
 import com.tongji.model.vo.ResponseResult;
@@ -36,7 +35,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -69,6 +67,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     private FileStorageService fileStorageService;
 
+
     @Override
     public ResponseResult login(UserLoginDTO userLoginDTO) {
         if (StrUtil.hasBlank(userLoginDTO.getAccount(), userLoginDTO.getPassword())) {
@@ -77,7 +76,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         User user = this.getOne(Wrappers.<User>lambdaQuery()
                         .eq(User::getAccount, userLoginDTO.getAccount())
-//                .eq(User::getRole, RoleEnum.valueOf(loginDTO.getRole()).getRoleNum())
         );
         if (user == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "用户不存在");
@@ -98,25 +96,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         //因此转为JSON字符串传入，需要时再转回Object
         StpUtil.login(jsonUser);
 
-//        //将角色写入redis
-//        cacheService.delete(Constrants.USER_ROLE + user.getId());
-//        cacheService.set(Constrants.USER_ROLE + user.getId(), RoleEnum.find(user.getRole()).getName());
-//        String expireString = environment.getProperty("sa-token.timeout");
-//        if (StrUtil.hasBlank(expireString))
-//            expireString = "14400";
-//        long expire = Long.parseLong(expireString);
-//        cacheService.expire(Constrants.USER_ROLE + user.getId(), expire, TimeUnit.SECONDS);
-
         log.info("登录成功 {}", user.getId());
         return ResponseResult.okResult("登录成功");
     }
 
     @Override
     public ResponseResult logout() {
-//        LoginObj loginObj= JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-//        User user = this.getById(loginObj.getId());
-//        //删除角色缓存
-//        cacheService.delete(Constrants.USER_ROLE + user.getId());
         StpUtil.logout();
         return ResponseResult.okResult("登出成功");
 
@@ -124,8 +109,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public ResponseResult getUser() {
-        LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-        User user = this.getById(loginObj.getId());
+        Long id= SaTokenUtil.getId();
+        User user = this.getById(id);
         return ResponseResult.okResult(user);
     }
 
@@ -151,20 +136,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "验证码错误");
         }
 
-//        RoleEnum roleEnum = Enums.getIfPresent(RoleEnum.class, dto.getRole()).orNull();
-//        if (roleEnum == null) {
-//            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "角色不存在");
-//        }
         // 删掉验证码
         this.cacheService.delete(CommonConstants.SMS_CODE + phone);
 
-//        User user = this.getOne(Wrappers.<User>lambdaQuery()
-//                .eq(User::getAccount, dto.getAccount())
-//                .eq(User::getRole,dto.getRole())
-//        );
-//        if(user!=null){
-//            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_EXIST, "用户已存在");
-//        }
 
         // 随机生成长度为6的字符串作为盐
         String salt = RandomUtil.randomString(CommonConstants.SALT_LENGTH);
@@ -175,7 +149,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setAccount(dto.getAccount());
         user.setSalt(salt);
         user.setPassword(password);
-//        user.setRole(RoleEnum.valueOf(dto.getRole()).getRoleNum());
         try {
             this.save(user);
         } catch (Exception e) {
@@ -254,10 +227,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (StrUtil.hasBlank(dto.getName())) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "用户名不能为空");
         }
-//        User user = this.getById(StpUtil.getLoginIdAsLong());
-        log.info("修改用户名 {}", StpUtil.getLoginIdAsLong());
-        LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-        User user = this.getById(loginObj.getId());
+        Long id=SaTokenUtil.getId();
+        User user = this.getById(id);
         user.setName(dto.getName());
         this.updateById(user);
         return ResponseResult.okResult("修改成功");
@@ -278,9 +249,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "两次密码不一致");
         }
         // 找到是哪个账号
-//        User user = this.getById(StpUtil.getLoginIdAsLong());
-        LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-        User user = this.getById(loginObj.getId());
+        User user = this.getById(SaTokenUtil.getId());
         // 检查验证码是否正确
         String codeCache = this.cacheService.get(CommonConstants.SMS_UPDATE_CODE + user.getAccount());
         if (!dto.getCode().equals(codeCache)) {
@@ -295,9 +264,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         lambdaUpdateWrapper.eq(User::getId, user.getId()).set(User::getPassword, password);
         this.baseMapper.update(null, lambdaUpdateWrapper);
         // 将当前账号下线
-
-//        //删掉角色信息
-//        cacheService.delete(Constrants.USER_ROLE + user.getId());
 
         StpUtil.logout();
 
@@ -345,10 +311,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public ResponseResult getDetail() {
-//        User user = this.getById(StpUtil.getLoginIdAsLong());
         System.out.println(StpUtil.getLoginId().getClass());
-        LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-        User user = this.getById(loginObj.getId());
+        User user = this.getById(SaTokenUtil.getId());
         UserDetail userDetail = userDetailService.getOne(
                 Wrappers.<UserDetail>lambdaQuery().eq(UserDetail::getUserId, user.getId())
         );
@@ -362,9 +326,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public ResponseResult updateDetail(UserDetailDTO userDetailDTO) {
-//        Long id = StpUtil.getLoginIdAsLong();
-        LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-        Long id = loginObj.getId();
+        Long id = SaTokenUtil.getId();
 
         // 找到这条信息
         UserDetail userDetailFound = userDetailMapper.selectOne(Wrappers.<UserDetail>lambdaQuery().eq(UserDetail::getUserId,
@@ -411,9 +373,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return ResponseResult.errorResult(400, "文件类型错误");
         }
 
-//        User user = this.getById(StpUtil.getLoginIdAsLong());
-        LoginObj loginObj = JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-        User user = this.getById(loginObj.getId());
+        User user = this.getById(SaTokenUtil.getId());
+
 
         String prifileUrl = user.getProfile();
         if (!StrUtil.hasBlank(prifileUrl))

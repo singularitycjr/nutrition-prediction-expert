@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tongji.common.enums.AppHttpCodeEnum;
+import com.tongji.global.util.SaTokenUtil;
 import com.tongji.model.dto.*;
 import com.tongji.model.json.FoodChoices;
 import com.tongji.model.pojo.Record;
@@ -60,7 +61,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         if (timeRangeDTO.getStartTime() == null || timeRangeDTO.getEndTime() == null) {
             return ResponseResult.errorResult(400, "时间范围不能为空");
         }
-        Long id = StpUtil.getLoginIdAsLong();
+        Long id = SaTokenUtil.getId();
         List<Record> recordList = this.list(
                 Wrappers.<Record>lambdaQuery().eq(Record::getUserId, id).
                         between(Record::getCreateTime, timeRangeDTO.getStartTime(), timeRangeDTO.getEndTime())
@@ -82,7 +83,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         if (id == null) {
             return ResponseResult.errorResult(400, "id不能为空");
         }
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
         Record record = this.getOne(
                 Wrappers.<Record>lambdaQuery().eq(Record::getUserId, userId).
                         eq(Record::getId, id)
@@ -99,7 +100,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         if (recordDTO.getId() == null||recordDTO.getCreateTime()==null||recordDTO.getType()==null) {
             return ResponseResult.errorResult(400, "id、时间、类型不能为空");
         }
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
         Record record = this.getOne(
                 Wrappers.<Record>lambdaQuery().eq(Record::getUserId, userId).
                         eq(Record::getId, recordDTO.getId())
@@ -118,7 +119,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         if (recordAddDTO.getCreateTime() == null || recordAddDTO.getType() == null) {
             return ResponseResult.errorResult(400, "时间和类型不能为空");
         }
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = SaTokenUtil.getId();
         Record record=new Record();
 
         BeanUtils.copyProperties(recordAddDTO,record);
@@ -149,7 +150,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             Long id = this.foodService.getIdByName(dto.getName());
             dto.setId(id);
         }
-        // Long id = this.foodService.getIdByName()
+
         log.info("营养评估结果: {}", nutritionList);
         return ResponseResult.okResult(nutritionList);
     }
@@ -159,7 +160,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         if (timeRangeDTO.getStartTime() == null || timeRangeDTO.getEndTime() == null) {
             return ResponseResult.errorResult(400, "时间范围不能为空");
         }
-        Long id = StpUtil.getLoginIdAsLong();
+        Long id = SaTokenUtil.getId();
         List<Record> recordList = this.list(
                 Wrappers.<Record>lambdaQuery().eq(Record::getUserId, id).
                         between(Record::getCreateTime, timeRangeDTO.getStartTime(), timeRangeDTO.getEndTime())
@@ -198,7 +199,6 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         Environment environment = new StandardEnvironment();
         RestTemplate restTemplate = new RestTemplate();
         String url= environment.getProperty("algorithmUrl.segRec");
-//        String url = "https://ericwvi.site/bgmp/api/diet?Action=SegRec";
 
         // 为restTemplate添加请求头
         /* 请求头 */
@@ -217,10 +217,8 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
     }
     @Override
     public ResponseResult nutrition(NutritionDTO nutritionDTO) {
-//        Environment environment = new StandardEnvironment();
         RestTemplate restTemplate = new RestTemplate();
         String url= environment.getProperty("algorithmUrl.nutrition");
-//        String url = "https://ericwvi.site/bgmp/api/diet?Action=Nutrition";
 
         // 为restTemplate添加请求头
         /* 请求头 */
