@@ -210,7 +210,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // 看看之前有没有发送过验证码
         String codeCache = this.cacheService.get(CommonConstants.SMS_UPDATE_CODE + mobile);
         if (StrUtil.isNotBlank(codeCache)) {
-            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_EXIST, "验证码已发送");
+            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_EXIST, "不可重复发送验证码");
         }
         // 生成验证码
         String code = RandomUtil.randomNumbers(CommonConstants.SMS_CODE_LENGTH);

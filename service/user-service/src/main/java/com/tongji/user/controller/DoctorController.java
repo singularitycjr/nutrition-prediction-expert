@@ -1,10 +1,10 @@
-package com.tongji.doctor.controller;
+package com.tongji.user.controller;
 
 
 import com.tongji.model.dto.DoctorDTO;
 import com.tongji.model.dto.DoctorLoginDTO;
 import com.tongji.model.vo.ResponseResult;
-import com.tongji.doctor.service.IDoctorService;
+import com.tongji.user.service.IDoctorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

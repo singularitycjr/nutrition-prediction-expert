@@ -1,4 +1,4 @@
-package com.tongji.doctor.service;
+package com.tongji.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tongji.model.dto.DoctorDTO;

@@ -6,7 +6,7 @@ public class CommonConstants {
     public static final String SMS_CODE = "sms_code:";
     public static final String SMS_UPDATE_CODE = "sms_update_code:";
     public static final Integer SMS_CODE_LENGTH = 6;
-    public static final Integer SMS_CODE_TIMEOUT = 3;
+    public static final Integer SMS_CODE_TIMEOUT = 1;
     public static final TimeUnit SMS_CODE_TIMEOUT_TYPE = TimeUnit.MINUTES;
 
     public static final Integer SALT_LENGTH = 6;

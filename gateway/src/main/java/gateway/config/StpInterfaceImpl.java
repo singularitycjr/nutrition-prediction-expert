@@ -2,13 +2,7 @@ package gateway.config;
 
 import cn.dev33.satoken.stp.StpInterface;
 import cn.dev33.satoken.stp.StpUtil;
-import com.tongji.global.constrants.Constrants;
 import com.tongji.global.helper.LoginObj;
-import com.tongji.global.util.SaTokenUtil;
-import com.tongji.model.pojo.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -21,8 +15,6 @@ import com.alibaba.fastjson.JSON;
 @Component    // 保证此类被 SpringBoot 扫描，完成 Sa-Token 的自定义权限验证扩展
 public class StpInterfaceImpl   implements StpInterface {
 
-//    @Autowired
-//    private StringRedisTemplate redisService;
 
 
     //返回一个账号所拥有的权限集合
@@ -38,11 +30,7 @@ public class StpInterfaceImpl   implements StpInterface {
     public List<String> getRoleList(Object obj, String loginType) {
         List<String> list=new ArrayList<>();
         LoginObj loginObj= JSON.parseObject((String) StpUtil.getLoginId(), LoginObj.class);
-//        String id=loginObj.getId().toString();
-//        String role=redisService.opsForValue().get(Constrants.USER_ROLE+ role+id);
-
         list.add(loginObj.getRole());
-//        System.out.println(list);
         return list;
     }
 

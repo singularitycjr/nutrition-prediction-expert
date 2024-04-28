@@ -1,11 +1,10 @@
-package com.tongji.doctor.service.Impl;
+package com.tongji.user.service.Impl;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -20,21 +19,17 @@ import com.tongji.global.util.SaTokenUtil;
 import com.tongji.model.dto.DoctorLoginDTO;
 import com.tongji.model.dto.DoctorDTO;
 import com.tongji.global.enums.RoleEnum;
-import com.tongji.global.constrants.Constrants;
 import com.tongji.model.pojo.Doctor;
 import com.tongji.model.vo.ResponseResult;
-import com.tongji.doctor.mapper.DoctorMapper;
-import com.tongji.doctor.service.IDoctorService;
+import com.tongji.user.mapper.DoctorMapper;
+import com.tongji.user.service.IDoctorService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 
 /**

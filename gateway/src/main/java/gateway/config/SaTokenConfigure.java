@@ -31,17 +31,15 @@ public class SaTokenConfigure {
                 .addExclude("/user/user/forgetPassword")
                 .addExclude("/user/common/uploadMask")
 
-                .addExclude("/doctor/doctor/login")
-                .addExclude("/doctor/doctor/register")
-                .addExclude("/doctor/doctor/sendCode/**")
-                .addExclude("/doctor/doctor/sendCodeUpdate/**")
-                .addExclude("/doctor/doctor/forgetPassword")
-                .addExclude("/doctor/common/uploadMask")
+                .addExclude("/user/doctor/login")
+                .addExclude("/user/doctor/register")
+                .addExclude("/user/doctor/sendCode/**")
+                .addExclude("/user/doctor/sendCodeUpdate/**")
+                .addExclude("/user/doctor/forgetPassword")
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
                     SaRouter.match("/**")
                             .notMatch("/user/user/login")
-                            .notMatch("/doctor/doctor/login")
                             .check(r -> StpUtil.checkLogin());
 
 //                    进入角色鉴权
