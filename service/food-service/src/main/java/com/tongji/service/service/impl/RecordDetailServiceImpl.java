@@ -159,7 +159,6 @@ public class RecordDetailServiceImpl extends ServiceImpl<RecordDetailMapper, Rec
         if (recordDetailAddDTO.getRecordId() == null || recordDetailAddDTO.getFoodId() == null) {
             return ResponseResult.errorResult(400, "食物和所属记录不能为空");
         }
-        Long userId = SaTokenUtil.getId();
 
         RecordDetail recordDetail = new RecordDetail();
         BeanUtils.copyProperties(recordDetailAddDTO, recordDetail);

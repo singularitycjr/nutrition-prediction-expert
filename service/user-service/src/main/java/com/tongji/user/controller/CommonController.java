@@ -31,6 +31,7 @@ public class CommonController {
     @Autowired
     private FileStorageService fileStorageService;
 
+
     @Autowired
     private CacheService cacheService;
 
@@ -142,6 +143,7 @@ public class CommonController {
         HttpEntity<byte[]> httpEntity = new HttpEntity<>(body, header);
 
         String res = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
+        System.out.println(res);
 
         GoBankUploadVO goBankEndVO = JSON.parseObject(res, GoBankUploadVO.class);
 

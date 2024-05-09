@@ -96,9 +96,9 @@ public class UserController {
         return userService.updateDetail(userDetailDTO);
     }
 
-    @Operation(summary = "上传头像")
-    @PutMapping("/uploadProfix")
-    public ResponseResult uploadProfix(@RequestParam("picture") MultipartFile picture){
+    @Operation(summary = "上传/修改头像")
+    @PostMapping("/uploadProfix")
+    public ResponseResult uploadProfix(@RequestParam(value = "file") MultipartFile picture){
         return userService.uploadProfix(picture);
     }
 

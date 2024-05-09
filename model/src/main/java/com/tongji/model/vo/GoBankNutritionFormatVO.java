@@ -9,6 +9,7 @@ public class GoBankNutritionFormatVO {
     @Data
     public static class Result {
         String name;
+        Long id;
         Float foodMass;
         Float calorieMass;
         Float carbohydrateMass;

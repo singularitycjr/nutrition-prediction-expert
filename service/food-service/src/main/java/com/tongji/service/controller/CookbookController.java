@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 //@SaCheckRole("PATIENT")
 @RequestMapping("/cookbook")
-@Tag(name = "食谱数据数据")
+@Tag(name = "食谱数据")
 public class CookbookController {
     @Autowired
     private ICookbookService cookbookService;

@@ -9,6 +9,7 @@ import com.tongji.model.dto.*;
 import com.tongji.model.json.FoodChoices;
 import com.tongji.model.pojo.Record;
 import com.tongji.model.pojo.RecordDetail;
+import com.tongji.model.vo.GoBankNutritionFormatVO;
 import com.tongji.model.vo.GoBankNutritionVO;
 import com.tongji.model.vo.GoBankSegRecVO;
 import com.tongji.model.vo.ResponseResult;
@@ -22,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.core.env.StandardEnvironment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -196,8 +196,8 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
 
     @Override
     public ResponseResult segrec(SegRecDTO segRecDTO) {
-        Environment environment = new StandardEnvironment();
         RestTemplate restTemplate = new RestTemplate();
+        System.out.println("111");
         String url= environment.getProperty("algorithmUrl.segRec");
 
         // 为restTemplate添加请求头
@@ -219,7 +219,6 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
     public ResponseResult nutrition(NutritionDTO nutritionDTO) {
         RestTemplate restTemplate = new RestTemplate();
         String url= environment.getProperty("algorithmUrl.nutrition");
-
         // 为restTemplate添加请求头
         /* 请求头 */
         HttpHeaders header = new HttpHeaders();
@@ -227,13 +226,20 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         header.add("x-api-key", environment.getProperty("x-api-key"));
 
         HttpEntity<NutritionDTO> httpEntity = new HttpEntity<>(nutritionDTO, header);
-
         String res = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
-
+        System.out.println(res);
         GoBankNutritionVO goBankSegRecVO = JSON.parseObject(res, GoBankNutritionVO.class);
         if (goBankSegRecVO == null || goBankSegRecVO.getCode() == null || goBankSegRecVO.getCode() != 200) {
             return ResponseResult.errorResult(AppHttpCodeEnum.SERVER_ERROR);
         }
-        return ResponseResult.okResult(goBankSegRecVO.format());
+        GoBankNutritionFormatVO formatVO=goBankSegRecVO.format();
+        for (GoBankNutritionFormatVO.Result result : formatVO.getMessage().getResults()) {
+            // 通过食物名字获取食物id
+            Long id = this.foodService.getIdByName(result.getName());
+            System.out.println(result.getName());
+            System.out.println(id);
+            result.setId(id);
+        }
+        return ResponseResult.okResult(formatVO);
     }
 }

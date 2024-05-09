@@ -84,8 +84,8 @@ public class DoctorController {
 
 
     @Operation(summary = "上传头像")
-    @PutMapping("/uploadProfix")
-    public ResponseResult uploadProfix(@RequestParam("picture") MultipartFile picture){
+    @PostMapping("/uploadProfix")
+    public ResponseResult uploadProfix(@RequestParam("file") MultipartFile picture){
         return doctorService.uploadProfix(picture);
     }
 
