@@ -1,12 +1,10 @@
 package com.tongji.service.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.tongji.model.dto.RecordDetailAddDTO;
-import com.tongji.model.dto.RecordDetailDTO;
+import com.tongji.model.dto.patient.RecordDetailAddDTO;
+import com.tongji.model.dto.patient.RecordDetailDTO;
 import com.tongji.model.pojo.RecordDetail;
 import com.tongji.model.vo.ResponseResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * <p>

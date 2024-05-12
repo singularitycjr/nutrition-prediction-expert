@@ -2,9 +2,9 @@ package com.tongji.service.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.tongji.model.dto.CookBookReturnDTO;
-import com.tongji.model.dto.CookbookDTO;
-import com.tongji.model.dto.OtherFoodDTO;
+import com.tongji.model.dto.patient.CookBookReturnDTO;
+import com.tongji.model.dto.patient.CookbookDTO;
+import com.tongji.model.dto.patient.OtherFoodDTO;
 import com.tongji.model.pojo.Cookbook;
 import com.tongji.model.pojo.CookbookDetail;
 import com.tongji.model.pojo.OtherFood;

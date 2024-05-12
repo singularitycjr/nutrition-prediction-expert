@@ -1,11 +1,10 @@
 package com.tongji.service.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tongji.common.enums.AppHttpCodeEnum;
 import com.tongji.global.util.SaTokenUtil;
-import com.tongji.model.dto.*;
+import com.tongji.model.dto.patient.*;
 import com.tongji.model.json.FoodChoices;
 import com.tongji.model.pojo.Record;
 import com.tongji.model.pojo.RecordDetail;

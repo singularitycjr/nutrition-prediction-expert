@@ -1,13 +1,11 @@
 package com.tongji.service.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.tongji.model.dto.FoodAddDTO;
-import com.tongji.model.dto.FoodDTO;
+import com.tongji.model.dto.patient.FoodAddDTO;
+import com.tongji.model.dto.patient.FoodDTO;
 import com.tongji.model.pojo.Food;
 import com.tongji.model.query.FoodQuery;
 import com.tongji.model.vo.ResponseResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * <p>

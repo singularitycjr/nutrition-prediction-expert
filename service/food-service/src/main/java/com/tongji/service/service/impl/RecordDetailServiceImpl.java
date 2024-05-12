@@ -1,17 +1,15 @@
 package com.tongji.service.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tongji.global.util.SaTokenUtil;
-import com.tongji.model.dto.RecordDetailAddDTO;
-import com.tongji.model.dto.RecordDetailDTO;
-import com.tongji.model.dto.RecordDetailReturnDTO;
+import com.tongji.model.dto.patient.RecordDetailAddDTO;
+import com.tongji.model.dto.patient.RecordDetailDTO;
+import com.tongji.model.dto.patient.RecordDetailReturnDTO;
 import com.tongji.model.pojo.Record;
 import com.tongji.model.pojo.RecordDetail;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.mapper.FoodMapper;
 import com.tongji.service.mapper.RecordDetailMapper;
-import com.tongji.service.service.IFoodService;
 import com.tongji.service.service.IRecordDetailService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tongji.service.service.IRecordService;

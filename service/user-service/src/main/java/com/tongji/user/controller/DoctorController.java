@@ -1,8 +1,8 @@
 package com.tongji.user.controller;
 
 
-import com.tongji.model.dto.DoctorDTO;
-import com.tongji.model.dto.DoctorLoginDTO;
+import com.tongji.model.dto.doctor.DoctorDTO;
+import com.tongji.model.dto.doctor.DoctorLoginDTO;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.user.service.IDoctorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @RequestMapping("/doctor")
-@Tag(name = "用户")
+@Tag(name = "医生用户")
 public class DoctorController {
     @Autowired
     private IDoctorService doctorService;

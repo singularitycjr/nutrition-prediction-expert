@@ -1,17 +1,13 @@
 package com.tongji.service.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import cn.hutool.json.ObjectMapper;
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tongji.common.service.FileStorageService;
 import com.tongji.global.util.SaTokenUtil;
-import com.tongji.model.dto.*;
+import com.tongji.model.dto.patient.*;
 import com.tongji.model.pojo.Glucose;
-import com.tongji.model.vo.GoBankNutritionVO;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.mapper.GlucoseMapper;
 import com.tongji.service.service.IGlucoseService;
@@ -20,11 +16,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.core.env.StandardEnvironment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,7 +28,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -42,6 +35,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -133,8 +127,14 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         //默认是xlsx
         Workbook workbook;
         try {
-            workbook = new XSSFWorkbook(file.getInputStream());
-        } catch (IOException e) {
+            String filename = file.getOriginalFilename();
+            String fileType = filename.substring(filename.lastIndexOf("."));
+            if(fileType.equals(".xlsx"))
+                workbook = new XSSFWorkbook(file.getInputStream());
+            else
+                workbook = new HSSFWorkbook(file.getInputStream());
+
+        } catch (Exception e) {
             return ResponseResult.errorResult(400,"文件读取错误");
         }
         Sheet sheet = workbook.getSheetAt(0);
@@ -162,11 +162,16 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
                 ||glucoseFileAddDTO.getValueCol()==null)
             return ResponseResult.errorResult(400, "文件路径、血糖列、时间列不能为空");
 
-        InputStream inputStream = new ByteArrayInputStream(fileStorageService.downLoadFile(glucoseFileAddDTO.getUrl()));
+        String url=glucoseFileAddDTO.getUrl();
+        InputStream inputStream = new ByteArrayInputStream(fileStorageService.downLoadFile(url));
         Workbook workbook;
         try {
-            workbook=new XSSFWorkbook(inputStream);
-        } catch (IOException e) {
+            String fileType = url.substring(url.lastIndexOf("."));
+            if(fileType.equals(".xlsx"))
+                workbook = new XSSFWorkbook(inputStream);
+            else
+                workbook = new HSSFWorkbook(inputStream);
+        } catch (Exception e) {
             return ResponseResult.okResult(400,"文件下载错误");
         }
 
@@ -226,8 +231,7 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
     @Override
     public ResponseResult getPredictGlucose()
     {
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        DateTimeFormatter returnFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         //获取当前时间往前96条数据
         Long userId = SaTokenUtil.getId();
         LocalDateTime currentTime=LocalDateTime.now();
@@ -235,11 +239,16 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
                 Wrappers.<Glucose>lambdaQuery().
                         eq(Glucose::getUserId, userId).
                         orderByDesc(Glucose::getTime).
+                        le(Glucose::getTime, currentTime). // 添加条件：小于等于当前时间
                         last("LIMIT 96")
         );
+        glucoseList = glucoseList.stream()
+                .sorted(Comparator.comparing(Glucose::getTime)) // 按时间正序排序
+                .collect(Collectors.toList());
         List<Object[]> dataList = new ArrayList<>();
         for (Glucose glucose : glucoseList){
-            dataList.add(new Object[] {glucose.getTime().format(inputFormatter), glucose.getGluValue()});
+            dataList.add(new Object[] {glucose.getTime().format(formatter), glucose.getGluValue()});
+            System.out.println(glucose.getTime().format(formatter));
         }
         Map<String, Object> jsonObject = new HashMap<>();
         jsonObject.put("seq",dataList);
@@ -248,7 +257,6 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         //调go接口部分
         RestTemplate restTemplate = new RestTemplate();
         String url = environment.getProperty("algorithmUrl.glucosePredict");
-        System.out.println(url);
         // 为restTemplate添加请求头
         /* 请求头 */
         HttpHeaders header = new HttpHeaders();
@@ -262,10 +270,12 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         JSONArray datasArray= (JSONArray) jsonResult.get("results");
         //转换为合适的键值对形式
         List<GlucosePredictDTO> predictList=new ArrayList<>();
+        System.out.println("***************************");
         for (Object object : datasArray) {
             JSONArray data = (JSONArray) object;
             GlucosePredictDTO glucosePredictDTO=new GlucosePredictDTO();
-            glucosePredictDTO.setTime(LocalDateTime.parse(data.get(0).toString(),returnFormatter));
+            glucosePredictDTO.setTime(LocalDateTime.parse(data.get(0).toString(),formatter));
+            System.out.println(LocalDateTime.parse(data.get(0).toString(),formatter));
             glucosePredictDTO.setValue((BigDecimal)data.get(1));
             predictList.add(glucosePredictDTO);
 //            System.out.println(data.get(0).toString());

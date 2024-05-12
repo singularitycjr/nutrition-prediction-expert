@@ -1,14 +1,13 @@
 package com.tongji.service.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tongji.global.util.SaTokenUtil;
-import com.tongji.model.dto.FoodAddDTO;
-import com.tongji.model.dto.FoodDTO;
+import com.tongji.model.dto.patient.FoodAddDTO;
+import com.tongji.model.dto.patient.FoodDTO;
 import com.tongji.model.pojo.Food;
 import com.tongji.model.query.FoodQuery;
 import com.tongji.model.vo.PageVO;
@@ -18,9 +17,6 @@ import com.tongji.service.service.IFoodService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * <p>

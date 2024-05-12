@@ -1,11 +1,8 @@
 package com.tongji.service.controller;
 
 
-import cn.dev33.satoken.annotation.SaCheckRole;
-import com.tongji.model.dto.FoodAddDTO;
-import com.tongji.model.dto.FoodDTO;
-import com.tongji.model.dto.GlucoseDTO;
-import com.tongji.model.pojo.Glucose;
+import com.tongji.model.dto.patient.FoodAddDTO;
+import com.tongji.model.dto.patient.FoodDTO;
 import com.tongji.model.query.FoodQuery;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.service.IFoodService;

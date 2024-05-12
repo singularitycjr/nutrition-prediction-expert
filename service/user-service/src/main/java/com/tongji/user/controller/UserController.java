@@ -1,10 +1,9 @@
 package com.tongji.user.controller;
 
 
-import cn.dev33.satoken.stp.StpUtil;
-import com.tongji.model.dto.UserLoginDTO;
-import com.tongji.model.dto.UserDTO;
-import com.tongji.model.dto.UserDetailDTO;
+import com.tongji.model.dto.patient.UserLoginDTO;
+import com.tongji.model.dto.patient.UserDTO;
+import com.tongji.model.dto.patient.UserDetailDTO;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.user.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @RequestMapping("/user")
-@Tag(name = "用户")
+@Tag(name = "患者用户")
 public class UserController {
     @Autowired
     private IUserService userService;

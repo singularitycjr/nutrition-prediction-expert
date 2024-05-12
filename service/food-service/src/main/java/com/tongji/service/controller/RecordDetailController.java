@@ -1,13 +1,10 @@
 package com.tongji.service.controller;
 
 
-import cn.dev33.satoken.annotation.SaCheckRole;
-import com.tongji.model.dto.RecordDetailAddDTO;
-import com.tongji.model.dto.RecordDetailDTO;
-import com.tongji.model.dto.TimeRangeDTO;
+import com.tongji.model.dto.patient.RecordDetailAddDTO;
+import com.tongji.model.dto.patient.RecordDetailDTO;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.service.IRecordDetailService;
-import com.tongji.service.service.IRecordService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;

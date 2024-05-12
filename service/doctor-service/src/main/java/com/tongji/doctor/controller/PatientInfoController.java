@@ -9,4 +9,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/patientInfo")
 @Tag(name = "患者数据")
 public class PatientInfoController {
+
 }

@@ -1,7 +1,7 @@
 package com.tongji.service.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.tongji.model.dto.CookbookDTO;
+import com.tongji.model.dto.patient.CookbookDTO;
 import com.tongji.model.pojo.Cookbook;
 import com.tongji.model.vo.ResponseResult;
 

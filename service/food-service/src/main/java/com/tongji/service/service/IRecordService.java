@@ -1,11 +1,9 @@
 package com.tongji.service.service;
 
-import com.tongji.model.dto.*;
+import com.tongji.model.dto.patient.*;
 import com.tongji.model.pojo.Record;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tongji.model.vo.ResponseResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * <p>

@@ -1,7 +1,7 @@
 package com.tongji.service.controller;
 
 
-import com.tongji.model.dto.CookbookDTO;
+import com.tongji.model.dto.patient.CookbookDTO;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.service.ICookbookService;
 import io.swagger.v3.oas.annotations.Operation;

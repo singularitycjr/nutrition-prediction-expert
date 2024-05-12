@@ -1,8 +1,7 @@
 package com.tongji.service.controller;
 
 
-import cn.dev33.satoken.annotation.SaCheckRole;
-import com.tongji.model.dto.*;
+import com.tongji.model.dto.patient.*;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.service.IRecordService;
 import io.swagger.v3.oas.annotations.Operation;

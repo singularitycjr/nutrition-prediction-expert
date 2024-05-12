@@ -1,9 +1,9 @@
 package com.tongji.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.tongji.model.dto.UserLoginDTO;
-import com.tongji.model.dto.UserDTO;
-import com.tongji.model.dto.UserDetailDTO;
+import com.tongji.model.dto.patient.UserLoginDTO;
+import com.tongji.model.dto.patient.UserDTO;
+import com.tongji.model.dto.patient.UserDetailDTO;
 import com.tongji.model.pojo.User;
 import com.tongji.model.vo.ResponseResult;
 import org.springframework.web.multipart.MultipartFile;

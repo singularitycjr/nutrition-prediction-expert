@@ -1,20 +1,16 @@
 package com.tongji.service.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.json.JSONObject;
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tongji.common.constants.CommonConstants;
 import com.tongji.common.service.Impl.CacheService;
 import com.tongji.common.utils.HttpClientUtil;
 import com.tongji.global.util.SaTokenUtil;
-import com.tongji.model.dto.AugorithmReturnDTO;
-import com.tongji.model.dto.FoodChosenDTO;
-import com.tongji.model.dto.RecognizeDTO;
+import com.tongji.model.dto.patient.AugorithmReturnDTO;
+import com.tongji.model.dto.patient.FoodChosenDTO;
+import com.tongji.model.dto.patient.RecognizeDTO;
 import com.tongji.model.json.FoodChoices;
 import com.tongji.model.json.LapDepthJSON;
-import com.tongji.model.pojo.Glucose;
-import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.properties.AlgorithmProperties;
 import com.tongji.service.service.IAlgorithmService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service

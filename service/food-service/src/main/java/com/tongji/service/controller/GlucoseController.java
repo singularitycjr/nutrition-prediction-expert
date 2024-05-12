@@ -1,17 +1,15 @@
 package com.tongji.service.controller;
 
 
-import cn.dev33.satoken.annotation.SaCheckRole;
-import com.tongji.model.dto.GlucoseAddDTO;
-import com.tongji.model.dto.GlucoseDTO;
-import com.tongji.model.dto.GlucoseFileAddDTO;
-import com.tongji.model.dto.TimeRangeDTO;
+import com.tongji.model.dto.patient.GlucoseAddDTO;
+import com.tongji.model.dto.patient.GlucoseDTO;
+import com.tongji.model.dto.patient.GlucoseFileAddDTO;
+import com.tongji.model.dto.patient.TimeRangeDTO;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.service.IGlucoseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
