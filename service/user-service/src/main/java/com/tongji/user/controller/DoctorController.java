@@ -2,7 +2,9 @@ package com.tongji.user.controller;
 
 
 import com.tongji.model.dto.doctor.DoctorDTO;
+import com.tongji.model.dto.doctor.DoctorDetailDTO;
 import com.tongji.model.dto.doctor.DoctorLoginDTO;
+import com.tongji.model.dto.patient.UserDetailDTO;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.user.service.IDoctorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +29,7 @@ public class DoctorController {
     private IDoctorService doctorService;
 
     @GetMapping("/get")
-    @Operation(summary = "获取用户信息")
+    @Operation(summary = "获取医生信息")
     public ResponseResult getDoctor(){
         return doctorService.getDoctor();
     }
@@ -82,6 +84,17 @@ public class DoctorController {
         return doctorService.forgetPassword(dto);
     }
 
+    @Operation(summary = "获取用户细节信息(只能获取自己的)")
+    @GetMapping("/getDetail")
+    public ResponseResult getDetail(){
+        return doctorService.getDetail();
+    }
+
+    @Operation(summary = "修改用户细节信息(只能修改自己的)")
+    @PutMapping("/updateDetail")
+    public ResponseResult updateDetail(@RequestBody DoctorDetailDTO doctorDetailDTO){
+        return doctorService.updateDetail(doctorDetailDTO);
+    }
 
     @Operation(summary = "上传头像")
     @PostMapping("/uploadProfix")

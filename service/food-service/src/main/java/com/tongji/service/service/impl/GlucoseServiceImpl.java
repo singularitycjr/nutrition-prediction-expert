@@ -6,6 +6,9 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tongji.common.service.FileStorageService;
 import com.tongji.global.util.SaTokenUtil;
+import com.tongji.model.dto.common.GlucoseFileAddDTO;
+import com.tongji.model.dto.common.GlucoseFileReturnDTO;
+import com.tongji.model.dto.common.GlucosePredictDTO;
 import com.tongji.model.dto.patient.*;
 import com.tongji.model.pojo.Glucose;
 import com.tongji.model.vo.ResponseResult;
@@ -248,7 +251,6 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         List<Object[]> dataList = new ArrayList<>();
         for (Glucose glucose : glucoseList){
             dataList.add(new Object[] {glucose.getTime().format(formatter), glucose.getGluValue()});
-            System.out.println(glucose.getTime().format(formatter));
         }
         Map<String, Object> jsonObject = new HashMap<>();
         jsonObject.put("seq",dataList);
@@ -270,7 +272,6 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         JSONArray datasArray= (JSONArray) jsonResult.get("results");
         //转换为合适的键值对形式
         List<GlucosePredictDTO> predictList=new ArrayList<>();
-        System.out.println("***************************");
         for (Object object : datasArray) {
             JSONArray data = (JSONArray) object;
             GlucosePredictDTO glucosePredictDTO=new GlucosePredictDTO();
@@ -278,7 +279,6 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
             System.out.println(LocalDateTime.parse(data.get(0).toString(),formatter));
             glucosePredictDTO.setValue((BigDecimal)data.get(1));
             predictList.add(glucosePredictDTO);
-//            System.out.println(data.get(0).toString());
         }
         Map<String,List<GlucosePredictDTO>> returnMap=new HashMap<>();
         returnMap.put("precict",predictList);

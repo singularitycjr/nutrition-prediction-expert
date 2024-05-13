@@ -311,7 +311,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public ResponseResult getDetail() {
-        System.out.println(StpUtil.getLoginId().getClass());
         User user = this.getById(SaTokenUtil.getId());
         UserDetail userDetail = userDetailService.getOne(
                 Wrappers.<UserDetail>lambdaQuery().eq(UserDetail::getUserId, user.getId())

@@ -1,4 +1,4 @@
-package com.tongji.model.dto.patient;
+package com.tongji.model.dto.common;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

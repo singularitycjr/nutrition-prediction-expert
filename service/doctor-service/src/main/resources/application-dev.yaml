@@ -32,3 +32,8 @@ minio:
   endpoint: http://212.64.29.100:9000
   readPath: http://212.64.29.100:9000
 
+algorithmUrl:
+  nutrition: https://ericwvi.site/bgmp/api/diet?Action=Nutrition
+  glucosePredict: http://212.64.29.100:52965/predict
+
+x-api-key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Nn0.0C-pklGl8S9T6aiJgxZAudKW3x2gbisxKUaxiRj2WbA

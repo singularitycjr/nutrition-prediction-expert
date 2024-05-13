@@ -3,7 +3,7 @@ package com.tongji.service.controller;
 
 import com.tongji.model.dto.patient.GlucoseAddDTO;
 import com.tongji.model.dto.patient.GlucoseDTO;
-import com.tongji.model.dto.patient.GlucoseFileAddDTO;
+import com.tongji.model.dto.common.GlucoseFileAddDTO;
 import com.tongji.model.dto.patient.TimeRangeDTO;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.service.service.IGlucoseService;

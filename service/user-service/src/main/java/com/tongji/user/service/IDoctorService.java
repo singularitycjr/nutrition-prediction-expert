@@ -2,6 +2,7 @@ package com.tongji.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tongji.model.dto.doctor.DoctorDTO;
+import com.tongji.model.dto.doctor.DoctorDetailDTO;
 import com.tongji.model.dto.doctor.DoctorLoginDTO;
 import com.tongji.model.pojo.Doctor;
 import com.tongji.model.vo.ResponseResult;
@@ -34,6 +35,9 @@ public interface IDoctorService extends IService<Doctor> {
 
     ResponseResult forgetPassword(DoctorDTO dto);
 
+    ResponseResult getDetail();
+
+    ResponseResult updateDetail(DoctorDetailDTO doctorDetailDTO);
 
     ResponseResult uploadProfix( MultipartFile picture);
 }

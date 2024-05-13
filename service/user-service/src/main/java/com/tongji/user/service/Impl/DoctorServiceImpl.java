@@ -16,14 +16,20 @@ import com.tongji.common.service.Impl.CacheService;
 import com.tongji.common.utils.SmsUtil;
 import com.tongji.global.helper.LoginObj;
 import com.tongji.global.util.SaTokenUtil;
+import com.tongji.model.dto.doctor.DoctorDetailDTO;
 import com.tongji.model.dto.doctor.DoctorLoginDTO;
 import com.tongji.model.dto.doctor.DoctorDTO;
 import com.tongji.global.enums.RoleEnum;
+import com.tongji.model.dto.patient.UserDetailDTO;
 import com.tongji.model.pojo.Doctor;
+import com.tongji.model.pojo.DoctorDetail;
+import com.tongji.model.pojo.User;
+import com.tongji.model.pojo.UserDetail;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.user.mapper.DoctorMapper;
 import com.tongji.user.service.IDoctorService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,6 +59,9 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private DoctorDetailServiceImpl doctorDetailService;
 
     @Override
     public ResponseResult login(DoctorLoginDTO doctorLoginDTO) {
@@ -300,6 +309,38 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
         return ResponseResult.okResult("修改成功");
     }
 
+
+    @Override
+    public ResponseResult getDetail() {
+        Doctor doctor = this.getById(SaTokenUtil.getId());
+        DoctorDetail doctorDetail = doctorDetailService.getOne(
+                Wrappers.<DoctorDetail>lambdaQuery().
+                        eq(DoctorDetail::getDoctorId, doctor.getId())
+        );
+        DoctorDetailDTO doctorDetailDTO = new DoctorDetailDTO();
+
+        BeanUtils.copyProperties(doctor, doctorDetailDTO);
+        BeanUtils.copyProperties(doctorDetail, doctorDetailDTO);
+
+        return ResponseResult.okResult(doctorDetailDTO);
+    }
+
+    @Override
+    public ResponseResult updateDetail(DoctorDetailDTO doctorDetailDTO) {
+        Long id = SaTokenUtil.getId();
+
+        // 找到这条信息
+        DoctorDetail doctorDetail = doctorDetailService.getOne(
+                Wrappers.<DoctorDetail>lambdaQuery().
+                        eq(DoctorDetail::getDoctorId,id));
+        if (doctorDetail == null) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "用户信息不存在");
+        }
+        BeanUtils.copyProperties(doctorDetailDTO, doctorDetail);
+        log.info("修改用户信息 {}", doctorDetail);
+        doctorDetailService.updateById(doctorDetail);
+        return ResponseResult.okResult("修改成功");
+    }
 
 
     @Override

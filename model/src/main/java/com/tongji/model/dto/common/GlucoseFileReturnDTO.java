@@ -1,4 +1,4 @@
-package com.tongji.model.dto.patient;
+package com.tongji.model.dto.common;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;

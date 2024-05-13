@@ -3,7 +3,7 @@ package com.tongji.service.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tongji.model.dto.patient.GlucoseAddDTO;
 import com.tongji.model.dto.patient.GlucoseDTO;
-import com.tongji.model.dto.patient.GlucoseFileAddDTO;
+import com.tongji.model.dto.common.GlucoseFileAddDTO;
 import com.tongji.model.dto.patient.TimeRangeDTO;
 import com.tongji.model.pojo.Glucose;
 import com.tongji.model.vo.ResponseResult;
