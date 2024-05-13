@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tongji.global.util.SaTokenUtil;
 import com.tongji.model.dto.patient.RecordDetailAddDTO;
 import com.tongji.model.dto.patient.RecordDetailDTO;
-import com.tongji.model.dto.patient.RecordDetailReturnDTO;
+import com.tongji.model.dto.common.RecordDetailReturnDTO;
 import com.tongji.model.pojo.Record;
 import com.tongji.model.pojo.RecordDetail;
 import com.tongji.model.vo.ResponseResult;

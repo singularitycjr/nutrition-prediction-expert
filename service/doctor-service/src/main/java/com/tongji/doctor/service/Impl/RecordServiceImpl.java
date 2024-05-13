@@ -3,23 +3,32 @@ package com.tongji.doctor.service.Impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.tongji.doctor.mapper.FoodMapper;
 import com.tongji.doctor.mapper.RecordDetailMapper;
 import com.tongji.doctor.mapper.RecordMapper;
-import com.tongji.doctor.mapper.UserMapper;
 import com.tongji.doctor.service.IRecordService;
 import com.tongji.global.util.SaTokenUtil;
+import com.tongji.model.dto.common.RecordDetailReturnDTO;
+import com.tongji.model.dto.doctor.RecordStatisticDTO;
 import com.tongji.model.dto.doctor.TimeRangeDTO;
+import com.tongji.model.dto.patient.RecordDTO;
+import com.tongji.model.pojo.Food;
 import com.tongji.model.pojo.Record;
+import com.tongji.model.pojo.RecordDetail;
 import com.tongji.model.vo.ResponseResult;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> implements IRecordService {
     @Autowired
     RecordDetailMapper recordDetailMapper;
+
+    @Autowired
+    FoodMapper foodMapper;
 
     @Override
     public ResponseResult statisticByDay(TimeRangeDTO timeRangeDTO) {
@@ -49,7 +58,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             RecordStatisticDTO recordStatisticDTO = dailyStatistics.get(recordDate);
 
             // 获取该记录的所有明细
-            List<RecordDetail> recordDetailList = recordDetailService.list(
+            List<RecordDetail> recordDetailList = recordDetailMapper.selectList(
                     Wrappers.<RecordDetail>lambdaQuery().eq(RecordDetail::getRecordId, record.getId())
             );
 
@@ -62,16 +71,6 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
                 recordStatisticDTO.setProteinMass(recordStatisticDTO.getProteinMass().add(recordDetail.getProteinMass() != null ? recordDetail.getProteinMass() : BigDecimal.ZERO));
                 recordStatisticDTO.setCelluloseMass(recordStatisticDTO.getCelluloseMass().add(recordDetail.getCelluloseMass() != null ? recordDetail.getCelluloseMass() : BigDecimal.ZERO));
 
-                // 根据记录类型，更新对应餐次的营养物质总量
-                if (Objects.equals(record.getType(), "早餐")) {
-                    recordStatisticDTO.setBreakfastCalorieMass(recordStatisticDTO.getBreakfastCalorieMass().add(recordDetail.getCalorieMass() != null ? recordDetail.getCalorieMass() : BigDecimal.ZERO));
-                } else if (Objects.equals(record.getType(), "午餐")) {
-                    recordStatisticDTO.setLunchCalorieMass(recordStatisticDTO.getLunchCalorieMass().add(recordDetail.getCalorieMass() != null ? recordDetail.getCalorieMass() : BigDecimal.ZERO));
-                } else if (Objects.equals(record.getType(), "晚餐")) {
-                    recordStatisticDTO.setDinnerCalorieMass(recordStatisticDTO.getDinnerCalorieMass().add(recordDetail.getCalorieMass() != null ? recordDetail.getCalorieMass() : BigDecimal.ZERO));
-                } else if (Objects.equals(record.getType(), "加餐")) {
-                    recordStatisticDTO.setSnackCalorieMass(recordStatisticDTO.getSnackCalorieMass().add(recordDetail.getCalorieMass() != null ? recordDetail.getCalorieMass() : BigDecimal.ZERO));
-                }
             }
         }
 
@@ -79,10 +78,62 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         List<Map.Entry<LocalDate, RecordStatisticDTO>> sortedStatistics = new ArrayList<>(dailyStatistics.entrySet());
         sortedStatistics.sort(Map.Entry.comparingByKey());
 
-        // 构造最终返回结果
-        List<RecordStatisticDTO> result = sortedStatistics.stream().map(Map.Entry::getValue).collect(Collectors.toList());
+        return ResponseResult.okResult(sortedStatistics);
+    }
 
-        return ResponseResult.okResult(result);
+    @Override
+    public ResponseResult getRecord(TimeRangeDTO timeRangeDTO) {
+        if (timeRangeDTO.getStartTime() == null || timeRangeDTO.getEndTime() == null) {
+            return ResponseResult.errorResult(400, "时间范围不能为空");
+        }
+        Long id = SaTokenUtil.getId();
+        List<Record> recordList = this.list(
+                Wrappers.<Record>lambdaQuery().eq(Record::getUserId, id).
+                        between(Record::getCreateTime, timeRangeDTO.getStartTime(), timeRangeDTO.getEndTime())
+        );
+
+        List<RecordDTO> recordDTOList =new ArrayList<RecordDTO>();
+        for(Record record:recordList){
+            RecordDTO recordDTO = new RecordDTO();
+            BeanUtils.copyProperties(record,recordDTO);
+            recordDTOList.add(recordDTO);
+        }
+        recordDTOList.sort(Comparator.comparing(RecordDTO::getCreateTime));
+        return ResponseResult.okResult(recordDTOList);
+    }
+
+    @Override
+    public ResponseResult getDetailByRecordId(Long id) {
+        if (id== null ) {
+            return ResponseResult.errorResult(400, "RecordId不能为空");
+        }
+        List<RecordDetail> recordDetailList = recordDetailMapper.selectList(
+                Wrappers.<RecordDetail>lambdaQuery().
+                        eq(RecordDetail::getRecordId, id)
+        );
+        List<RecordDetailReturnDTO> recordDetailReturnList=new ArrayList<>();
+        for(RecordDetail recordDetail:recordDetailList){
+            String foodName=foodMapper.selectOne(
+                    Wrappers.<Food>lambdaQuery().eq(Food::getId, recordDetail.getFoodId())
+            ).getName();
+
+            RecordDetailReturnDTO returnDTO=new RecordDetailReturnDTO();
+            returnDTO.setId(recordDetail.getId());
+            returnDTO.setFoodId(recordDetail.getFoodId());
+            returnDTO.setRecordId(id);
+
+            returnDTO.setFoodName(foodName);
+            returnDTO.setCalorieMass(recordDetail.getCalorieMass());
+            returnDTO.setCarbohydrateMass(recordDetail.getCarbohydrateMass());
+            returnDTO.setCelluloseMass(recordDetail.getCelluloseMass());
+            returnDTO.setFatMass(recordDetail.getFatMass());
+            returnDTO.setProteinMass(recordDetail.getProteinMass());
+            returnDTO.setFoodMass(recordDetail.getFoodMass());
+
+            recordDetailReturnList.add(returnDTO);
+        }
+
+        return ResponseResult.okResult(recordDetailReturnList);
     }
 
 }
