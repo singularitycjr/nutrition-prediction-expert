@@ -16,13 +16,17 @@ import com.tongji.model.pojo.Food;
 import com.tongji.model.pojo.Record;
 import com.tongji.model.pojo.RecordDetail;
 import com.tongji.model.vo.ResponseResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
+@Service
+@Slf4j
 public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> implements IRecordService {
     @Autowired
     RecordDetailMapper recordDetailMapper;

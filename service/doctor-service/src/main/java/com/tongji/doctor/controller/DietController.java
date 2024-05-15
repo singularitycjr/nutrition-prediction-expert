@@ -34,7 +34,7 @@ public class DietController {
         return recordService.getRecord(timeRangeDTO);
     }
 
-    @GetMapping("/getDetailByRecordId")
+    @GetMapping("/getDetailByRecordId/{id}")
     @Operation(summary = "获取饮食详细记录")
     public ResponseResult getDetailByRecordId(@PathVariable("id") Long id){
         return recordService.getDetailByRecordId(id);

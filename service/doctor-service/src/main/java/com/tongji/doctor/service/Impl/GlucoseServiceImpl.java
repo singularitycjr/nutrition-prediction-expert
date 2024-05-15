@@ -18,6 +18,7 @@ import com.tongji.model.dto.doctor.TimeRangeDTO;
 import com.tongji.model.pojo.Glucose;
 import com.tongji.model.pojo.User;
 import com.tongji.model.vo.ResponseResult;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -25,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,6 +40,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
+@Slf4j
 public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose>  implements IGlucoseService {
 
     @Autowired

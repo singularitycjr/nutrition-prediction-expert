@@ -36,4 +36,13 @@ public class RecordStatisticDTO {
      * 热量(kcal)
      */
     private BigDecimal calorieMass;
+
+    public RecordStatisticDTO() {
+        carbohydrateMass= new BigDecimal(0);
+        fatMass= new BigDecimal(0);
+        proteinMass= new BigDecimal(0);
+        celluloseMass= new BigDecimal(0);
+        calorieMass= new BigDecimal(0);
+        foodMass= new BigDecimal(0);
+    }
 }

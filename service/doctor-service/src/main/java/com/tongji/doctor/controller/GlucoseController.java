@@ -8,6 +8,7 @@ import com.tongji.model.vo.ResponseResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +23,7 @@ public class GlucoseController {
 
     @Operation(summary = "获取血糖数据")
     @GetMapping("/getGlucose")
-    public ResponseResult getGlucose(TimeRangeDTO timeRangeDTO){
+    public ResponseResult getGlucose( TimeRangeDTO timeRangeDTO){
         log.info("获取血糖数据: {}", timeRangeDTO);
         return this.glucoseService.getGlucose(timeRangeDTO);
     }
@@ -45,7 +46,7 @@ public class GlucoseController {
 //        return this.glucoseService.addGlucose(glucoseAddDTO);
 //    }
 
-    @Operation(summary = "添加血糖数据文件")
+    @Operation(summary = "添加血糖数据文件（传患者id和文件）")
     @PostMapping("/uploadGlucoseFile")
     public ResponseResult uploadGlucoseFile(@RequestParam("id") Long patientId,@RequestParam("file") MultipartFile file){
         return this.glucoseService.uploadGlucoseFile(patientId,file);
@@ -57,7 +58,7 @@ public class GlucoseController {
         return this.glucoseService.addFileData(glucoseFileAddDTO);
     }
 
-    @Operation(summary = "调go接口获取血糖预测结果")
+    @Operation(summary = "调go接口获取血糖预测结果（传患者id）")
     @GetMapping("/getPredictGlucose/{id}")
     public ResponseResult getPredictGlucose(@PathVariable("id") Long patientId){
         return this.glucoseService.getPredictGlucose(patientId);
