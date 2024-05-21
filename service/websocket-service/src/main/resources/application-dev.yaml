@@ -1,0 +1,34 @@
+
+datasource:
+  host: 212.64.29.100
+  port: 3306
+  database: nee
+  username: tongji_yeah
+  password: AaEEnB65HEBkkEBG
+
+#datasource:
+#  host: localhost
+#  port: 3306
+#  database: zhuanzong
+#  username: root
+#  password: cjr0117
+
+sms:
+  app-id: 113556
+  app-secret: 70c2c874-d4a8-435f-ab30-6755763a1994
+  template-id: 12329
+
+
+redis:
+  host: 212.64.29.100
+  port: 6379
+  password: tyhf8y4h1
+  database: 1
+
+minio:
+  accessKey: abigail
+  secretKey: minio021106
+  bucket: npe
+  endpoint: http://212.64.29.100:9000
+  readPath: http://212.64.29.100:9000
+
