@@ -72,5 +72,4 @@ public class MessageServer {
     public void onError(Throwable throwable) {
         throwable.printStackTrace();
     }
-
 }
