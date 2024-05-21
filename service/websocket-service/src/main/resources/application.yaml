@@ -1,0 +1,58 @@
+server:
+  port: 8025
+
+spring:
+  profiles:
+    active: dev
+  main:
+    lazy-initialization: false  #默认false 关闭懒加载
+  application:
+    name: websocket-service
+  cloud:
+    nacos:
+      username: nacos
+      password: nacos
+      server-addr: 212.64.29.100:8848
+      discovery:
+#        ip: 47.100.190.116 #lc
+        ip: 47.115.207.162 #cjr
+        port: 8026
+        group: zhuanzong
+  config:
+    import:
+      - optional:nacos:websocket-service.yaml # 导入nacos中的配置文件
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${datasource.host}:${datasource.port}/${datasource.database}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: ${datasource.username}
+    password: ${datasource.password}
+    type: com.alibaba.druid.pool.DruidDataSource
+  data:
+    # redis配置
+    redis:
+      # Redis数据库索引（默认为0）
+      database: ${redis.database}
+      # Redis服务器地址
+      host: ${redis.host}
+      # Redis服务器连接端口
+      port: ${redis.port}
+      # Redis服务器连接密码（默认为空）
+      password: ${redis.password}
+      # 连接超时时间
+      timeout: 10s
+      lettuce:
+        pool:
+          # 连接池最大连接数
+          max-active: 10
+          # 连接池最大阻塞等待时间（使用负值表示没有限制）
+          max-wait: -1ms
+          # 连接池中的最大空闲连接
+          max-idle: 2
+          # 连接池中的最小空闲连接
+          min-idle: 0
+
+#springdoc:
+#  group-configs:
+#    - group: 'default'
+#      paths-to-match: '/**'
+#      packages-to-scan: com.tongji.doctor.controller
