@@ -121,7 +121,7 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose>  imp
             else
                 workbook = new HSSFWorkbook(inputStream);
         } catch (Exception e) {
-            return ResponseResult.okResult(400,"文件下载错误");
+            return ResponseResult.errorResult(400,"文件下载错误");
         }
 
         Sheet sheet=workbook.getSheetAt(0);
@@ -143,7 +143,7 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose>  imp
         if(rowIterator.hasNext())
             rowIterator.next();
         else
-            return ResponseResult.okResult(400,"表格文件为空");
+            return ResponseResult.errorResult(400,"表格文件为空");
 
         Long userId = Long.valueOf(cacheService.get(url));
         List<Glucose> glucoseList=new ArrayList<>();
@@ -161,7 +161,7 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose>  imp
             }
             catch (Exception e){
                 System.out.println(e);
-                return ResponseResult.okResult(400,"文件数据格式错误");
+                return ResponseResult.errorResult(400,"文件数据格式错误");
             }
 
             Glucose glucose=new Glucose();
@@ -189,6 +189,7 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose>  imp
                         le(Glucose::getTime, currentTime). // 添加条件：小于等于当前时间
                         last("LIMIT 96")
         );
+        System.out.println(glucoseList);
         glucoseList = glucoseList.stream()
                 .sorted(Comparator.comparing(Glucose::getTime)) // 按时间正序排序
                 .collect(Collectors.toList());

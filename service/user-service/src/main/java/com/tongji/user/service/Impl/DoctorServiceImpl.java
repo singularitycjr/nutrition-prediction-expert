@@ -84,7 +84,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
             return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_PASSWORD_ERROR);
         }
 
-        LoginObj loginObj = new LoginObj(RoleEnum.PATIENT.getName(), doctor.getId());
+        LoginObj loginObj = new LoginObj(RoleEnum.DOCTOR.getName(), doctor.getId());
         JSONObject jsonDoctor = (JSONObject) JSONObject.toJSON(loginObj);
         //会话登录：参数填写要登录的账号id，建议的数据类型：long | int | String，
         //不可以传入复杂类型，如：Doctor、Admin 等等

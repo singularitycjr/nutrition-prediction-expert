@@ -40,4 +40,9 @@ public class PatientDTO {
      * 糖尿病类型（Ⅰ型糖尿病、Ⅱ型糖尿病、妊娠期糖尿病）
      */
     private String diabetesType;
+
+    /**
+    * 头像
+    */
+    private String profile;
 }

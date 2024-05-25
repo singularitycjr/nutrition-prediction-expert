@@ -40,12 +40,16 @@ public class SaTokenConfigure {
                 .setAuth(obj -> {
                     SaRouter.match("/**")
                             .notMatch("/user/user/login")
+                            .notMatch("/user/doctor/login")
                             .check(r -> StpUtil.checkLogin());
 
 //                    进入角色鉴权
                     // 权限/角色认证 -- 不同模块, 校验不同权限/角色
                     SaRouter.match("/food/**", r -> StpUtil.checkRole(RoleEnum.PATIENT.getName()));
-//                    SaRouter.match("/doctor/**", r -> StpUtil.checkRole(RoleEnum.DOCTOR.getName()));
+                    SaRouter.match("/doctor/**", r -> StpUtil.checkRole(RoleEnum.DOCTOR.getName()));
+                    SaRouter.match("/user/user/**", r -> StpUtil.checkRole(RoleEnum.PATIENT.getName()));
+                    SaRouter.match("/user/doctor/**", r -> StpUtil.checkRole(RoleEnum.DOCTOR.getName()));
+
 
                     // 更多匹配 ...  */
                 })

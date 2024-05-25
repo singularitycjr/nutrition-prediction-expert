@@ -2,7 +2,7 @@ package com.tongji.doctor.controller;
 
 
 import com.tongji.doctor.service.IPatientInfoService;
-import com.tongji.model.dto.doctor.PatientQueryDTO;
+import com.tongji.model.query.PatientQuery;
 import com.tongji.model.vo.ResponseResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,19 +21,19 @@ public class PatientInfoController {
 
     @GetMapping("/getAll")
     @Operation(summary = "获取所有患者信息")
-    public ResponseResult getAll(){
-        return patientInfoService.getAll();
+    public ResponseResult getAll(PatientQuery patientQuery){
+        return patientInfoService.getAll( patientQuery);
     }
 
     @GetMapping("/getById/{id}")
     @Operation(summary = "使用患者id获取患者信息")
-    public ResponseResult getById(@PathVariable Long id){
+    public ResponseResult getById(@PathVariable("id") Long id){
         return patientInfoService.getById(id);
     }
 
-    @GetMapping("/getByProperty")
-    @Operation(summary = "按name/phone获取患者信息")
-    public ResponseResult getByProperty(PatientQueryDTO patientQueryDTO){
-        return patientInfoService.getByProperty(patientQueryDTO);
+    @GetMapping("/getOwnPatients")
+    @Operation(summary = "按account(即phone)/name获取患者信息，模糊查询")
+    public ResponseResult getOwnPatients(PatientQuery patientQuery){
+        return patientInfoService.getOwnPatients(patientQuery);
     }
 }

@@ -1,9 +1,9 @@
-package com.tongji.model.dto.doctor;
+package com.tongji.model.query;
 
 import lombok.Data;
 
 @Data
-public class PatientQueryDTO {
+public class PatientQuery extends PageQuery{
     //电话号码，即账号
     private String account;
 
