@@ -2,6 +2,7 @@ package com.tongji.doctor.service.Impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -22,6 +23,7 @@ import com.tongji.model.vo.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +64,7 @@ public class PatientInfoServiceImpl extends ServiceImpl<UserMapper, User> implem
                 .like(StrUtil.isNotBlank(patientQuery.getAccount()), User::getAccount, "%" + patientQuery.getAccount() + "%")
                 .page(page);
 
-        List<User> userList =page.getRecords();
+        List<User> userList = page.getRecords();
         List<PatientDTO> patientList = new ArrayList<>();
 
         for (User user : userList) {
@@ -71,6 +73,7 @@ public class PatientInfoServiceImpl extends ServiceImpl<UserMapper, User> implem
             patientDTO.setAccount(user.getAccount());
             patientDTO.setName(user.getName());
             patientDTO.setProfile(user.getProfile());
+            patientDTO.setDoctor(user.getDoctor());
 
             UserDetail userDetail = userDetailMapper.selectOne(
                     Wrappers.<UserDetail>lambdaQuery()
@@ -117,6 +120,7 @@ public class PatientInfoServiceImpl extends ServiceImpl<UserMapper, User> implem
         patientDTO.setAccount(user.getAccount());
         patientDTO.setName(user.getName());
         patientDTO.setProfile(user.getProfile());
+        patientDTO.setDoctor(user.getDoctor());
 
         UserDetail userDetail = userDetailMapper.selectOne(
                 Wrappers.<UserDetail>lambdaQuery().
@@ -175,6 +179,7 @@ public class PatientInfoServiceImpl extends ServiceImpl<UserMapper, User> implem
             patientDTO.setAccount(user.getAccount());
             patientDTO.setName(user.getName());
             patientDTO.setProfile(user.getProfile());
+            patientDTO.setDoctor(user.getDoctor());
 
             UserDetail userDetail = userDetailMapper.selectOne(
                     Wrappers.<UserDetail>lambdaQuery()
@@ -195,5 +200,31 @@ public class PatientInfoServiceImpl extends ServiceImpl<UserMapper, User> implem
         pageVO.setPages(page.getPages());
         pageVO.setList(patientList);
         return ResponseResult.okResult(pageVO);
+    }
+
+    @Override
+    public ResponseResult addPatients(List<Long> idList) {
+        Long doctorId = SaTokenUtil.getId();
+        List<User> userList = this.list(
+                Wrappers.<User>lambdaQuery()
+                        .in(User::getId, idList)
+                        .eq(User::getDoctor,null)
+        );
+        for (User user : userList) {
+            user.setDoctor(doctorId);
+        }
+        this.updateBatchById(userList);
+        return ResponseResult.okResult(200, "添加成功");
+    }
+
+    @Override
+    public ResponseResult deletePatients(List<Long> idList) {
+        Long doctorId = SaTokenUtil.getId();
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.set(User::getDoctor, null)
+                .in(User::getId, idList)
+                .eq(User::getDoctor, doctorId);
+        this.update(wrapper);
+        return ResponseResult.okResult(200, "删除成功");
     }
 }

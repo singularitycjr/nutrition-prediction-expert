@@ -1,4 +1,4 @@
-package com.tongji.model.dto.doctor;
+package com.tongji.model.dto.common;
 
 import lombok.Data;
 

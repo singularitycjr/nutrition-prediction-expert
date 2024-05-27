@@ -7,10 +7,9 @@ import com.tongji.model.vo.ResponseResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/patientInfo")
@@ -35,5 +34,17 @@ public class PatientInfoController {
     @Operation(summary = "按account(即phone)/name获取患者信息，模糊查询")
     public ResponseResult getOwnPatients(PatientQuery patientQuery){
         return patientInfoService.getOwnPatients(patientQuery);
+    }
+
+    @PostMapping("/addPatients")
+    @Operation(summary = "添加患者(只允许添加尚未关联医生的患者)")
+    public ResponseResult addPatients(@RequestBody List<Long> idList){
+        return patientInfoService.addPatients(idList);
+    }
+
+    @PostMapping("/deletePatients")
+    @Operation(summary = "删除患者(只允许删除自己关联的患者)")
+    public ResponseResult deletePatients(@RequestBody List<Long> idList){
+        return patientInfoService.deletePatients(idList);
     }
 }

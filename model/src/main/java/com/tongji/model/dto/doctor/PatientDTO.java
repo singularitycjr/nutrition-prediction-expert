@@ -45,4 +45,9 @@ public class PatientDTO {
     * 头像
     */
     private String profile;
+
+    /**
+     * 关联医生id
+     */
+    private Long doctor;
 }

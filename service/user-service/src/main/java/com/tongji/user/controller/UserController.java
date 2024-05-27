@@ -101,5 +101,9 @@ public class UserController {
         return userService.uploadProfix(picture);
     }
 
-
+    @Operation(summary = "获取关联医生信息")
+    @GetMapping("/getDoctor")
+    public ResponseResult getDoctor(){
+        return userService.getDoctor();
+    }
 }

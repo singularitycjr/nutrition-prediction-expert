@@ -16,22 +16,22 @@ import com.tongji.common.service.Impl.CacheService;
 import com.tongji.common.utils.SmsUtil;
 import com.tongji.global.helper.LoginObj;
 import com.tongji.global.util.SaTokenUtil;
-import com.tongji.model.dto.doctor.DoctorDetailDTO;
+import com.tongji.model.dto.common.DoctorDetailDTO;
 import com.tongji.model.dto.doctor.DoctorLoginDTO;
 import com.tongji.model.dto.doctor.DoctorDTO;
 import com.tongji.global.enums.RoleEnum;
-import com.tongji.model.dto.patient.UserDetailDTO;
 import com.tongji.model.pojo.Doctor;
 import com.tongji.model.pojo.DoctorDetail;
-import com.tongji.model.pojo.User;
 import com.tongji.model.pojo.UserDetail;
 import com.tongji.model.vo.ResponseResult;
+import com.tongji.user.mapper.DoctorDetailMapper;
 import com.tongji.user.mapper.DoctorMapper;
 import com.tongji.user.service.IDoctorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
@@ -70,7 +70,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
         }
 
         Doctor doctor = this.getOne(Wrappers.<Doctor>lambdaQuery()
-                        .eq(Doctor::getAccount, doctorLoginDTO.getAccount())
+                .eq(Doctor::getAccount, doctorLoginDTO.getAccount())
         );
         if (doctor == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "用户不存在");
@@ -114,6 +114,25 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
     public ResponseResult getDoctor() {
         Doctor doctor = this.getById(SaTokenUtil.getId());
         return ResponseResult.okResult(doctor);
+    }
+
+    @Override
+    public ResponseResult getDoctorById(Long id) {
+        Doctor doctor = this.getById(id);
+        DoctorDetail doctorDetail = doctorDetailService.getOne(
+                Wrappers.<DoctorDetail>lambdaQuery()
+                        .eq(DoctorDetail::getDoctorId, doctor.getId())
+        );
+        DoctorDetailDTO doctorDetailDTO = new DoctorDetailDTO();
+        doctorDetailDTO.setAccount(doctor.getAccount());
+        doctorDetailDTO.setAge(doctorDetail.getAge());
+        doctorDetailDTO.setGender(doctorDetail.getGender());
+        doctorDetailDTO.setName(doctor.getName());
+        doctorDetailDTO.setDepartment(doctorDetail.getDepartment());
+        doctorDetailDTO.setIntroduction(doctorDetail.getIntroduction());
+        doctorDetailDTO.setTitle(doctorDetail.getTitle());
+
+        return ResponseResult.okResult(doctorDetailDTO);
     }
 
     @Override
@@ -287,7 +306,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
         }
         // 找到是哪个账号
         Doctor doctor = this.getOne(Wrappers.<Doctor>lambdaQuery()
-                        .eq(Doctor::getAccount, dto.getAccount())
+                .eq(Doctor::getAccount, dto.getAccount())
         );
         if (doctor == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "手机号未注册");
@@ -332,7 +351,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
         // 找到这条信息
         DoctorDetail doctorDetail = doctorDetailService.getOne(
                 Wrappers.<DoctorDetail>lambdaQuery().
-                        eq(DoctorDetail::getDoctorId,id));
+                        eq(DoctorDetail::getDoctorId, id));
         if (doctorDetail == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "用户信息不存在");
         }

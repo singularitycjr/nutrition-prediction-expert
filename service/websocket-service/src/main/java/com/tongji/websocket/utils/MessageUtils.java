@@ -1,7 +1,7 @@
-package com.tongji.utils;
+package com.tongji.websocket.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.tongji.pojo.Message;
+import com.tongji.websocket.pojo.Message;
 
 
 public class MessageUtils {

@@ -1,4 +1,4 @@
-package com.tongji.pojo;
+package com.tongji.websocket.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

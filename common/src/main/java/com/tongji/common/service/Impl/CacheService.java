@@ -9,11 +9,13 @@ import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.data.redis.core.types.Expiration;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Getter
+@Component
 public class CacheService implements CachingConfigurer {//extends CachingConfigurerSupport
     @Autowired
     private StringRedisTemplate stringRedisTemplate;

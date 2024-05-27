@@ -47,6 +47,13 @@ spring:
             - Path=/doctor/**
           filters:
             - StripPrefix= 1
+
+        - id: websocket
+          uri: lb://websocket-service
+          predicates:
+            - Path=/websocket/**
+          filters:
+            - StripPrefix= 1
   data:
     # redis配置
     redis:

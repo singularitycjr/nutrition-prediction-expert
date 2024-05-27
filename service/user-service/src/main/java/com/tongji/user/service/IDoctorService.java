@@ -2,10 +2,11 @@ package com.tongji.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tongji.model.dto.doctor.DoctorDTO;
-import com.tongji.model.dto.doctor.DoctorDetailDTO;
+import com.tongji.model.dto.common.DoctorDetailDTO;
 import com.tongji.model.dto.doctor.DoctorLoginDTO;
 import com.tongji.model.pojo.Doctor;
 import com.tongji.model.vo.ResponseResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -18,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface IDoctorService extends IService<Doctor> {
     ResponseResult getDoctor();
+
+    ResponseResult getDoctorById(Long id);
 
     ResponseResult login(DoctorLoginDTO userLoginDTO);
 

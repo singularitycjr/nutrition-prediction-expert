@@ -13,11 +13,15 @@ datasource:
 #  username: root
 #  password: cjr0117
 
+nacos:
+  username: nacos
+  password: nacos
+  server-addr: 212.64.29.100:8848
+
 sms:
   app-id: 113556
   app-secret: 70c2c874-d4a8-435f-ab30-6755763a1994
   template-id: 12329
-
 
 redis:
   host: 212.64.29.100

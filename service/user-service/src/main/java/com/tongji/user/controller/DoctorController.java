@@ -2,9 +2,8 @@ package com.tongji.user.controller;
 
 
 import com.tongji.model.dto.doctor.DoctorDTO;
-import com.tongji.model.dto.doctor.DoctorDetailDTO;
+import com.tongji.model.dto.common.DoctorDetailDTO;
 import com.tongji.model.dto.doctor.DoctorLoginDTO;
-import com.tongji.model.dto.patient.UserDetailDTO;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.user.service.IDoctorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +28,7 @@ public class DoctorController {
     private IDoctorService doctorService;
 
     @GetMapping("/get")
-    @Operation(summary = "获取医生信息")
+    @Operation(summary = "获取医生自己的信息")
     public ResponseResult getDoctor(){
         return doctorService.getDoctor();
     }
@@ -102,5 +101,10 @@ public class DoctorController {
         return doctorService.uploadProfix(picture);
     }
 
+    @GetMapping("/getDoctorById/{id}")
+    @Operation(summary = "获取其他医生的信息")
+    public ResponseResult getDoctorById(@PathVariable("id") Long id){
 
+        return doctorService.getDoctorById(id);
+    }
 }

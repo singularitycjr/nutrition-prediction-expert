@@ -40,4 +40,6 @@ public interface IUserService extends IService<User> {
     ResponseResult updateDetail(UserDetailDTO userDetailDTO);
 
     ResponseResult uploadProfix( MultipartFile picture);
+
+    ResponseResult getDoctor();
 }

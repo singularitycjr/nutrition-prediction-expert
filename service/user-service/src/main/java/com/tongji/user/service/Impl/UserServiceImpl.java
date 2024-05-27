@@ -16,13 +16,18 @@ import com.tongji.common.service.Impl.CacheService;
 import com.tongji.common.utils.SmsUtil;
 import com.tongji.global.helper.LoginObj;
 import com.tongji.global.util.SaTokenUtil;
+import com.tongji.model.dto.common.DoctorDetailDTO;
 import com.tongji.model.dto.patient.UserLoginDTO;
 import com.tongji.model.dto.patient.UserDTO;
 import com.tongji.model.dto.patient.UserDetailDTO;
 import com.tongji.global.enums.RoleEnum;
+import com.tongji.model.pojo.Doctor;
+import com.tongji.model.pojo.DoctorDetail;
 import com.tongji.model.pojo.User;
 import com.tongji.model.pojo.UserDetail;
 import com.tongji.model.vo.ResponseResult;
+import com.tongji.user.mapper.DoctorDetailMapper;
+import com.tongji.user.mapper.DoctorMapper;
 import com.tongji.user.mapper.UserDetailMapper;
 import com.tongji.user.mapper.UserMapper;
 import com.tongji.user.service.IUserService;
@@ -67,6 +72,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     private FileStorageService fileStorageService;
 
+    @Autowired
+    private DoctorMapper doctorMapper;
+
+    @Autowired
+    private DoctorDetailMapper doctorDetailMapper;
+
 
     @Override
     public ResponseResult login(UserLoginDTO userLoginDTO) {
@@ -75,7 +86,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
 
         User user = this.getOne(Wrappers.<User>lambdaQuery()
-                        .eq(User::getAccount, userLoginDTO.getAccount())
+                .eq(User::getAccount, userLoginDTO.getAccount())
         );
         if (user == null) {
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST, "用户不存在");
@@ -109,7 +120,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public ResponseResult getUser() {
-        Long id= SaTokenUtil.getId();
+        Long id = SaTokenUtil.getId();
         User user = this.getById(id);
         return ResponseResult.okResult(user);
     }
@@ -227,7 +238,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (StrUtil.hasBlank(dto.getName())) {
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID, "用户名不能为空");
         }
-        Long id=SaTokenUtil.getId();
+        Long id = SaTokenUtil.getId();
         User user = this.getById(id);
         user.setName(dto.getName());
         this.updateById(user);
@@ -389,5 +400,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return ResponseResult.okResult(map);
     }
 
+    public ResponseResult getDoctor() {
+        Long patientId = SaTokenUtil.getId();
+        User user = this.getOne(Wrappers.<User>lambdaQuery().eq(User::getId, patientId));
+        Long doctorId = user.getDoctor();
+        if (doctorId == null) {
+            return ResponseResult.errorResult(400, "未绑定医生");
+        }
+        Doctor doctor = doctorMapper.selectOne(
+                Wrappers.<Doctor>lambdaQuery()
+                        .eq(Doctor::getId, doctorId)
+        );
+        DoctorDetail doctorDetail = doctorDetailMapper.selectOne(
+                Wrappers.<DoctorDetail>lambdaQuery()
+                        .eq(DoctorDetail::getDoctorId, doctor.getId())
+        );
+        DoctorDetailDTO doctorDetailDTO=new DoctorDetailDTO();
+        doctorDetailDTO.setAccount(doctor.getAccount());
+        doctorDetailDTO.setAge(doctorDetail.getAge());
+        doctorDetailDTO.setGender(doctorDetail.getGender());
+        doctorDetailDTO.setName(doctor.getName());
+        doctorDetailDTO.setDepartment(doctorDetail.getDepartment());
+        doctorDetailDTO.setIntroduction(doctorDetail.getIntroduction());
+        doctorDetailDTO.setTitle(doctorDetail.getTitle());
 
+        return ResponseResult.okResult(doctorDetailDTO);
+
+    }
 }
