@@ -1,8 +1,8 @@
-package com.tongji.user.mapper;
-
+package com.tongji.messagechat.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.tongji.model.pojo.User;
+import com.tongji.model.pojo.Chat;
+
 
 /**
  * <p>
@@ -12,6 +12,6 @@ import com.tongji.model.pojo.User;
  * @author author
  * @since 2023-10-18
  */
-public interface UserMapper extends BaseMapper<User> {
+public interface ChatMapper extends BaseMapper<Chat> {
 
 }

@@ -3,17 +3,15 @@ package com.tongji.websocket.ws;
 import com.alibaba.fastjson.JSON;
 import com.tongji.common.service.Impl.CacheService;
 import com.tongji.global.constrants.Constrants;
-import com.tongji.global.enums.MessageTypeEnum;
 import com.tongji.global.enums.RoleEnum;
 import com.tongji.global.util.ConnectionUtil;
 import com.tongji.global.util.SaTokenUtil;
-import com.tongji.model.dto.websocket.CommonMessageDTO;
-import com.tongji.model.pojo.Chat;
-import com.tongji.model.pojo.Message;
 import com.tongji.messagechat.mapper.DoctorMapper;
 import com.tongji.messagechat.mapper.UserMapper;
 import com.tongji.messagechat.service.Impl.ChatServiceImpl;
 import com.tongji.messagechat.service.Impl.MessageServiceImpl;
+import com.tongji.model.dto.websocket.CommonMessageDTO;
+import com.tongji.model.pojo.Chat;
 import com.tongji.websocket.manager.WebSocketSessionManager;
 import com.tongji.websocket.utils.MessageUtils;
 import jakarta.websocket.*;
@@ -21,7 +19,6 @@ import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -30,10 +27,10 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ServerEndpoint(value="/ws/message/{satoken}")
+@ServerEndpoint(value="/ws/chat/{satoken}")
 @Component
 @Slf4j
-public class MessageServer implements ApplicationContextAware {
+public class ChatServer implements ApplicationContextAware {
     // 全局静态变量，保存 ApplicationContext
     private static ApplicationContext applicationContext;
 
@@ -51,7 +48,7 @@ public class MessageServer implements ApplicationContextAware {
     // 保存 Spring 注入的 ApplicationContext 到静态变量
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        MessageServer.applicationContext = applicationContext;
+        ChatServer.applicationContext = applicationContext;
     }
 
 
@@ -65,11 +62,11 @@ public class MessageServer implements ApplicationContextAware {
         System.out.println("New connection: " + session.getId() + " userId: " + userId);
 
         // 连接创建的时候，从 ApplicationContext 获取到 Bean 进行初始化
-        this.cacheService = MessageServer.applicationContext.getBean(CacheService.class);
-        this.userMapper= MessageServer.applicationContext.getBean(UserMapper.class);
-        this.doctorMapper= MessageServer.applicationContext.getBean(DoctorMapper.class);
-        this.chatService= MessageServer.applicationContext.getBean(ChatServiceImpl.class);
-        this.messageService= MessageServer.applicationContext.getBean(MessageServiceImpl.class);
+        this.cacheService = ChatServer.applicationContext.getBean(CacheService.class);
+        this.userMapper= ChatServer.applicationContext.getBean(UserMapper.class);
+        this.doctorMapper= ChatServer.applicationContext.getBean(DoctorMapper.class);
+        this.chatService= ChatServer.applicationContext.getBean(ChatServiceImpl.class);
+        this.messageService= ChatServer.applicationContext.getBean(MessageServiceImpl.class);
     }
 
     /**
@@ -100,33 +97,45 @@ public class MessageServer implements ApplicationContextAware {
             toUserRole=RoleEnum.PATIENT.getName();
 
 
-            Message messageObj=new Message();
-            messageObj.setMessage(commonMessageDTO.getMessage());
-            messageObj.setConfirmed(Boolean.FALSE);
-            messageObj.setTime(commonMessageDTO.getTime());
-            messageObj.setFromUserId(SaTokenUtil.getIdByToken(satoken));
-            messageObj.setFromUserRole(SaTokenUtil.getRoleByToken(satoken));
-            messageObj.setToUserId(commonMessageDTO.getToUserId());
-            messageObj.setToUserRole(toUserRole);
-            sendMessageToUser(messageObj);
-
+            Chat chat=new Chat();
+            chat.setMessage(commonMessageDTO.getMessage());
+            chat.setTime(commonMessageDTO.getTime());
+            chat.setFromUserId(SaTokenUtil.getIdByToken(satoken));
+            chat.setFromUserRole(SaTokenUtil.getRoleByToken(satoken));
+            chat.setToUserId(commonMessageDTO.getToUserId());
+            chat.setToUserRole(toUserRole);
+            sendChatToUser(chat);
 
         System.out.println("Message sent: userId: " + userId);
 //        sendToAllClient(message);
     }
 
-    private void sendMessageToUser(Message messageObj) throws IOException {
-        String toUserId=messageObj.getToUserRole()+messageObj.getToUserId();
-        String fromUserId=messageObj.getFromUserRole()+messageObj.getFromUserId();
-        messageService.save(messageObj);
+    private void sendChatToUser(Chat chat) throws IOException {
+        String toUserId=chat.getToUserRole()+chat.getToUserId();
+        String fromUserId=chat.getFromUserRole()+chat.getFromUserId();
+
+        String chatId=ConnectionUtil.getChatId(fromUserId,toUserId);
+        List<Chat> chatList;
+        if (!cacheService.exists(chatId)) {
+            chatList = new ArrayList<>();
+            chatList.add(chat);
+
+        } else {
+            String chatStringList = cacheService.get(chatId);
+             chatList = JSON.parseArray(chatStringList, Chat.class);
+            chatList.add(chat);
+        }
+
+        if(chatList.size()>= Constrants.CHAT_SAVE_BATCH_SIZE) {
+            chatService.saveBatch(chatList);
+            chatList.clear();
+        }
+        cacheService.set(chatId, JSON.toJSONString(chatList));
 
         Session session = onlineUsers.get(toUserId);
         if(session!=null)
-        session.getBasicRemote().sendText(MessageUtils.getMessage(messageObj));
-
-
+        session.getBasicRemote().sendText(MessageUtils.getChat(chat));
     }
-
 
     public void sendToAllClient(String message) {
         Collection<Session> sessions = onlineUsers.values();

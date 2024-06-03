@@ -68,6 +68,9 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose>  imp
 
     @Override
     public ResponseResult uploadGlucoseFile(Long patientId, MultipartFile file) {
+        if (patientId == null) {
+            return ResponseResult.errorResult(400, "患者id不可为空");
+        }
         if(file.isEmpty()){
             return ResponseResult.errorResult(400, "上传文件不能为空");
         }
@@ -179,6 +182,9 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose>  imp
 
     @Override
     public ResponseResult getPredictGlucose(Long patientId) {
+        if (patientId == null) {
+            return ResponseResult.errorResult(400, "患者id不可为空");
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         //获取当前时间往前96条数据
         LocalDateTime currentTime=LocalDateTime.now();

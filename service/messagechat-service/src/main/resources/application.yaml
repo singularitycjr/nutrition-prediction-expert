@@ -1,5 +1,5 @@
 server:
-  port: 8025
+  port: 8026
 
 spring:
   profiles:
@@ -7,7 +7,7 @@ spring:
   main:
     lazy-initialization: false  #默认false 关闭懒加载
   application:
-    name: websocket-service
+    name: messagechat-service
   cloud:
     nacos:
       username: nacos
@@ -16,11 +16,11 @@ spring:
       discovery:
 #        ip: 47.115.207.162 #cjr
         ip: 212.64.29.100 #zmc
-        port: 8025
+        port: 8026
         group: zhuanzong
   config:
     import:
-      - optional:nacos:websocket-service.yaml # 导入nacos中的配置文件
+      - optional:nacos:messagechat-service.yaml # 导入nacos中的配置文件
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${datasource.host}:${datasource.port}/${datasource.database}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
@@ -55,4 +55,4 @@ springdoc:
   group-configs:
     - group: 'default'
       paths-to-match: '/**'
-      packages-to-scan: com.tongji.websocket.ws
+      packages-to-scan: com.tongji.messagechat.controller

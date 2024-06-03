@@ -204,12 +204,19 @@ public class PatientInfoServiceImpl extends ServiceImpl<UserMapper, User> implem
 
     @Override
     public ResponseResult addPatients(List<Long> idList) {
+        if (idList == null) {
+            return ResponseResult.errorResult(400, "idList不可为空");
+        }
+
         Long doctorId = SaTokenUtil.getId();
         List<User> userList = this.list(
                 Wrappers.<User>lambdaQuery()
                         .in(User::getId, idList)
-                        .eq(User::getDoctor,null)
+                        .eq(User::getDoctor, null)
         );
+        if (idList.size() != userList.size())
+            return ResponseResult.errorResult(400, "不可添加已绑定其他医生的患者");
+
         for (User user : userList) {
             user.setDoctor(doctorId);
         }
@@ -219,6 +226,10 @@ public class PatientInfoServiceImpl extends ServiceImpl<UserMapper, User> implem
 
     @Override
     public ResponseResult deletePatients(List<Long> idList) {
+        if (idList == null) {
+            return ResponseResult.errorResult(400, "idList不可为空");
+        }
+
         Long doctorId = SaTokenUtil.getId();
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
         wrapper.set(User::getDoctor, null)

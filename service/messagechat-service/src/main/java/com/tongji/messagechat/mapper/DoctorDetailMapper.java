@@ -1,9 +1,8 @@
-package com.tongji.user.mapper;
+package com.tongji.messagechat.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tongji.model.pojo.DoctorDetail;
-import com.tongji.model.pojo.UserDetail;
 
 /**
  * <p>

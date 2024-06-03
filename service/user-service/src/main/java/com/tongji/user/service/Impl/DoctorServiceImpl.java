@@ -92,6 +92,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
         StpUtil.login(jsonDoctor);
 
 //        //将角色写入redis
+
 //        cacheService.delete(Constrants.USER_ROLE + doctor.getId());
 //        cacheService.set(Constrants.USER_ROLE + doctor.getId(), RoleEnum.find(doctor.getRole()).getName());
 //        String expireString = environment.getProperty("sa-token.timeout");
@@ -118,6 +119,9 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
 
     @Override
     public ResponseResult getDoctorById(Long id) {
+        if (id == null) {
+            return ResponseResult.errorResult(400, "id不可为空");
+        }
         Doctor doctor = this.getById(id);
         DoctorDetail doctorDetail = doctorDetailService.getOne(
                 Wrappers.<DoctorDetail>lambdaQuery()

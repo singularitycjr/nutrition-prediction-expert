@@ -49,9 +49,16 @@ spring:
             - StripPrefix= 1
 
         - id: websocket
-          uri: lb://websocket-service
+          uri: lb:ws://websocket-service
           predicates:
             - Path=/websocket/**
+          filters:
+            - StripPrefix= 1
+
+        - id: messagechat
+          uri: lb://messagechat-service
+          predicates:
+            - Path=/messagechat/**
           filters:
             - StripPrefix= 1
   data:

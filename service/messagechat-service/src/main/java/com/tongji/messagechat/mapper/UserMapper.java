@@ -1,4 +1,4 @@
-package com.tongji.user.mapper;
+package com.tongji.messagechat.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
