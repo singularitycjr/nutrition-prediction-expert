@@ -7,12 +7,18 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.tongji.doctor.mapper.ChatReadMapper;
 import com.tongji.doctor.mapper.UserDetailMapper;
 import com.tongji.doctor.mapper.UserMapper;
+import com.tongji.doctor.service.IChatReadService;
 import com.tongji.doctor.service.IPatientInfoService;
+import com.tongji.global.enums.RoleEnum;
+import com.tongji.global.util.ConnectionUtil;
 import com.tongji.global.util.SaTokenUtil;
 import com.tongji.model.dto.doctor.PatientBriefDTO;
 import com.tongji.model.dto.doctor.PatientDTO;
+import com.tongji.model.pojo.ChatRead;
 import com.tongji.model.pojo.Food;
 import com.tongji.model.pojo.User;
 import com.tongji.model.pojo.UserDetail;
@@ -25,6 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,6 +42,9 @@ import java.util.Objects;
 public class PatientInfoServiceImpl extends ServiceImpl<UserMapper, User> implements IPatientInfoService {
     @Autowired
     UserDetailMapper userDetailMapper;
+
+    @Autowired
+    IChatReadService chatReadService;
 
     @Override
     public ResponseResult getAll(PatientQuery patientQuery) {
@@ -212,15 +223,40 @@ public class PatientInfoServiceImpl extends ServiceImpl<UserMapper, User> implem
         List<User> userList = this.list(
                 Wrappers.<User>lambdaQuery()
                         .in(User::getId, idList)
-                        .eq(User::getDoctor, null)
+                        .isNull(User::getDoctor)
+//                        .eq(User::getDoctor, null)//注意这儿千万不能用eq比较null
         );
+        System.out.println(idList.size());
+        System.out.println(userList.size());
         if (idList.size() != userList.size())
             return ResponseResult.errorResult(400, "不可添加已绑定其他医生的患者");
 
+        LocalDateTime currentTime = LocalDateTime.now();
+        List<ChatRead> chatReadList = new ArrayList<>();
         for (User user : userList) {
             user.setDoctor(doctorId);
+            String chatId = ConnectionUtil.getChatId(
+                    RoleEnum.DOCTOR.getName() + doctorId,
+                    RoleEnum.PATIENT.getName() + user.getId()
+            );
+            ChatRead chatRead1 = new ChatRead();
+            chatRead1.setChatId(chatId);
+            chatRead1.setPersonId(doctorId);
+            chatRead1.setPersonRole(RoleEnum.DOCTOR.getName());
+            chatRead1.setLastReadTime(currentTime);
+
+            ChatRead chatRead2 = new ChatRead();
+            chatRead2.setChatId(chatId);
+            chatRead2.setPersonId(user.getId());
+            chatRead2.setPersonRole(RoleEnum.PATIENT.getName());
+            chatRead2.setLastReadTime(currentTime);
+
+            chatReadList.add(chatRead1);
+            chatReadList.add(chatRead2);
         }
         this.updateBatchById(userList);
+        chatReadService.saveBatch(chatReadList);
+
         return ResponseResult.okResult(200, "添加成功");
     }
 
@@ -231,11 +267,43 @@ public class PatientInfoServiceImpl extends ServiceImpl<UserMapper, User> implem
         }
 
         Long doctorId = SaTokenUtil.getId();
+        List<User> userList = this.list(
+                Wrappers.<User>lambdaQuery()
+                        .in(User::getId, idList)
+                        .eq(User::getDoctor, doctorId)
+        );
+
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
         wrapper.set(User::getDoctor, null)
                 .in(User::getId, idList)
                 .eq(User::getDoctor, doctorId);
         this.update(wrapper);
+
+        List<ChatRead> chatReadList = new ArrayList<>();
+        for (User user : userList) {
+            String chatId = ConnectionUtil.getChatId(
+                    RoleEnum.DOCTOR.getName() + doctorId,
+                    RoleEnum.PATIENT.getName() + user.getId()
+            );
+            ChatRead chatRead1=chatReadService.getOne(
+                    Wrappers.<ChatRead>lambdaQuery()
+                            .in(ChatRead::getChatId, chatId)
+                            .eq(ChatRead::getPersonRole, RoleEnum.PATIENT.getName())
+                            .eq(ChatRead::getPersonId,user.getId())
+            );
+            if(chatRead1!=null)
+                chatReadList.add(chatRead1);
+
+            ChatRead chatRead2=chatReadService.getOne(
+                    Wrappers.<ChatRead>lambdaQuery()
+                            .in(ChatRead::getChatId, chatId)
+                            .eq(ChatRead::getPersonRole, RoleEnum.DOCTOR.getName())
+                            .eq(ChatRead::getPersonId,doctorId)
+            );
+            if(chatRead2!=null)
+                chatReadList.add(chatRead2);
+        }
+        chatReadService.removeBatchByIds(chatReadList);
         return ResponseResult.okResult(200, "删除成功");
     }
 }

@@ -13,6 +13,10 @@ public interface IMessageService extends IService<Message> {
     ResponseResult getHistory(MessageQuery messageQuery);
     ResponseResult getLatestUnread();
     ResponseResult getHistoryUnread(MessageQuery messageQuery);
+    ResponseResult getUnreadNum();
+    ResponseResult getLatestSend();
+    ResponseResult getHistorySend(MessageQuery messageQuery);
+    ResponseResult getSendNum();
     ResponseResult confirm( List<Long> idList);
     ResponseResult delete( List<Long> idList);
 }

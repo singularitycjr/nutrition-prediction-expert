@@ -23,6 +23,7 @@ public class SaTokenConfigure {
                 .addInclude("/**")    /* 拦截全部path */
                 // 开放地址
                 .addExclude("/favicon.ico")
+                .addExclude("/websocket/**")
 
                 .addExclude("/user/user/login")
                 .addExclude("/user/user/register")

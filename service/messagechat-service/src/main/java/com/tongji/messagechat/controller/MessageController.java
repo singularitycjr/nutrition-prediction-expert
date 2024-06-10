@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common")
+@RequestMapping("/message")
 @Tag(name = "消息接口")
 @Slf4j
 public class MessageController {
@@ -48,17 +48,42 @@ public class MessageController {
         return messageService.getHistoryUnread(messageQuery);
     }
 
-    @Operation(summary = "确认某条消息",
+    @Operation(summary = "获取未读消息数目")
+    @GetMapping("/getUnreadNum")
+    public ResponseResult getUnreadNum(){
+        return messageService.getUnreadNum();
+    }
+
+    @Operation(summary = "获取最新若干条已发送数据")
+    @GetMapping("/getLatestSend")
+    public ResponseResult getLatestSend(){
+        return messageService.getLatestSend();
+    }
+
+    @Operation(summary = "获取指定时间前后若干条已发送数据",
             description = "分页查询，默认一页5条")
+    @GetMapping("/getHistorySend")
+    public ResponseResult getHistorySend(MessageQuery messageQuery){
+        return messageService.getHistorySend(messageQuery);
+    }
+
+    @Operation(summary = "获取已发送消息数目")
+    @GetMapping("/getSendNum")
+    public ResponseResult getSendNum(){
+        return messageService.getSendNum();
+    }
+
+    @Operation(summary = "确认某条消息",
+            description = "传入一个消息id数组，只能是发信人或收信人是自己的消息")
     @PostMapping("/confirm")
     public ResponseResult confirm(@RequestBody List<Long> idList){
         return messageService.confirm(idList);
     }
 
-    @Operation(summary = "获取指定时间前后若干条未读数据",
-            description = "分页查询，默认一页5条")
-    @PostMapping("/delete")
-    public ResponseResult delete(@RequestBody List<Long> idList){
-        return messageService.delete(idList);
-    }
+//    @Operation(summary = "删除某条消息",
+//            description = "传入一个消息id数组，只能是发信人或收信人是自己的消息")
+//    @PostMapping("/delete")
+//    public ResponseResult delete(@RequestBody List<Long> idList){
+//        return messageService.delete(idList);
+//    }
 }

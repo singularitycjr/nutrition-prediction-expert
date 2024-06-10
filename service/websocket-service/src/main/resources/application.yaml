@@ -15,7 +15,8 @@ spring:
       server-addr: 212.64.29.100:8848
       discovery:
 #        ip: 47.115.207.162 #cjr
-        ip: 212.64.29.100 #zmc
+#        ip: 212.64.29.100 #zmc
+        ip: 47.115.216.221 #chj
         port: 8025
         group: zhuanzong
   config:

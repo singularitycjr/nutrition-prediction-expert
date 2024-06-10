@@ -1,6 +1,7 @@
 package com.tongji.messagechat.controller;
 
 
+import com.tongji.model.dto.messagechat.ReadTimeDTO;
 import com.tongji.model.dto.websocket.HistoryMessageDTO;
 import com.tongji.model.vo.ResponseResult;
 import com.tongji.messagechat.service.IChatService;
@@ -8,10 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/chat")
@@ -21,10 +19,11 @@ public class ChatController {
     @Autowired
     IChatService chatService;
 
+
     @Operation(summary = "获取最新若干条数据",
             description = "要传对方的id，返回之多50条最近的数据。注意，展示聊天记录时先调这个接口，然后调getHistory")
     @GetMapping("/getLatest/{otherSideId}")
-    public ResponseResult getLatest(@PathVariable("otherSideId") Long otherSideId){
+    public ResponseResult getLatest(@PathVariable("otherSideId") Long otherSideId) {
         return chatService.getLatest(otherSideId);
     }
 
@@ -36,7 +35,20 @@ public class ChatController {
                     "如果要做查看历史聊天记录，则是传入某个整天0点到23:59的数据，或者只传0时，之后随着页面下拉调这个接口传能拿到的最晚消息时间，逐步获取后面的记录，以防一次返回的太多"
     )
     @GetMapping("/getHistory")
-    public ResponseResult getHistory(HistoryMessageDTO historyChatDTO){
+    public ResponseResult getHistory(HistoryMessageDTO historyChatDTO) {
         return chatService.getHistory(historyChatDTO);
+    }
+
+    @Operation(summary = "更新已读时间")
+    @PostMapping("/updateReadTime")
+    public ResponseResult updateReadTime(ReadTimeDTO readTimeDTO) {
+        return chatService.updateReadTime(readTimeDTO);
+    }
+
+    @Operation(summary = "获取未读数目",
+            description = "传入正在聊天的对方的id")
+    @GetMapping("/getUnreadNum/{otherSideId}")
+    public ResponseResult getUnreadNum(@PathVariable("otherSideId") Long otherSideId) {
+        return chatService.getUnreadNum(otherSideId);
     }
 }
