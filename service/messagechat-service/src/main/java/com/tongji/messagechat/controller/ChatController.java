@@ -41,7 +41,7 @@ public class ChatController {
 
     @Operation(summary = "更新已读时间")
     @PostMapping("/updateReadTime")
-    public ResponseResult updateReadTime(ReadTimeDTO readTimeDTO) {
+    public ResponseResult updateReadTime(@RequestBody ReadTimeDTO readTimeDTO) {
         return chatService.updateReadTime(readTimeDTO);
     }
 

@@ -62,7 +62,7 @@ public class MessageServer implements ApplicationContextAware {
     public void onOpen(Session session,@PathParam("satoken") String satoken) {
         String userId=SaTokenUtil.getRoleByToken(satoken)+SaTokenUtil.getIdByToken(satoken);
         onlineUsers.put(userId, session);//将该会话添加到map中
-        System.out.println("New connection: " + session.getId() + " userId: " + userId);
+        System.out.println("New connection(message): " + session.getId() + " userId: " + userId);
 
         // 连接创建的时候，从 ApplicationContext 获取到 Bean 进行初始化
         this.cacheService = MessageServer.applicationContext.getBean(CacheService.class);
@@ -79,7 +79,7 @@ public class MessageServer implements ApplicationContextAware {
     public void onClose(@PathParam("satoken") String satoken) {
         String userId=SaTokenUtil.getRoleByToken(satoken)+SaTokenUtil.getIdByToken(satoken);
         onlineUsers.remove(userId);
-        System.out.println("Connection closed:  userId: " + userId);
+        System.out.println("Connection closed(message):  userId: " + userId);
     }
 
     /**
@@ -111,7 +111,7 @@ public class MessageServer implements ApplicationContextAware {
             sendMessageToUser(messageObj);
 
 
-        System.out.println("Message sent: userId: " + userId);
+        System.out.println("Message sent(message): userId: " + userId);
 //        sendToAllClient(message);
     }
 

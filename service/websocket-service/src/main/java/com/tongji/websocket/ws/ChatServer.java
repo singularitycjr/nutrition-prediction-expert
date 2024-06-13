@@ -59,7 +59,7 @@ public class ChatServer implements ApplicationContextAware {
     public void onOpen(Session session,@PathParam("satoken") String satoken) {
         String userId=SaTokenUtil.getRoleByToken(satoken)+SaTokenUtil.getIdByToken(satoken);
         onlineUsers.put(userId, session);//将该会话添加到map中
-        System.out.println("New connection: " + session.getId() + " userId: " + userId);
+        System.out.println("New connection(chat): " + session.getId() + " userId: " + userId);
 
         // 连接创建的时候，从 ApplicationContext 获取到 Bean 进行初始化
         this.cacheService = ChatServer.applicationContext.getBean(CacheService.class);
@@ -76,7 +76,7 @@ public class ChatServer implements ApplicationContextAware {
     public void onClose(@PathParam("satoken") String satoken) {
         String userId=SaTokenUtil.getRoleByToken(satoken)+SaTokenUtil.getIdByToken(satoken);
         onlineUsers.remove(userId);
-        System.out.println("Connection closed:  userId: " + userId);
+        System.out.println("Connection closed(chat):  userId: " + userId);
     }
 
     /**
@@ -106,7 +106,7 @@ public class ChatServer implements ApplicationContextAware {
             chat.setToUserRole(toUserRole);
             sendChatToUser(chat);
 
-        System.out.println("Message sent: userId: " + userId);
+        System.out.println("Message sent(chat): userId: " + userId);
 //        sendToAllClient(message);
     }
 
