@@ -122,6 +122,7 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
     }
 
     @Override
+
     public ResponseResult uploadGlucoseFile(MultipartFile file) {
         if(file.isEmpty()){
             return ResponseResult.errorResult(400, "上传文件不能为空");
@@ -159,6 +160,7 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
     }
 
     @Override
+
     public ResponseResult addFileData(GlucoseFileAddDTO glucoseFileAddDTO)
     {
         if(glucoseFileAddDTO.getUrl()==null||glucoseFileAddDTO.getTimeCol()==null
@@ -238,6 +240,7 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         //获取当前时间往前96条数据
         Long userId = SaTokenUtil.getId();
         LocalDateTime currentTime=LocalDateTime.now();
+        currentTime=currentTime.plusDays(-2);
         List<Glucose> glucoseList=this.list(
                 Wrappers.<Glucose>lambdaQuery().
                         eq(Glucose::getUserId, userId).
@@ -250,6 +253,8 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
                 .collect(Collectors.toList());
         List<Object[]> dataList = new ArrayList<>();
         for (Glucose glucose : glucoseList){
+            //算法用的单位是mg/dl
+            glucose.setGluValue(glucose.getGluValue().multiply(BigDecimal.valueOf(18)));
             dataList.add(new Object[] {glucose.getTime().format(formatter), glucose.getGluValue()});
         }
         Map<String, Object> jsonObject = new HashMap<>();
@@ -276,8 +281,9 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
             JSONArray data = (JSONArray) object;
             GlucosePredictDTO glucosePredictDTO=new GlucosePredictDTO();
             glucosePredictDTO.setTime(LocalDateTime.parse(data.get(0).toString(),formatter));
-            System.out.println(LocalDateTime.parse(data.get(0).toString(),formatter));
-            glucosePredictDTO.setValue((BigDecimal)data.get(1));
+            BigDecimal value = (BigDecimal) data.get(1);
+            // divide 方法中指定 scale 和 RoundingMode(保留几位小数和舍入模式)
+            glucosePredictDTO.setValue(value.divide( BigDecimal.valueOf(18), 4, RoundingMode.HALF_UP));
             predictList.add(glucosePredictDTO);
         }
         Map<String,List<GlucosePredictDTO>> returnMap=new HashMap<>();

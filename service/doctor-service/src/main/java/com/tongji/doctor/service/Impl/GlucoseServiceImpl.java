@@ -201,6 +201,8 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose>  imp
                 .collect(Collectors.toList());
         List<Object[]> dataList = new ArrayList<>();
         for (Glucose glucose : glucoseList){
+            //算法用的单位是mg/dl
+            glucose.setGluValue(glucose.getGluValue().multiply(BigDecimal.valueOf(18)));
             dataList.add(new Object[] {glucose.getTime().format(formatter), glucose.getGluValue()});
         }
         Map<String, Object> jsonObject = new HashMap<>();
