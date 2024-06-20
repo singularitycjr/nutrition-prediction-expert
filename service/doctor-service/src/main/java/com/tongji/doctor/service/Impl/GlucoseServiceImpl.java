@@ -105,10 +105,17 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose>  imp
         glucoseFileReturnDTO.setPath(path) ;
         cacheService.set(path,patientId.toString());
 
-        return ResponseResult.okResult(glucoseFileReturnDTO);
+        GlucoseFileAddDTO glucoseFileAddDTO=new GlucoseFileAddDTO();
+        glucoseFileAddDTO.setTimeCol(0L);
+        glucoseFileAddDTO.setValueCol(1L);
+        glucoseFileAddDTO.setUrl(path);
+        return this.addFileData(glucoseFileAddDTO);
+
+
+//        return ResponseResult.okResult(glucoseFileReturnDTO);
     }
 
-    @Override
+//    @Override
     public ResponseResult addFileData(GlucoseFileAddDTO glucoseFileAddDTO) {
         if(glucoseFileAddDTO.getUrl()==null||glucoseFileAddDTO.getTimeCol()==null
                 ||glucoseFileAddDTO.getValueCol()==null)

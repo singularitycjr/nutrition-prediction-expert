@@ -154,13 +154,19 @@ public class GlucoseServiceImpl extends ServiceImpl<GlucoseMapper, Glucose> impl
         }
 
         //将文件上传到minio
-        glucoseFileReturnDTO.setPath(fileStorageService.uploadFile(file)) ;
-        return ResponseResult.okResult(glucoseFileReturnDTO);
+        String path=fileStorageService.uploadFile(file);
+        glucoseFileReturnDTO.setPath(path) ;
+
+        GlucoseFileAddDTO glucoseFileAddDTO=new GlucoseFileAddDTO();
+        glucoseFileAddDTO.setTimeCol(0L);
+        glucoseFileAddDTO.setValueCol(1L);
+        glucoseFileAddDTO.setUrl(path);
+        return this.addFileData(glucoseFileAddDTO);
+//        return ResponseResult.okResult(glucoseFileReturnDTO);
 
     }
 
-    @Override
-
+//    @Override
     public ResponseResult addFileData(GlucoseFileAddDTO glucoseFileAddDTO)
     {
         if(glucoseFileAddDTO.getUrl()==null||glucoseFileAddDTO.getTimeCol()==null

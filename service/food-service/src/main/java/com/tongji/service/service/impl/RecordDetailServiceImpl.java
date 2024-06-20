@@ -161,14 +161,14 @@ public class RecordDetailServiceImpl extends ServiceImpl<RecordDetailMapper, Rec
         if(recordDetailAddDTO.getFoodId() == null)
             return ResponseResult.errorResult(400, "FoodId不能为空");
 
-        if(!(recordDetailAddDTO.getProteinMass() instanceof BigDecimal)||
-                !(recordDetailAddDTO.getFatMass() instanceof BigDecimal)||
-                !(recordDetailAddDTO.getCalorieMass() instanceof BigDecimal)||
-                !(recordDetailAddDTO.getCelluloseMass() instanceof BigDecimal)||
-                !(recordDetailAddDTO.getCarbohydrateMass() instanceof BigDecimal)||
-                !(recordDetailAddDTO.getFoodMass() instanceof BigDecimal)
-        )
-            return ResponseResult.errorResult(400, "字段类型错误");
+//        if(!(recordDetailAddDTO.getProteinMass() instanceof BigDecimal)||
+//                !(recordDetailAddDTO.getFatMass() instanceof BigDecimal)||
+//                !(recordDetailAddDTO.getCalorieMass() instanceof BigDecimal)||
+//                !(recordDetailAddDTO.getCelluloseMass() instanceof BigDecimal)||
+//                !(recordDetailAddDTO.getCarbohydrateMass() instanceof BigDecimal)||
+//                !(recordDetailAddDTO.getFoodMass() instanceof BigDecimal)
+//        )
+//            return ResponseResult.errorResult(400, "字段类型错误");
 
          Record record=recordService.getById(recordDetailAddDTO.getRecordId());
          if(record==null)
@@ -177,30 +177,30 @@ public class RecordDetailServiceImpl extends ServiceImpl<RecordDetailMapper, Rec
         if(food==null)
             return ResponseResult.errorResult(400, "FoodId不存在");
 
-        if(recordDetailAddDTO.getCalorieMass().compareTo(BigDecimal.ZERO) < 0||
-                recordDetailAddDTO.getCarbohydrateMass().compareTo(BigDecimal.ZERO) < 0||
-                recordDetailAddDTO.getCelluloseMass().compareTo(BigDecimal.ZERO) < 0||
-                recordDetailAddDTO.getFatMass().compareTo(BigDecimal.ZERO) < 0||
-                recordDetailAddDTO.getFoodMass().compareTo(BigDecimal.ZERO) < 0||
-                recordDetailAddDTO.getProteinMass().compareTo(BigDecimal.ZERO) < 0
-        )
-            return ResponseResult.errorResult(400, "营养素或食物质量不得小于0");
-
-        if(recordDetailAddDTO.getCalorieMass().compareTo(BigDecimal.valueOf(2000)) > 0||
-                recordDetailAddDTO.getCarbohydrateMass().compareTo(BigDecimal.valueOf(2000)) > 0||
-                recordDetailAddDTO.getCelluloseMass().compareTo(BigDecimal.valueOf(2000)) > 0||
-                recordDetailAddDTO.getFatMass().compareTo(BigDecimal.valueOf(2000)) > 0||
-                recordDetailAddDTO.getFoodMass().compareTo(BigDecimal.valueOf(2000)) > 0||
-                recordDetailAddDTO.getProteinMass().compareTo(BigDecimal.valueOf(2000)) > 0
-        )
-            return ResponseResult.errorResult(400, "营养素或食物质量不得大于2000");
-
-        BigDecimal temp=recordDetailAddDTO.getCarbohydrateMass()
-                .add(recordDetailAddDTO.getCelluloseMass())
-                .add(recordDetailAddDTO.getFatMass())
-                .add(recordDetailAddDTO.getProteinMass());
-        if(recordDetailAddDTO.getFoodMass().compareTo(temp)<0)
-            return ResponseResult.errorResult(400, "食物质量不得小于营养素质量之和");
+//        if(recordDetailAddDTO.getCalorieMass().compareTo(BigDecimal.ZERO) < 0||
+//                recordDetailAddDTO.getCarbohydrateMass().compareTo(BigDecimal.ZERO) < 0||
+//                recordDetailAddDTO.getCelluloseMass().compareTo(BigDecimal.ZERO) < 0||
+//                recordDetailAddDTO.getFatMass().compareTo(BigDecimal.ZERO) < 0||
+//                recordDetailAddDTO.getFoodMass().compareTo(BigDecimal.ZERO) < 0||
+//                recordDetailAddDTO.getProteinMass().compareTo(BigDecimal.ZERO) < 0
+//        )
+//            return ResponseResult.errorResult(400, "营养素或食物质量不得小于0");
+//
+//        if(recordDetailAddDTO.getCalorieMass().compareTo(BigDecimal.valueOf(2000)) > 0||
+//                recordDetailAddDTO.getCarbohydrateMass().compareTo(BigDecimal.valueOf(2000)) > 0||
+//                recordDetailAddDTO.getCelluloseMass().compareTo(BigDecimal.valueOf(2000)) > 0||
+//                recordDetailAddDTO.getFatMass().compareTo(BigDecimal.valueOf(2000)) > 0||
+//                recordDetailAddDTO.getFoodMass().compareTo(BigDecimal.valueOf(2000)) > 0||
+//                recordDetailAddDTO.getProteinMass().compareTo(BigDecimal.valueOf(2000)) > 0
+//        )
+//            return ResponseResult.errorResult(400, "营养素或食物质量不得大于2000");
+//
+//        BigDecimal temp=recordDetailAddDTO.getCarbohydrateMass()
+//                .add(recordDetailAddDTO.getCelluloseMass())
+//                .add(recordDetailAddDTO.getFatMass())
+//                .add(recordDetailAddDTO.getProteinMass());
+//        if(recordDetailAddDTO.getFoodMass().compareTo(temp)<0)
+//            return ResponseResult.errorResult(400, "食物质量不得小于营养素质量之和");
 
         RecordDetail recordDetail=new RecordDetail();
         BeanUtils.copyProperties(recordDetailAddDTO, recordDetail);

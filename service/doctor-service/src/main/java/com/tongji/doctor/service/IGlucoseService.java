@@ -14,7 +14,7 @@ public interface IGlucoseService extends IService<Glucose> {
 
     ResponseResult getGlucose(TimeRangeDTO timeRangeDTO);
     ResponseResult uploadGlucoseFile(Long patientId,MultipartFile file);
-    ResponseResult addFileData( GlucoseFileAddDTO glucoseFileAddDTO);
+//    ResponseResult addFileData( GlucoseFileAddDTO glucoseFileAddDTO);
     ResponseResult getPredictGlucose( Long patientId);
 
 

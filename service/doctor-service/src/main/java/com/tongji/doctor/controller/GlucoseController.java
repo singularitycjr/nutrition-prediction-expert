@@ -52,11 +52,11 @@ public class GlucoseController {
         return this.glucoseService.uploadGlucoseFile(patientId,file);
     }
 
-    @Operation(summary = "上传血糖两列数据")
-    @PostMapping("/addFileData")
-    public ResponseResult addFileData(@RequestBody GlucoseFileAddDTO glucoseFileAddDTO){
-        return this.glucoseService.addFileData(glucoseFileAddDTO);
-    }
+//    @Operation(summary = "上传血糖两列数据")
+//    @PostMapping("/addFileData")
+//    public ResponseResult addFileData(@RequestBody GlucoseFileAddDTO glucoseFileAddDTO){
+//        return this.glucoseService.addFileData(glucoseFileAddDTO);
+//    }
 
     @Operation(summary = "调go接口获取血糖预测结果（传患者id）")
     @GetMapping("/getPredictGlucose/{id}")
